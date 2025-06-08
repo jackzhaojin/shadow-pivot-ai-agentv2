@@ -73,7 +73,7 @@ An AI-powered design-to-code agent embedded within a Next.js app, capable of gen
 
 ```
 npx create-next-app@latest
-✔ What is your project named? … shadow-pivot-nextjs
+✔ What is your project named? … shadow-pivot-ai-agentv2
 ✔ Would you like to use TypeScript? … Yes
 ✔ Would you like to use ESLint? … Yes
 ✔ Would you like to use Tailwind CSS? … Yes
