@@ -69,6 +69,50 @@ An AI-powered design-to-code agent embedded within a Next.js app, capable of gen
 * Agent Flow UI: SSR for baseline, CSR for interaction/live updates.
 * Data Visualization: Open (Recharts/D3/others allowed).
 
+#### Preferred Code Structure:
+
+```
+/app                     ← App Router routing lives here
+  /dashboard
+    /page.tsx
+  /chat
+    /page.tsx
+  /layout.tsx
+  /globals.css
+
+/components              ← Reusable UI elements (client/server split with 'use client')
+  /ui/
+  /charts/
+  /chat/
+
+/features                ← Feature-based logic (e.g., auth, ai-chat)
+  /ai/
+    /components/         ← Feature-specific components
+    /api/
+    /utils.ts
+  /stocks/
+    /components/
+    /hooks.ts
+    /api/
+
+/hooks                   ← Global shared custom hooks
+
+/lib                     ← Core logic like API clients, Cosmos SDK, Foundry wrapper
+  cosmosClient.ts
+  aiClient.ts
+  graphUtils.ts
+
+/providers               ← Context providers (e.g., theme, chat state)
+
+/types                   ← Global TypeScript types
+
+/utils                   ← Utility functions (formatters, date parsers)
+
+/public                  ← Static assets (favicon, images)
+
+/config                  ← App config: constants, env parsing, tokens
+```
+
 #### App Bootstrapping Command:
 
 ```
@@ -90,7 +134,11 @@ npx create-next-app@latest
 * Authentication:
 
   * **Managed Identity** on Azure server.
-  * **DefaultAzureCredential** for local development (uses local user identity).
+  * **DefaultAzureCredential** for local development:
+
+    * Uses local `az login` identity via Azure CLI token
+    * Automatically resolves to Managed Identity on Azure App Service
+    * Enables unified credential usage across environments
 * Storage: **Azure Blob Storage (Hot v2 tier)**
 
   * All executions stored under `/userId/executionId/*`
@@ -98,6 +146,13 @@ npx create-next-app@latest
 
   * Parallel Figma generation where applicable
   * Decision steps marked with visual nodes
+
+#### Local Development Notes:
+
+* When running `npm run dev`, `DefaultAzureCredential` resolves to your local Azure CLI session.
+* Developers should run `az login` beforehand.
+* For debugging auth, use `AZURE_LOG_LEVEL=verbose npm run dev` to confirm which credential is being used.
+* SDK calls must be made only within server components or API routes (never client components).
 
 #### User Identity:
 
@@ -130,7 +185,17 @@ npx create-next-app@latest
 
 ---
 
-### Infrastructure Notes:
+### Deployment & Infrastructure Notes:
+
+* A `Dockerfile` and `.dockerignore` will be included to support containerized builds and deployments.
+
+* GitHub Actions will be used to automate Docker-based deployments.
+
+* We will reuse and adapt the proven code and patterns from the following working examples:
+
+  * GitHub Actions Workflow: [main\_shadow-pivot-nextjsv2.yml](https://github.com/jackzhaojin/shadow-pivot-nextjs/blob/main/.github/workflows/main_shadow-pivot-nextjsv2.yml)
+  * Dockerfile: [Dockerfile](https://github.com/jackzhaojin/shadow-pivot-nextjs/blob/main/Dockerfile)
+  * Docker Ignore File: [.dockerignore](https://github.com/jackzhaojin/shadow-pivot-nextjs/blob/main/.dockerignore)
 
 * An `infrastructure.md` file will be included in the codebase to guide developers through setting up the necessary Azure resources:
 
@@ -138,6 +203,7 @@ npx create-next-app@latest
   * Azure AI Foundry
   * Managed Identities
   * User permissions and roles
+
 * Full Infrastructure as Code (IaC) will be developed post-MVP.
 
 ---
