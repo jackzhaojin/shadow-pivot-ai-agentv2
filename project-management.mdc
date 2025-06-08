@@ -1,0 +1,255 @@
+# TSLA AI UI Agent - Deployment-First Task Management
+
+## Project Overview
+- **Project Name**: TSLA AI UI Agent
+- **Framework**: Next.js 15.1.8 with App Router
+- **Current Status**: ✅ Docker containerization complete, ready for GitHub Actions + Azure deployment
+- **Immediate Goal**: Get current app deployed to Azure via Docker + GitHub Actions
+
+## Phase 1: IMMEDIATE PRIORITY - Deployment Pipeline
+**Status**: In Progress | **Target**: Get baseline app running on Azure
+
+### 1.1 Docker Containerization ✅ COMPLETED
+**Priority**: CRITICAL - Must complete first
+
+- [x] Create Dockerfile based on reference example
+  - [x] Fetch reference Dockerfile from shadow-pivot-nextjs repo
+  - [x] Adapt for current Next.js 15.1.8 setup
+  - [x] Ensure proper Node.js version and build steps
+  - [x] Test local Docker build with `docker build -t shadow-pivot-ai-agentv2 .`
+
+- [x] Create .dockerignore file
+  - [x] Fetch reference .dockerignore from shadow-pivot-nextjs repo  
+  - [x] Adapt for current project structure
+  - [x] Exclude node_modules, .git, docs, etc.
+
+- [x] Local Docker testing
+  - [x] Build image successfully (925MB, built in ~44s)
+  - [x] Run container locally on port 3000
+  - [x] Verify Next.js app loads correctly
+  - [x] Test production build works in container
+
+**✅ DOCKER CONTAINERIZATION COMPLETE** 
+- Image: `shadow-pivot-ai-agentv2:latest` (SHA: f1061ac3019b)
+- Build time: ~44 seconds
+- Startup time: ~521ms
+- Status: Ready for GitHub Actions deployment
+
+### 1.2 GitHub Actions Workflow
+**Priority**: CRITICAL - Second step
+
+- [ ] Create GitHub Actions workflow
+  - [ ] Fetch reference workflow from shadow-pivot-nextjs repo
+  - [ ] Adapt main_shadow-pivot-nextjsv2.yml for this project
+  - [ ] Configure Docker image building
+  - [ ] Set up GitHub Container Registry or Azure Container Registry
+
+- [ ] Configure Azure deployment
+  - [ ] Set up Azure App Service (manual for now)
+  - [ ] Configure container deployment from GitHub
+  - [ ] Set up required GitHub secrets for Azure credentials
+  - [ ] Test automated deployment pipeline
+
+### 1.3 Azure Infrastructure (Manual Setup)
+**Priority**: HIGH - Parallel with GitHub Actions
+
+- [ ] Azure Storage Account setup
+  - [ ] Create Azure Storage Account (Hot v2 tier)
+  - [ ] Configure blob container for executions
+  - [ ] Set up access policies and permissions
+  - [ ] Test basic blob operations via Azure CLI
+
+- [ ] Azure AI Foundry setup
+  - [ ] Create Azure AI Foundry workspace
+  - [ ] Configure AI models and endpoints
+  - [ ] Set up API keys and connection strings
+  - [ ] Test model availability and access
+
+- [ ] Managed Identity configuration
+  - [ ] Create user-assigned managed identity
+  - [ ] Assign permissions to Storage Account
+  - [ ] Assign permissions to AI Foundry
+  - [ ] Configure DefaultAzureCredential access
+
+- [ ] Azure App Service setup
+  - [ ] Create App Service with container support
+  - [ ] Configure for Docker container deployment
+  - [ ] Attach managed identity to App Service
+  - [ ] Configure environment variables for Azure services
+  - [ ] Set up custom domain (if needed)
+  - [ ] Configure health checks
+
+- [ ] GitHub integration
+  - [ ] Set up deployment center in Azure
+  - [ ] Link to GitHub repository
+  - [ ] Configure automatic deployments
+  - [ ] Test webhook triggers
+
+### 1.4 Azure Integration Testing
+**Priority**: HIGH - Validation step before deployment
+
+- [ ] Basic Azure connection tests
+  - [ ] Create simple API route to test Azure Storage connection
+  - [ ] Create simple API route to test Azure AI Foundry connection
+  - [ ] Test DefaultAzureCredential resolution locally (`az login`)
+  - [ ] Verify environment variables and configuration
+  - [ ] Test basic blob storage read/write operations
+
+- [ ] Next.js SSR Azure integration
+  - [ ] Add Azure SDK dependencies to package.json
+  - [ ] Create lib/azureClient.ts for storage operations
+  - [ ] Create lib/aiClient.ts for AI Foundry operations
+  - [ ] Test server-side Azure calls in page.tsx
+  - [ ] Verify no client-side Azure SDK usage
+
+- [ ] End-to-end deployment testing
+  - [ ] Push code to GitHub with Azure integration
+  - [ ] Verify GitHub Actions build and push image
+  - [ ] Confirm Azure pulls and deploys container
+  - [ ] Test deployed app accessibility
+  - [ ] Test Azure connections work in deployed environment
+  - [ ] Verify baseline Next.js functionality
+  - [ ] Validate Azure service connectivity from App Service
+
+## Phase 2: SECONDARY - Foundation Setup
+**Status**: Not Started | **Target**: Prepare for feature development
+
+### 2.1 Project Structure Enhancement
+- [ ] Implement folder structure from PRD
+- [ ] Set up TypeScript configurations
+- [ ] Add essential dependencies for future features
+- [ ] Create placeholder components and layouts
+
+### 2.2 Azure Services Preparation
+- [ ] Document Azure Storage Account setup
+- [ ] Prepare Azure AI Foundry configuration
+- [ ] Plan Managed Identity integration
+- [ ] Create infrastructure.md guide
+
+## Phase 3: FUTURE - Core Features
+**Status**: Deferred | **Target**: After successful deployment
+
+### 3.1 Agent Pipeline Foundation
+- [ ] Basic agent flow UI
+- [ ] MCP client setup
+- [ ] User management system
+- [ ] Execution tracking
+
+### 3.2 AI Integration
+- [ ] Azure AI Foundry connection
+- [ ] Design concept generation
+- [ ] Code generation pipeline
+- [ ] Blob storage integration
+
+## Progress Log
+
+### ✅ Completed Tasks
+- **Docker containerization complete** - Dockerfile, .dockerignore, local testing all working
+  - Image builds in ~44 seconds, starts in ~521ms
+  - Successfully tested container deployment locally
+  - Ready for GitHub Actions integration
+
+### 🎯 Next When Time Allows
+1. **GitHub Actions workflow** - Adapt from reference repo for automated deployment
+2. **Azure infrastructure setup** - Storage Account, AI Foundry, Managed Identity
+3. **Basic Azure integration** - Test connections before full deployment
+4. **End-to-end deployment** - Get the app running on Azure
+
+### 📝 Work Session Notes
+- **Session 1**: Docker setup complete - everything working smoothly
+- **Next session**: Focus on either GitHub Actions OR Azure setup (whichever feels right)
+
+## Success Criteria for Phase 1
+
+### Must Have (Deployment Success)
+- [ ] Docker image builds successfully
+- [ ] Container runs locally without errors
+- [ ] Azure Storage Account accessible via DefaultAzureCredential
+- [ ] Azure AI Foundry accessible via DefaultAzureCredential
+- [ ] Basic Azure integration tests pass locally
+- [ ] GitHub Actions workflow completes without failures
+- [ ] Azure App Service shows "Running" status
+- [ ] Deployed app accessible via public URL
+- [ ] Next.js default page loads correctly
+- [ ] Azure connections work in deployed environment
+
+### Nice to Have
+- [ ] Build time under 5 minutes
+- [ ] Container startup time under 30 seconds
+- [ ] Automated health checks working
+- [ ] Logs visible in Azure portal
+
+## Reference Resources
+
+### GitHub Repositories to Reference
+- **Workflow**: [main_shadow-pivot-nextjsv2.yml](https://github.com/jackzhaojin/shadow-pivot-nextjs/blob/main/.github/workflows/main_shadow-pivot-nextjsv2.yml)
+- **Dockerfile**: [Dockerfile](https://github.com/jackzhaojin/shadow-pivot-nextjs/blob/main/Dockerfile)
+- **Docker Ignore**: [.dockerignore](https://github.com/jackzhaojin/shadow-pivot-nextjs/blob/main/.dockerignore)
+
+### Key Commands for Testing
+```bash
+# Local Docker testing
+docker build -t shadow-pivot-ai-agentv2 .
+docker run -p 3000:3000 shadow-pivot-ai-agentv2
+
+# Azure CLI (if needed)
+az login
+az webapp list
+az webapp restart --name <app-name> --resource-group <rg-name>
+```
+
+## Blockers & Risks
+
+### Potential Blockers
+- [ ] Docker build failures due to Next.js 15.1.8 differences
+- [ ] Azure Storage Account access permissions issues
+- [ ] Azure AI Foundry model availability or quotas
+- [ ] DefaultAzureCredential authentication problems
+- [ ] GitHub Actions authentication issues with Azure
+- [ ] Azure App Service container deployment problems
+- [ ] Managed Identity permission configuration
+- [ ] Port configuration mismatches
+
+### Risk Mitigation
+- [ ] Test Docker builds locally before pushing
+- [ ] Test Azure connections with `az login` before managed identity
+- [ ] Have Azure CLI ready for debugging permissions
+- [ ] Keep reference repos accessible for comparison
+- [ ] Document all Azure configuration steps
+- [ ] Test Azure SDK calls in isolation before integration
+
+## Daily Progress Log
+
+### Work Session Log
+- **Session 1 (Completed)**: Docker containerization
+  - ✅ Created Dockerfile and .dockerignore  
+  - ✅ Tested local builds and container execution
+  - ✅ Verified Next.js app runs perfectly in container
+  - **Time spent**: ~1-2 hours
+  - **Status**: Ready for next phase
+
+### When Time Allows - Next Sessions
+- **Option A**: GitHub Actions setup (~1-2 hours)
+- **Option B**: Azure infrastructure setup (~2-3 hours)  
+- **Option C**: Basic Azure integration testing (~1-2 hours)
+
+*No pressure, no deadlines - just progress when life allows!*
+
+## Notes & Decisions
+
+### Architecture Decisions for Deployment
+- Using Docker containerization for consistent deployment
+- GitHub Actions for CI/CD automation
+- Azure App Service for hosting (familiar, proven)
+- Container Registry via GitHub or Azure (TBD based on workflow)
+
+### Immediate Scope Constraints
+- **No feature development** until deployment works
+- **No infrastructure automation** (manual Azure setup for now)
+- **No advanced configurations** (SSL, custom domains later)
+- **Focus on baseline functionality** only
+
+### Success Definition
+✅ **Deployment Success** = Pushing code to GitHub triggers automatic build and deployment to Azure, resulting in accessible web app
+
+This is the ONLY success criteria for Phase 1. Everything else is secondary.
