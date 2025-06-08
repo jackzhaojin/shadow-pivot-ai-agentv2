@@ -102,6 +102,102 @@ Use the Azure CLI and SDK’s `DefaultAzureCredential`.
 * Your Web App will use **Managed Identity** as described above.
 * Ensure role assignments are set for blob and AI access.
 
+### For GitHub Actions (Optional - OIDC Authentication)
+
+**Enable passwordless authentication for GitHub Actions to restart Azure App Service**
+
+This setup allows GitHub Actions to authenticate with Azure without storing sensitive credentials, using OpenID Connect (OIDC) for secure, token-based authentication.
+
+#### 1. Create Azure Enterprise Application
+
+**Steps:**
+
+1. Log in to [Azure Portal](https://portal.azure.com).
+2. Go to **Azure Active Directory** > **Enterprise Applications**.
+3. Click **"+ New Application"** > **"Create your own application"**.
+4. Name it `GitHub-Actions-OIDC` and select **"Register an application to integrate with Azure AD"**.
+5. Click **"Create"**.
+6. Once created, go to **App Registrations** and find your newly created app.
+7. Note down the **Application (client) ID** - this is your `AZURE_CLIENT_ID`.
+8. Note down the **Directory (tenant) ID** - this is your `AZURE_TENANT_ID`.
+
+#### 2. Configure Federated Credentials
+
+**Steps:**
+
+1. In your App Registration, go to **Certificates & secrets**.
+2. Click **"Federated credentials"** tab.
+3. Click **"+ Add credential"**.
+4. Select **"GitHub Actions deploying Azure resources"**.
+5. Fill in the form:
+   - **Organization**: Your GitHub username/organization
+   - **Repository**: `shadow-pivot-ai-agentv2`
+   - **Entity type**: `Branch`
+   - **GitHub branch name**: `main`
+   - **Name**: `main-branch-deployment`
+6. Click **"Add"**.
+
+> **Note**: This allows only the `main` branch to authenticate with Azure. For additional branches, create separate federated credentials.
+
+#### 3. Assign Azure Permissions to Enterprise Application
+
+**Steps:**
+
+1. Go to your **Subscription** in Azure Portal.
+2. Click **"Access control (IAM)"**.
+3. Click **"+ Add"** > **"Add role assignment"**.
+4. Select **"Contributor"** role (or create a custom role with just restart permissions).
+5. In **"Assign access to"**, select **"User, group, or service principal"**.
+6. Search for your Enterprise Application name (`GitHub-Actions-OIDC`).
+7. Select it and click **"Save"**.
+
+Alternatively, for minimal permissions, assign these specific roles:
+- **Website Contributor** (on the App Service)
+- **Reader** (on the Resource Group)
+
+#### 4. Configure GitHub Repository Variables
+
+**Steps:**
+
+1. Go to your GitHub repository.
+2. Navigate to **Settings** > **Secrets and variables** > **Actions**.
+3. Click **"Variables"** tab.
+4. Add these repository variables:
+   - `AZURE_CLIENT_ID`: Application (client) ID from step 1
+   - `AZURE_TENANT_ID`: Directory (tenant) ID from step 1
+   - `AZURE_SUBSCRIPTION_ID`: Your Azure subscription ID
+
+#### 5. Verify OIDC Configuration
+
+Your GitHub Actions workflow (`.github/workflows/main_shadow-pivot-ai-agentv2.yml`) is already configured to use these variables:
+
+```yaml
+- name: Login to Azure
+  uses: azure/login@v2
+  with:
+    client-id: ${{ vars.AZURE_CLIENT_ID }}
+    tenant-id: ${{ vars.AZURE_TENANT_ID }}
+    subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+```
+
+#### 6. Test the Setup
+
+**Steps:**
+
+1. Push a commit to your `main` branch.
+2. Watch the GitHub Actions workflow run.
+3. Verify that the Azure login step succeeds.
+4. Check that the App Service restart completes without errors.
+
+#### Troubleshooting
+
+**Common Issues:**
+
+- **Authentication failed**: Verify federated credential is configured for the correct repository and branch
+- **Insufficient permissions**: Ensure the Enterprise Application has appropriate Azure RBAC roles
+- **Wrong tenant**: Double-check `AZURE_TENANT_ID` matches your Azure AD tenant
+- **Branch mismatch**: Federated credential must match the exact branch name triggering the workflow
+
 ---
 
 ## 📂 Directory Structure for Blob Storage
@@ -131,6 +227,7 @@ shadowpivotstorage/
 
 ## ✅ Checklist for MVP
 
+### Core Infrastructure
 * [ ] Create or confirm `ShadowPivot` resource group
 * [ ] Create Azure Storage Account (Hot V2 tier)
 * [ ] Create `executions` container inside storage
@@ -139,6 +236,13 @@ shadowpivotstorage/
 * [ ] Assign correct RBAC roles
 * [ ] Verify local auth using `az login` + SDK
 * [ ] Deploy Next.js app and validate integration
+
+### GitHub Actions OIDC (Optional)
+* [ ] Create Azure Enterprise Application for GitHub Actions
+* [ ] Configure federated credentials for `main` branch
+* [ ] Assign Azure permissions to Enterprise Application
+* [ ] Set up GitHub repository variables (`AZURE_CLIENT_ID`, `AZURE_TENANT_ID`, `AZURE_SUBSCRIPTION_ID`)
+* [ ] Test passwordless authentication workflow
 
 ---
 
