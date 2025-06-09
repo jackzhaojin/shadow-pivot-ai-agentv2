@@ -66,17 +66,19 @@ export async function checkAzureHealth() {
 export function validateAzureEnvironment() {
   const requiredEnvVars = [
     'AZURE_STORAGE_ACCOUNT_NAME',
-    'AZURE_OPENAI_ENDPOINT'
+    'AZURE_OPENAI_ENDPOINT',
+    'AZURE_OPENAI_DEPLOYMENT_NAME'
   ];
-
+   
   const missing = requiredEnvVars.filter(varName => !process.env[varName]);
-  
+   
   return {
     isValid: missing.length === 0,
     missing,
     config: {
       storageAccount: process.env.AZURE_STORAGE_ACCOUNT_NAME,
-      aiEndpoint: process.env.AZURE_OPENAI_ENDPOINT
+      aiEndpoint: process.env.AZURE_OPENAI_ENDPOINT,
+      aiDeployment: process.env.AZURE_OPENAI_DEPLOYMENT_NAME
     }
   };
 }

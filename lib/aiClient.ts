@@ -64,7 +64,8 @@ export async function generateText(
 // Test function for AI connectivity
 export async function testAIConnection(): Promise<{ success: boolean; response?: string; error?: string }> {
   try {
-    const response = await generateText('Say "Hello" in one word', 'gpt-4o-mini', { maxTokens: 5 });
+    const deployment = process.env.AZURE_OPENAI_DEPLOYMENT_NAME || 'gpt-4o-mini';
+    const response = await generateText('Say "Hello" in one word', deployment, { maxTokens: 5 });
     return { success: true, response };
   } catch (error) {
     return { 
