@@ -56,13 +56,15 @@ export async function GET() {
       }
     });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Azure Storage test error:', error);
-    
+
+    const err = error instanceof Error ? error : new Error('Unknown error');
+
     return NextResponse.json({
       success: false,
-      error: error.message,
-      errorType: error.name,
+      error: err.message,
+      errorType: err.name,
       details: {
         storageAccount: process.env.AZURE_STORAGE_ACCOUNT_NAME || 'shadowpivotaiagentstrg',
         container: 'executions'

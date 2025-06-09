@@ -6,7 +6,7 @@ interface TestResult {
   success: boolean;
   message?: string;
   error?: string;
-  details?: any;
+  details?: Record<string, unknown>;
 }
 
 export default function AzureTestPage() {
@@ -23,10 +23,11 @@ export default function AzureTestPage() {
       const response = await fetch('/api/test-storage');
       const result = await response.json();
       setStorageResult(result);
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const err = error instanceof Error ? error : new Error('Unknown error');
       setStorageResult({
         success: false,
-        error: error.message || 'Failed to test storage connection'
+        error: err.message || 'Failed to test storage connection'
       });
     } finally {
       setLoading(prev => ({ ...prev, storage: false }));
@@ -39,10 +40,11 @@ export default function AzureTestPage() {
       const response = await fetch('/api/test-ai');
       const result = await response.json();
       setAiResult(result);
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const err = error instanceof Error ? error : new Error('Unknown error');
       setAiResult({
         success: false,
-        error: error.message || 'Failed to test AI connection'
+        error: err.message || 'Failed to test AI connection'
       });
     } finally {
       setLoading(prev => ({ ...prev, ai: false }));
@@ -116,7 +118,7 @@ export default function AzureTestPage() {
         </h1>
         <p className="text-gray-600">
           Test Azure Storage and AI Foundry connections using DefaultAzureCredential.
-          Make sure you're logged in with <code className="bg-gray-100 px-1 rounded">az login</code>.
+          Make sure you&apos;re logged in with <code className="bg-gray-100 px-1 rounded">az login</code>.
         </p>
       </div>
 
@@ -177,9 +179,9 @@ export default function AzureTestPage() {
       <div className="mt-8 border rounded-lg p-6 bg-blue-50">
         <h3 className="text-lg font-semibold mb-4 text-blue-900">Testing Instructions</h3>
         <ol className="list-decimal list-inside space-y-2 text-blue-800">
-          <li>Ensure you're logged in to Azure CLI: <code className="bg-blue-100 px-1 rounded">az login</code></li>
+            <li>Ensure you&apos;re logged in to Azure CLI: <code className="bg-blue-100 px-1 rounded">az login</code></li>
           <li>Verify you have access to the correct subscription: <code className="bg-blue-100 px-1 rounded">az account show</code></li>
-          <li>Click "Test All" to validate both Azure Storage and AI Foundry connections</li>
+            <li>Click &quot;Test All&quot; to validate both Azure Storage and AI Foundry connections</li>
           <li>Check for any permission errors and resolve them in Azure Portal if needed</li>
         </ol>
       </div>
