@@ -11,15 +11,14 @@ export function ClientSideDemo() {
   const testServerSideAzure = async () => {
     setLoading(true);
     try {
-      // Call our API route (server-side) instead of using Azure SDK directly
-      const response = await fetch('/api/test-ai', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: 'Hello from client!' })
-      });
+      const response = await fetch('/api/test-ai'); // use GET to match server route
       
       const data = await response.json();
-      setMessage(data.success ? `AI Response: ${data.response}` : `Error: ${data.error}`);
+      if (data.success) {
+        setMessage(`AI Response: ${data.details.testResponse}`);
+      } else {
+        setMessage(`Error: ${data.error}`);
+      }
     } catch (error) {
       setMessage(`Network Error: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
