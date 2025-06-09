@@ -40,3 +40,5 @@ npm run build
 ```
 
 If a command fails due to environment limitations, mention it in the PR body.
+
+If `npm run lint` or `npm run build` fail with "next: not found", run `npm install` to set up dependencies.
