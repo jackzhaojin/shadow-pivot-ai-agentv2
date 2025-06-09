@@ -235,13 +235,18 @@
 ## Phase 2: SECONDARY - Foundation Setup
 **Status**: Not Started | **Target**: Prepare for feature development
 
-### 2.1 Project Structure Enhancement
+### 2.1 Service Principal Setup (Online Compiler)
+- [ ] Create service principal with `az ad sp create-for-rbac`
+- [ ] Add `AZURE_CLIENT_ID` and `AZURE_TENANT_ID` variables to Codex
+- [ ] **Configure `AZURE_CLIENT_SECRET` in Codex**
+
+### 2.2 Project Structure Enhancement
 - [x] Implement folder structure from PRD
 - [x] Set up TypeScript configurations
 - [x] Add essential dependencies for future features
 - [x] Create placeholder components and layouts
 
-### 2.2 Azure Services Preparation
+### 2.3 Azure Services Preparation
 - [ ] Document Azure Storage Account setup
 - [ ] Prepare Azure AI Foundry configuration
 - [ ] Plan Managed Identity integration
