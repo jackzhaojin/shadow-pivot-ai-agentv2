@@ -56,13 +56,15 @@ export async function GET() {
       }
     });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Azure AI Foundry test error:', error);
-    
+
+    const err = error instanceof Error ? error : new Error('Unknown error');
+
     return NextResponse.json({
       success: false,
-      error: error.message,
-      errorType: error.name,
+      error: err.message,
+      errorType: err.name,
       details: {
         endpoint: process.env.AZURE_OPENAI_ENDPOINT || 'https://story-generation-v1.openai.azure.com/',
         deployment: process.env.AZURE_OPENAI_DEPLOYMENT_NAME || 'gpt-4o-mini-deployment',
