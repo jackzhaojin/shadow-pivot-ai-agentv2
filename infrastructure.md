@@ -73,11 +73,11 @@ Create a `.env.local` file in your project root for local development:
 
 ```bash
 # Storage Configuration (for local development)
-AZURE_STORAGE_ACCOUNT_NAME=shadowpivotstorage2025
+AZURE_STORAGE_ACCOUNT_NAME=shadowpivotaiagentstrg
 
-# AI Services Configuration (add when ready)
-AZURE_OPENAI_ENDPOINT=https://shadow-pivot-ai-services.openai.azure.com/
-AZURE_OPENAI_DEPLOYMENT_NAME=gpt-deployment
+# AI Services Configuration
+AZURE_OPENAI_ENDPOINT=https://story-generation-v1.openai.azure.com/
+AZURE_OPENAI_DEPLOYMENT_NAME=gpt-4o-mini-deployment
 
 # Development Environment
 NODE_ENV=development
@@ -252,9 +252,9 @@ We use this for storing per-user data and execution output.
 
 ### 3. Provision Azure AI Foundry
 
-We use this for connecting to Azure's hosted LLMs via inference APIs.
+We use this for connecting to Azure's hosted LLMs via inference APIs using managed identity authentication.
 
-**Important Note**: Azure AI Foundry might have different availability and naming in different regions. These instructions cover the most common setup path.
+**Deployment**: OpenAI GPT-4o-mini model for cost-effective AI operations.
 
 **Detailed Steps:**
 
@@ -299,54 +299,60 @@ We use this for connecting to Azure's hosted LLMs via inference APIs.
    - In AI Studio, go to **"Deployments"** in the left sidebar
    - Click **"+ Create deployment"**
 
-2. **Deploy GPT Model**:
-   - **Model**: Search for and select **"gpt-35-turbo"** or **"gpt-4"** (depending on availability)
-   - **Deployment name**: Enter **"gpt-deployment"**
+2. **Deploy GPT-4o-mini Model**:
+   - **Model**: Search for and select **"gpt-4o-mini"** (cost-effective OpenAI model)
+   - **Deployment name**: Enter **"gpt-4o-mini-deployment"**
    - **Version**: Select latest available version
    - **Deployment type**: Choose **"Standard"**
    - **Tokens per minute rate limit**: Start with **"30K"** (adjust based on usage)
    - Click **"Deploy"**
    - Wait for deployment (1-2 minutes)
 
-#### 3.4 Get Endpoint Information
+#### 3.4 Configure Managed Identity Access
 
-1. **Find Deployment Details**:
+1. **No API Keys Required**:
+   - This setup uses Azure managed identity for authentication
+   - No need to store API keys or connection strings
+   - Access is managed through Azure IAM roles
+
+2. **Verify Deployment**:
    - Go to **"Deployments"** in AI Studio
-   - Click on your deployment (**"gpt-deployment"**)
-   - Copy the **"Target URI"** (this is your endpoint URL)
-
-2. **Get API Keys**:
-   - In Azure Portal, search for your AI services resource (**"shadow-pivot-ai-services"**)
-   - Go to **"Keys and Endpoint"** in the left sidebar
-   - Copy **"KEY 1"** (you'll need this for authentication)
+   - Confirm **"gpt-4o-mini-deployment"** shows as "Succeeded"
+   - Note the deployment name for application configuration
 
 **💡 Save These Values:**
-- AI Endpoint URL: `https://[your-resource].openai.azure.com/`
-- API Key: `[your API key]`
-- Deployment Name: `gpt-deployment` (or whatever you named it)
+- AI Hub Name: `shadow-pivot-ai-hub`
+- AI Project Name: `shadow-pivot-ai-project`
+- Model Deployment Name: `gpt-4o-mini-deployment`
+- Authentication Method: `Managed Identity (DefaultAzureCredential)`
 
-#### 3.5 Alternative: Use Azure OpenAI Service Directly
+#### 3.5 Test Access via Azure CLI
 
-If Azure AI Studio isn't available in your region:
+**Verify access using your local Azure CLI session:**
 
-1. **Create Azure OpenAI Resource**:
-   - Search for **"Azure OpenAI"** in Azure Portal
-   - Click **"+ Create"**
-   - **Resource Group**: Select **"ShadowPivot"**
-   - **Region**: Choose a region with OpenAI availability (e.g., East US, West Europe)
-   - **Name**: Enter **"shadow-pivot-openai"**
-   - **Pricing tier**: Select **"Standard S0"**
-   - Click **"Review + Create"**
+```bash
+# Verify you're logged in and have access
+az login
+az account show
 
-2. **Deploy Model via Azure OpenAI Studio**:
-   - After creation, click **"Go to Azure OpenAI Studio"**
-   - Follow similar deployment steps as above
+# Test AI services access (replace with your resource names)
+az cognitiveservices account list --resource-group ShadowPivot
+
+# Verify AI Foundry project access
+az ml workspace list --resource-group ShadowPivot
+```
 
 **📋 Troubleshooting AI Services:**
 
 - **"No models available"**: Some regions have limited model availability. Try East US or West Europe.
-- **"Quota exceeded"**: Request quota increase in Azure Portal under your AI services resource.
 - **"Access denied"**: Ensure your Azure account has appropriate permissions (Contributor on resource group).
+- **"Quota exceeded"**: Request quota increase in Azure Portal under your AI services resource.
+- **"Managed identity not configured"**: Complete the Managed Identity setup in section 4 below.
+
+**💡 Cost Optimization:**
+- GPT-4o-mini is selected for cost efficiency while maintaining good performance
+- Monitor usage through Azure Cost Management
+- Consider setting up spending alerts for the resource group
 
 ### 4. Enable Managed Identity for Web App
 
@@ -508,7 +514,7 @@ This will host your Next.js app using the Docker image from GitHub Container Reg
    **For Azure Storage (Required):**
    - Click **"+ New application setting"**
    - **Name**: `AZURE_STORAGE_ACCOUNT_NAME`
-   - **Value**: `[your storage account name]` (e.g., `shadowpivotstorage2025`)
+   - **Value**: `shadowpivotaiagentstrg` (your storage account name)
    - Click **"OK"**
 
    **For Production Mode:**
@@ -524,7 +530,7 @@ This will host your Next.js app using the Docker image from GitHub Container Reg
    - **Value**: `[your AI endpoint URL]` (e.g., `https://shadow-pivot-ai-services.openai.azure.com/`)
    
    - **Name**: `AZURE_OPENAI_DEPLOYMENT_NAME`
-   - **Value**: `gpt-deployment` (or your deployment name)
+   - **Value**: `gpt-4o-mini-deployment` (or your deployment name)
 
    **For MCP Server (Future):**
    - **Name**: `MCP_SERVER_URL`
@@ -541,9 +547,9 @@ This will host your Next.js app using the Docker image from GitHub Container Reg
 |--------------|----------|---------|---------------|
 | `WEBSITES_PORT` | ✅ Yes | Port for Next.js app | `3000` |
 | `NODE_ENV` | ✅ Yes | Node.js environment | `production` |
-| `AZURE_STORAGE_ACCOUNT_NAME` | ✅ Yes | Storage account name | `shadowpivotstorage2025` |
+| `AZURE_STORAGE_ACCOUNT_NAME` | ✅ Yes | Storage account name | `shadowpivotaiagentstrg` |
 | `AZURE_OPENAI_ENDPOINT` | 🔄 Later | AI services endpoint | `https://....openai.azure.com/` |
-| `AZURE_OPENAI_DEPLOYMENT_NAME` | 🔄 Later | AI model deployment | `gpt-deployment` |
+| `AZURE_OPENAI_DEPLOYMENT_NAME` | 🔄 Later | AI model deployment | `gpt-4o-mini-deployment` |
 | `MCP_SERVER_URL` | 🔄 Future | MCP integration | `https://...` |
 
 **📋 Important Notes:**
@@ -911,24 +917,25 @@ shadowpivotstorage/
   - [ ] Copy Connection String (for reference): `________________`
 
 #### 1.3 Azure AI Services
-- [ ] **Create AI Hub & Services**
-  - [ ] Search "Azure AI Studio" → Create new hub
-  - [ ] Hub name: `shadow-pivot-ai-hub`
-  - [ ] Resource Group: `ShadowPivot`
-  - [ ] Region: Same as other resources
-  - [ ] AI services name: `shadow-pivot-ai-services`
-  - [ ] Wait for deployment (3-5 minutes)
-- [ ] **Deploy AI Model**
-  - [ ] Go to [Azure AI Studio](https://ai.azure.com)
-  - [ ] Create project: `shadow-pivot-ai-project`
-  - [ ] Deployments → "+ Create deployment"
-  - [ ] Model: `gpt-35-turbo` or `gpt-4`
-  - [ ] Deployment name: `gpt-deployment`
-  - [ ] Deploy and wait for completion
-- [ ] **Note AI Details**
-  - [ ] Copy Endpoint URL: `________________`
-  - [ ] Copy API Key: `________________`
-  - [ ] Copy Deployment Name: `________________`
+- [x] **Create AI Hub & Services**
+  - [x] Search "Azure AI Studio" → Create new hub
+  - [x] Hub name: `shadow-pivot-ai-hub`
+  - [x] Resource Group: `ShadowPivot`
+  - [x] Region: Same as other resources
+  - [x] AI services name: `shadow-pivot-ai-services`
+  - [x] Wait for deployment (3-5 minutes)
+- [x] **Deploy AI Model**
+  - [x] Go to [Azure AI Studio](https://ai.azure.com)
+  - [x] Create project: `shadow-pivot-ai-project`
+  - [x] Deployments → "+ Create deployment"
+  - [x] Model: `gpt-4o-mini` (cost-effective option)
+  - [x] Deployment name: `gpt-4o-mini-deployment`
+  - [x] Deploy and wait for completion
+- [x] **Note AI Details**
+  - [x] Copy Hub Name: `shadow-pivot-ai-hub`
+  - [x] Copy Project Name: `shadow-pivot-ai-project`
+  - [x] Copy Deployment Name: `gpt-4o-mini-deployment`
+  - [x] Authentication Method: `Managed Identity (DefaultAzureCredential)`
 
 ### Phase 2: Web App Deployment (15-20 minutes)
 
@@ -958,7 +965,7 @@ shadowpivotstorage/
   - [ ] Web App → Configuration → Application settings
   - [ ] Add: `WEBSITES_PORT` = `3000`
   - [ ] Add: `NODE_ENV` = `production`
-  - [ ] Add: `AZURE_STORAGE_ACCOUNT_NAME` = `[your storage account name]`
+  - [ ] Add: `AZURE_STORAGE_ACCOUNT_NAME` = `shadowpivotaiagentstrg`
   - [ ] Save configuration (app will restart)
 
 ### Phase 3: Security & Permissions (10-15 minutes)
