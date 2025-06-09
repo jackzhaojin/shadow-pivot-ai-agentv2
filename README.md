@@ -228,8 +228,9 @@ az webapp log tail --name shadow-pivot-ai-agentv2 --resource-group ShadowPivot
 ## Documentation
 
 - **Infrastructure Setup**: See `infrastructure.md`
-- **Project Management**: See `project-management.mdc` 
+- **Project Management**: See `project-management.mdc`
 - **AI Agent PRD**: See `docs/ai-agent/prd.md`
+- **App Router Overview**: See `docs/app-router-overview.md`
 
 ---
 
