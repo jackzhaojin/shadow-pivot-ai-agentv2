@@ -523,6 +523,14 @@ This will host your Next.js app using the Docker image from GitHub Container Reg
    - **Value**: `production`
    - Click **"OK"**
 
+   **If using a Service Principal (Codex):**
+   - **Name**: `AZURE_CLIENT_ID`
+   - **Value**: `[service principal appId]`
+   - **Name**: `AZURE_TENANT_ID`
+   - **Value**: `[tenant id]`
+   - **Name**: `AZURE_CLIENT_SECRET`
+   - **Value**: `[secret]`
+
 3. **Add Optional Environment Variables** (add these when you're ready to integrate AI services):
 
    **For Azure AI Services:**
@@ -548,6 +556,9 @@ This will host your Next.js app using the Docker image from GitHub Container Reg
 | `WEBSITES_PORT` | ✅ Yes | Port for Next.js app | `3000` |
 | `NODE_ENV` | ✅ Yes | Node.js environment | `production` |
 | `AZURE_STORAGE_ACCOUNT_NAME` | ✅ Yes | Storage account name | `shadowpivotaiagentstrg` |
+| `AZURE_CLIENT_ID` | 🔑 SP | Service principal ID | `[app-id]` |
+| `AZURE_TENANT_ID` | 🔑 SP | Azure tenant ID | `[tenant-id]` |
+| `AZURE_CLIENT_SECRET` | 🔑 SP | Service principal secret | `[secret]` |
 | `AZURE_OPENAI_ENDPOINT` | 🔄 Later | AI services endpoint | `https://....openai.azure.com/` |
 | `AZURE_OPENAI_DEPLOYMENT_NAME` | 🔄 Later | AI model deployment | `gpt-4o-mini-deployment` |
 | `MCP_SERVER_URL` | 🔄 Future | MCP integration | `https://...` |
@@ -699,6 +710,23 @@ Use the Azure CLI and SDK’s `DefaultAzureCredential`.
 
 * Your Web App will use **Managed Identity** as described above.
 * Ensure role assignments are set for blob and AI access.
+
+### For Online Compiler (Service Principal)
+
+Use a service principal when managed identity or `az login` are not available.
+
+**Steps:**
+
+1. Create a service principal:
+   ```bash
+   az ad sp create-for-rbac --name shadow-pivot-ai-codex --role Contributor --scopes /subscriptions/<subscription-id>/resourceGroups/ShadowPivot
+   ```
+   Save the `appId`, `password`, and `tenant` values.
+2. Set these variables in your compiler environment (e.g., Codex):
+   - `AZURE_CLIENT_ID` = `appId`
+   - `AZURE_TENANT_ID` = `tenant`
+   - `AZURE_CLIENT_SECRET` = `password`
+3. `DefaultAzureCredential` will automatically use these values when present.
 
 ### For GitHub Actions (Required for Automated Deployment - OIDC Authentication)
 
