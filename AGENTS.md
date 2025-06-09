@@ -42,3 +42,19 @@ npm run build
 If a command fails due to environment limitations, mention it in the PR body.
 
 If `npm run lint` or `npm run build` fail with "next: not found", run `npm install` to set up dependencies.
+
+## Azure Authentication Troubleshooting
+If you encounter Azure authentication issues during development or testing:
+
+```bash
+# Run baseline Azure authentication test for triaging
+./baseline-testing/quick-auth-test.sh
+```
+
+Or run the authentication test directly:
+
+```bash
+node baseline-testing/azure-auth-test.js
+```
+
+This will help identify if the issue is with Azure credentials, network connectivity, or service configuration. Make sure you're logged in with `az login` before running these tests.

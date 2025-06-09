@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@azure/identity": "^4.10.0",
+    "@azure/keyvault-secrets": "^4.9.0",
     "@azure/openai": "^2.0.0",
     "@azure/storage-blob": "^12",
     "clsx": "^2",

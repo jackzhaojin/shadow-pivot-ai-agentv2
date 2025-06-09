@@ -6,7 +6,7 @@
 
 ### Overview:
 
-An AI-powered design-to-code agent embedded within a Next.js app, capable of generating visual UIs (graphs/tables) from Tesla sentiment and stock data via Cosmos DB. The app guides users through a multistep agent pipeline, enabling retryable design/code cycles. The project leverages MCP (Model Context Protocol), Azure Blob Storage, and Azure AI Foundry for context and persistence.
+An AI-powered design-to-code agent embedded within a Next.js app, capable of generating visual UIs (graphs/tables) for web apps. The app guides users through a multistep agent pipeline, enabling retryable design/code cycles.  Azure Blob Storage, and Azure AI Foundry for context and persistence.
 
 ---
 
@@ -97,8 +97,7 @@ An AI-powered design-to-code agent embedded within a Next.js app, capable of gen
 
 /hooks                   ← Global shared custom hooks
 
-/lib                     ← Core logic like API clients, Cosmos SDK, Foundry wrapper
-  cosmosClient.ts
+/lib                     ← Core logic like API clients, Foundry wrapper
   aiClient.ts
   graphUtils.ts
 
