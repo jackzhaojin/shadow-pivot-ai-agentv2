@@ -1,6 +1,43 @@
 import Image from "next/image";
+import { checkAzureHealth, validateAzureEnvironment } from "@/lib/azureClient";
+import { ClientSideDemo } from "@/components/azure/ClientSideDemo";
 
-export default function Home() {
+// Server-side function to test Azure connections
+async function getAzureStatus() {
+  try {
+    // Validate environment first
+    const envValidation = validateAzureEnvironment();
+    if (!envValidation.isValid) {
+      return {
+        storage: 'Configuration Error',
+        ai: 'Configuration Error',
+        error: `Missing environment variables: ${envValidation.missing.join(', ')}`,
+        timestamp: new Date().toISOString()
+      };
+    }
+
+    // Check Azure service health
+    const health = await checkAzureHealth();
+    
+    return {
+      storage: health.storage.status === 'ok' ? 'Connected' : `Error: ${health.storage.message}`,
+      ai: health.ai.status === 'ok' ? `Connected - ${health.ai.message}` : `Error: ${health.ai.message}`,
+      timestamp: new Date().toISOString(),
+      environment: envValidation.config
+    };
+  } catch (error) {
+    return {
+      storage: 'Error',
+      ai: 'Error',
+      error: error instanceof Error ? error.message : 'Unknown error',
+      timestamp: new Date().toISOString()
+    };
+  }
+}
+
+export default async function Home() {
+  // Server-side Azure integration test
+  const azureStatus = await getAzureStatus();
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
@@ -12,6 +49,43 @@ export default function Home() {
           height={38}
           priority
         />
+        
+        {/* Azure SSR Integration Status */}
+        <div className="w-full max-w-lg p-6 border rounded-lg bg-gray-50 dark:bg-gray-900">
+          <h2 className="text-lg font-semibold mb-4">Azure SSR Integration Status</h2>
+          <div className="space-y-2 text-sm">
+            <div className="flex justify-between">
+              <span>Storage:</span>
+              <span className={azureStatus.storage.includes('Connected') ? 'text-green-600' : 'text-red-600'}>
+                {azureStatus.storage}
+              </span>
+            </div>
+            <div className="flex justify-between">
+              <span>AI Service:</span>
+              <span className={azureStatus.ai.includes('Connected') ? 'text-green-600' : 'text-red-600'}>
+                {azureStatus.ai}
+              </span>
+            </div>
+            {azureStatus.environment && (
+              <div className="mt-3 pt-3 border-t text-xs text-gray-600 dark:text-gray-400">
+                <div><strong>Storage Account:</strong> {azureStatus.environment.storageAccount}</div>
+                <div><strong>AI Endpoint:</strong> {azureStatus.environment.aiEndpoint}</div>
+              </div>
+            )}
+            <div className="text-xs text-gray-500 mt-2">
+              Last checked: {new Date(azureStatus.timestamp).toLocaleString()}
+            </div>
+            {azureStatus.error && (
+              <div className="text-xs text-red-600 mt-2">
+                Error: {azureStatus.error}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Client-Side Demo Component */}
+        <ClientSideDemo />
+
         <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
           <li className="mb-2 tracking-[-.01em]">
             Get started by editing{" "}
