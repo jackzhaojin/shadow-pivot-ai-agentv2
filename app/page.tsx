@@ -35,6 +35,9 @@ async function getAzureStatus() {
   }
 }
 
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
 export default async function Home() {
   // Server-side Azure integration test
   const azureStatus = await getAzureStatus();
