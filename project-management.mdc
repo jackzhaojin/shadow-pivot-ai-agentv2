@@ -60,6 +60,8 @@
 ### 1.3 Azure Infrastructure (Manual Setup) ✅ COMPLETED
 **Priority**: HIGH - Parallel with GitHub Actions
 
+#### 1.3a Azure Storage Account Setup ✅ COMPLETED
+
 - [x] Azure Storage Account setup
   - [x] Create Azure Storage Account (Hot v2 tier)
   - [x] Configure blob container for executions
@@ -73,6 +75,8 @@
 - CLI Testing: ✅ Upload/download operations verified with az login
 - Authentication: Storage Blob Data Contributor role assigned
 - Status: Ready for application integration
+
+#### 1.3b Azure AI Foundry Setup ✅ COMPLETED
 
 - [x] Azure AI Foundry setup
   - [x] Create Azure AI Foundry workspace
@@ -88,6 +92,8 @@
 - Status: Ready for application integration via managed services
 - AI Testing: ✅ Chat completion API verified with managed identity auth
 
+#### 1.3c Managed Identity Configuration ✅ COMPLETED
+
 - [x] Managed Identity configuration
   - [x] Create user-assigned managed identity
   - [x] Assign permissions to Storage Account
@@ -100,6 +106,8 @@
 - AI Foundry permissions: Cognitive Services User role assigned
 - DefaultAzureCredential: Configured for seamless authentication
 - Status: Ready for production deployment
+
+#### 1.3d Azure App Service Setup ✅ COMPLETED
 
 - [x] Azure App Service setup
   - [x] Create App Service with container support
@@ -117,6 +125,8 @@
 - Custom domain: Not needed for MVP deployment
 - Status: Ready for automated deployments via GitHub Actions
 
+#### 1.3e GitHub Integration ✅ COMPLETED
+
 - [x] GitHub integration
   - [x] Set up deployment center in Azure
   - [x] Link to GitHub repository
@@ -129,8 +139,10 @@
 - Web App auto-restarts on GitHub image updates
 - Status: Fully functional automated deployment
 
-### 1.4 Azure Integration Testing ✅ SECTION A COMPLETE
+### 1.4 Azure Integration Testing
 **Priority**: HIGH - Validation step before deployment
+
+#### 1.4a Basic Azure Connection Tests ✅ COMPLETED
 
 - [x] Basic Azure connection tests ✅ COMPLETED
   - [x] Create simple API route to test Azure Storage connection
@@ -151,12 +163,16 @@
 - Status: All Azure services accessible and functional locally
 - **Commit**: 9d043c7 - Azure integration testing infrastructure complete
 
+#### 1.4b Next.js SSR Azure Integration
+
 - [ ] Next.js SSR Azure integration
   - [ ] Add Azure SDK dependencies to package.json
   - [ ] Create lib/azureClient.ts for storage operations
   - [ ] Create lib/aiClient.ts for AI Foundry operations
   - [ ] Test server-side Azure calls in page.tsx
   - [ ] Verify no client-side Azure SDK usage
+
+#### 1.4c End-to-End Deployment Testing
 
 - [ ] End-to-end deployment testing
   - [ ] Push code to GitHub with Azure integration
