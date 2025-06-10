@@ -1,9 +1,11 @@
 'use client';
 import { useState } from 'react';
 import { useAgentFlow } from '@/providers/AgentFlowProvider';
+import { useUserGuid } from '@/providers/UserGuidProvider';
 
 export default function AgentFlow() {
   const { steps, currentStep, completed, completeStep, abort, aborted } = useAgentFlow();
+  const userGuid = useUserGuid();
   const [brief, setBrief] = useState('');
 
   const startFlow = () => {
@@ -67,6 +69,7 @@ export default function AgentFlow() {
             AI Agent Flow
           </h1>
           <p className="text-gray-600 text-lg">Transform your ideas into beautiful, functional UI components</p>
+          <div className="mt-2 text-sm text-gray-500">User ID: {userGuid}</div>
         </div>
 
         {/* Creative Brief Section */}
