@@ -258,3 +258,17 @@ npx create-next-app@latest
 * Which graph library will be selected (leave flexible for now)
 * How to handle authentication/token rotation for blob SAS
 * Cost optimization for blob cleanup policies
+
+---
+
+### Test-Driven Development & Validation Approach:
+
+* The project will follow a **test-driven development (TDD)** methodology.
+* Emphasis is on **integration testing** and **end-to-end validation** of actual functionality, rather than isolated unit tests.
+* Tests should validate real user flows, agent pipeline execution, and integration with external services (e.g., Azure AI Foundry, Azure Blob Storage).
+* Automated tests should cover:
+  * Full agent pipeline execution (from creative brief to artifact download)
+  * Visual execution tracking and UI state transitions
+  * API and storage integration (mocked or real, as appropriate)
+  * Accessibility and usability of generated UIs
+* Unit testing is **not required** unless it directly supports integration or functional validation.
