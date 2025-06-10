@@ -1,5 +1,5 @@
 const assert = require('assert');
-const { getOrCreateUserGuid } = require('../dist-test/userGuid.js');
+const { getOrCreateUserGuid } = require('./userGuid');
 
 function createMemoryStorage() {
   const store = {};
