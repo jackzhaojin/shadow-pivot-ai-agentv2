@@ -1,5 +1,10 @@
 'use client';
 import { createContext, useContext, useState } from 'react';
+import {
+  type ExecutionTrace,
+  createExecutionTrace,
+  logEvent
+} from '@/utils/execution';
 
 export const agentSteps = [
   'Design Concept Generation',
@@ -15,8 +20,10 @@ interface AgentFlowContextValue {
   steps: string[];
   currentStep: number;
   completed: Set<number>;
+  executionTrace: ExecutionTrace | null;
   setCurrentStep: (i: number) => void;
   completeStep: (i: number) => void;
+  startExecution: () => void;
   abort: () => void;
   aborted: boolean;
 }
@@ -27,18 +34,48 @@ export function AgentFlowProvider({ children }: { children: React.ReactNode }) {
   const [currentStep, setCurrentStep] = useState(0);
   const [completed, setCompleted] = useState<Set<number>>(new Set());
   const [aborted, setAborted] = useState(false);
+  const [executionTrace, setExecutionTrace] = useState<ExecutionTrace | null>(
+    null
+  );
+
+  const startExecution = () => {
+    const trace = createExecutionTrace();
+    setExecutionTrace(trace);
+    setAborted(false);
+    setCurrentStep(0);
+    setCompleted(new Set());
+    logEvent(trace, 'Execution started');
+  };
 
   const completeStep = (i: number) => {
     setCompleted(prev => new Set(prev).add(i));
     setCurrentStep(i + 1);
+    if (executionTrace) {
+      logEvent(executionTrace, `${agentSteps[i]} completed`);
+    }
   };
 
   const abort = () => {
     setAborted(true);
+    if (executionTrace) {
+      logEvent(executionTrace, 'Execution aborted');
+    }
   };
 
   return (
-    <AgentFlowContext.Provider value={{ steps: agentSteps, currentStep, completed, setCurrentStep, completeStep, abort, aborted }}>
+    <AgentFlowContext.Provider
+      value={{
+        steps: agentSteps,
+        currentStep,
+        completed,
+        executionTrace,
+        setCurrentStep,
+        completeStep,
+        startExecution,
+        abort,
+        aborted
+      }}
+    >
       {children}
     </AgentFlowContext.Provider>
   );

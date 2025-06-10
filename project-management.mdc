@@ -299,19 +299,19 @@
   - [x] **Validate by running the defined tests and confirming all pass**
 
 - **3.1.3 Execution Tracking & Display (Client-Side MVP)**
-  - [ ] **Define integration/functional tests for execution tracking and timeline UI** (e.g., test execution ID tracking, timeline rendering, event logging)
-  - [ ] Implement basic client-side state to track current execution ID (can be a timestamp or simple counter per session initially).
-  - [ ] Implement a collapsible timeline UI component.
+  - [x] **Define integration/functional tests for execution tracking and timeline UI** (e.g., test execution ID tracking, timeline rendering, event logging)
+  - [x] Implement basic client-side state to track current execution ID (can be a timestamp or simple counter per session initially).
+  - [x] Implement a collapsible timeline UI component.
     - Display start/end timestamps for major agent stages (e.g., Design, Figma, Code).
     - Log key events or decisions in the timeline.
-  - [ ] Store a simple execution trace log (JSON object) in client-side state during the agent run.
-  - [ ] **Validate by running the defined tests and confirming all pass**
+  - [x] Store a simple execution trace log (JSON object) in client-side state during the agent run.
+  - [x] **Validate by running the defined tests and confirming all pass**
 
 - **3.1.4 Download Artifacts (Initial Setup)**
-  - [ ] **Define integration/functional tests for artifact download** (e.g., test ZIP packaging, download trigger, file contents)
-  - [ ] UI button to trigger download.
-  - [ ] Placeholder function for packaging artifacts into a ZIP file (actual zipping and blob retrieval will be in 3.2.8).
-  - [ ] **Validate by running the defined tests and confirming all pass**
+  - [x] **Define integration/functional tests for artifact download** (e.g., test ZIP packaging, download trigger, file contents)
+  - [x] UI button to trigger download.
+  - [x] Placeholder function for packaging artifacts into a ZIP file (actual zipping and blob retrieval will be in 3.2.8).
+  - [x] **Validate by running the defined tests and confirming all pass**
 
 ### 3.2 AI Integration & Core Logic (MVP)
 **Complexity**: High | **Effort**: Very High

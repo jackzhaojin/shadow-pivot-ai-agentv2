@@ -1,15 +1,19 @@
 'use client';
 import { useState } from 'react';
 import { useAgentFlow } from '@/providers/AgentFlowProvider';
+import { createArtifactZipPlaceholder } from '@/utils/download';
+import { formatDate } from '@/utils/format';
 import { useUserGuid } from '@/providers/UserGuidProvider';
 
 export default function AgentFlow() {
-  const { steps, currentStep, completed, completeStep, abort, aborted } = useAgentFlow();
+  const { steps, currentStep, completed, completeStep, abort, aborted, startExecution, executionTrace } = useAgentFlow();
   const userGuid = useUserGuid();
   const [brief, setBrief] = useState('');
+  const [showTimeline, setShowTimeline] = useState(false);
 
   const startFlow = () => {
     if (currentStep === 0) {
+      startExecution();
       completeStep(0);
     }
   };
@@ -18,6 +22,20 @@ export default function AgentFlow() {
     if (currentStep < steps.length) {
       completeStep(currentStep);
     }
+  };
+
+  const handleDownload = () => {
+    if (!executionTrace) return;
+    const content = createArtifactZipPlaceholder({
+      trace: JSON.stringify(executionTrace, null, 2)
+    });
+    const blob = new Blob([content], { type: 'application/zip' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `execution-${executionTrace.executionId}.zip`;
+    a.click();
+    URL.revokeObjectURL(url);
   };
 
   const handleAbort = () => abort();
@@ -98,8 +116,31 @@ export default function AgentFlow() {
                 >
                   {brief.trim() ? '🚀 Start AI Agent Flow' : 'Enter your creative brief to begin'}
                 </button>
-              </div>
-            </div>
+        </div>
+      </div>
+
+      {executionTrace && (
+        <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-4 mb-8">
+          <button
+            onClick={() => setShowTimeline(!showTimeline)}
+            className="text-sm text-blue-600 underline mb-2"
+          >
+            {showTimeline ? 'Hide Timeline' : 'Show Timeline'}
+          </button>
+          {showTimeline && (
+            <ul className="space-y-1">
+              {executionTrace.timeline.map((e, idx) => (
+                <li key={idx} className="text-sm text-gray-700">
+                  <span className="font-mono text-gray-500 mr-2">
+                    {formatDate(new Date(e.timestamp))}
+                  </span>
+                  {e.message}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
           </div>
         )}
 
@@ -191,7 +232,13 @@ export default function AgentFlow() {
               </svg>
             </div>
             <h3 className="text-xl font-semibold text-emerald-900 mb-2">Flow Complete!</h3>
-            <p className="text-emerald-700">Your AI agent flow has completed successfully. Your artifacts are ready for download.</p>
+            <p className="text-emerald-700 mb-4">Your AI agent flow has completed successfully. Your artifacts are ready for download.</p>
+            <button
+              onClick={handleDownload}
+              className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-8 rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
+            >
+              Download Artifacts
+            </button>
           </div>
         )}
       </div>
