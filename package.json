@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test:user-guid": "tsc utils/userGuid.ts --target ES2017 --module commonjs --outDir dist-test && node tests/user-guid.test.js"
   },
   "dependencies": {
     "@azure/identity": "^4.10.0",
@@ -29,6 +30,7 @@
     "eslint": "^9",
     "eslint-config-next": "15.3.3",
     "tailwindcss": "^4",
+    "ts-node": "^10.9.2",
     "typescript": "^5"
   }
 }
