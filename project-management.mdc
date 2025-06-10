@@ -275,10 +275,10 @@
 **Complexity**: Medium | **Effort**: High
 
 - **3.1.1 Basic Agent Flow UI (Sequential)**
-  - [ ] Create main Next.js page/route for the AI Agent experience (e.g., `/agent`).
-  - [ ] Develop layout for multi-step agent process.
-  - [ ] Implement UI component for user to input "Creative Brief".
-  - [ ] Build sequential display for agent steps:
+  - [x] Create main Next.js page/route for the AI Agent experience (e.g., `/agent`).
+  - [x] Develop layout for multi-step agent process.
+  - [x] Implement UI component for user to input "Creative Brief".
+  - [x] Build sequential display for agent steps:
     - Design Concept Generation
     - Design Evaluation
     - Figma Spec Generation (single, MVP)
@@ -286,9 +286,9 @@
     - Code Generation (single, MVP)
     - Code Selection / Confirmation
     - Download Artifacts
-  - [ ] Implement basic visual indicators for active/completed steps (e.g., text status, simple highlighting).
-  - [ ] Add a global "Abort" button to stop the current agent flow.
-  - [ ] Basic client-side state management for the agent flow (e.g., React Context or Zustand/Jotai).
+  - [x] Implement basic visual indicators for active/completed steps (e.g., text status, simple highlighting).
+  - [x] Add a global "Abort" button to stop the current agent flow.
+  - [x] Basic client-side state management for the agent flow (e.g., React Context or Zustand/Jotai).
 
 - **3.1.2 User Identity Management (Client-Side GUID)**
   - [ ] Generate a unique GUID on the client-side for the user (if one doesn't exist in local storage).
@@ -404,10 +404,12 @@
 - **Phase 2: Foundation Setup COMPLETE** - Project structure, SP setup, and Azure service preparation documentation finalized.
   - Service Principal for Online Compiler configured.
   - PRD-aligned folder structure and TS configs implemented.
-  - `infrastructure.md` guide for Azure resources is complete and verified.
+- `infrastructure.md` guide for Azure resources is complete and verified.
+
+- **3.1.1 Basic Agent Flow UI (Sequential) COMPLETE** - Basic sequential UI with abort control and context state.
 
 ### 🎯 Next When Time Allows (Current Focus: Phase 3 MVP)
-1.  **3.1.1 Basic Agent Flow UI (Sequential)** - Build the foundational UI for the agent.
+1.  ~~**3.1.1 Basic Agent Flow UI (Sequential)** - Build the foundational UI for the agent.~~ ✅ Completed
 2.  **3.1.2 User Identity Management (Client-Side GUID)** - Implement user identification.
 3.  **3.2.1 Azure AI Foundry Service Connection** - Ensure backend can talk to AI.
 4.  **3.2.2 Step 1: Design Concept Generation (LLM)** - First AI step.
