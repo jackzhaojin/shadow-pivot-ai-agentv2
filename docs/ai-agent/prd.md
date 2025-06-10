@@ -15,7 +15,6 @@ An AI-powered design-to-code agent embedded within a Next.js app, capable of gen
 * Use AI to propose, evaluate, and implement UI features with visual execution tracking.
 * Support a step-based AI agent with a visual trace and execution log.
 * Enable Figma spec download and feature code download.
-* Integrate with MCP server and Azure Blob storage for state and execution data.
 * Support both SSR and CSR within Next.js 15.1.8 using the App Router.
 
 ---
@@ -162,7 +161,6 @@ npx create-next-app@latest
 
 #### Backend & AI:
 
-* AI Agent: Powered via **MCP client/server** with access to Azure data.
 * AI Integration: Uses **Azure AI Foundry** if available.
 * Authentication:
 
@@ -211,7 +209,6 @@ npx create-next-app@latest
 * ✅ Full run archive export with execution trace
 * ✅ Execution storage in Azure Blob
 * ✅ Parallel generation steps (3 Figma specs + 3 code implementations)
-* ✅ MCP client/server in container under shared ASP
 * ✅ Azure AI Foundry integration (if possible)
 * ✅ Managed Identity on Azure, DefaultAzureCredential for local
 * ✅ No retries or edits for failed steps (yet)

@@ -55,184 +55,54 @@ A Next.js application for AI-powered agent workflows with Azure integration, des
 
 4. **Open your browser**: [http://localhost:3000](http://localhost:3000)
 
-## Azure Integration Testing
-
-This project includes comprehensive Azure connection testing capabilities.
-
-### Interactive Test Interface
-
-Visit [http://localhost:3000/test-azure](http://localhost:3000/test-azure) to access the interactive Azure testing interface, which provides:
-
-- **Real-time connection testing** for Azure Storage and AI Foundry
-- **Detailed success/failure reporting** with error diagnostics
-- **Environment configuration verification**
-- **Step-by-step testing instructions**
-
-### API Endpoints for Testing
-
-#### Azure Storage Test
-```bash
-curl http://localhost:3000/api/test-storage
-```
-Tests:
-- ✅ Storage account accessibility
-- ✅ Container existence (`executions`)
-- ✅ Blob upload/download/delete operations
-- ✅ DefaultAzureCredential authentication
-
-#### Azure AI Foundry Test
-```bash
-curl http://localhost:3000/api/test-ai
-```
-Tests:
-- ✅ AI service endpoint connectivity
-- ✅ GPT-4o-mini model deployment access
-- ✅ Chat completion functionality
-- ✅ Managed identity authentication
-
-### Automated Testing Script
-
-Run the comprehensive test suite:
-```bash
-bash test-azure-connections.sh
-```
-
-This script verifies:
-- Development server accessibility
-- Azure Storage connection
-- Azure AI Foundry connection  
-- Azure CLI authentication status
-
-### Helper Libraries
-
-**Azure Storage Client** (`lib/storageClient.ts`):
-```typescript
-import { getBlobServiceClient, getExecutionsContainer } from '@/lib/storageClient';
-```
-
-**Azure AI Client** (`lib/aiClient.ts`):
-```typescript
-import { getAIClient } from '@/lib/aiClient';
-```
-
-## Azure Services Configuration
-
-### Required Azure Resources
-
-1. **Azure Storage Account**: `shadowpivotaiagentstrg`
-   - Container: `executions` (private access)
-   - Authentication: Storage Blob Data Contributor role
-
-2. **Azure AI Foundry**: 
-   - Workspace with OpenAI integration
-   - Model: GPT-4o-mini deployment
-   - Authentication: Cognitive Services User role
-
-3. **Managed Identity**:
-   - User-assigned managed identity
-   - Assigned to Azure App Service
-   - Permissions for both Storage and AI services
-
-### Authentication Method
-
-This project uses **DefaultAzureCredential** which automatically handles:
-- ✅ **Local Development**: Azure CLI authentication (`az login`)
-- ✅ **Production**: Managed Identity authentication
-- ✅ **No API Keys Required**: Seamless credential management
-
-## Deployment
-
-### Docker Containerization
-
-Build and test locally:
-```bash
-docker build -t shadow-pivot-ai-agentv2 .
-docker run -p 3000:3000 shadow-pivot-ai-agentv2
-```
-
-### GitHub Actions CI/CD
-
-Automated deployment pipeline:
-- **Trigger**: Push to `main` branch
-- **Registry**: GitHub Container Registry (GHCR)
-- **Target**: Azure App Service with container support
-- **Authentication**: OIDC with Azure
-
-## Project Structure
+## Project Structure Overview
 
 ```
-app/
-├── api/
-│   ├── test-storage/route.ts    # Azure Storage testing endpoint
-│   └── test-ai/route.ts         # Azure AI Foundry testing endpoint
-├── test-azure/page.tsx          # Interactive testing interface
-lib/
-├── storageClient.ts             # Azure Storage helpers
-└── aiClient.ts                  # Azure AI client helpers
-```
-
-## Testing & Validation
-
-### Must Pass Before Deployment
-
-1. **Local Azure connections working**:
-   ```bash
-   curl http://localhost:3000/api/test-storage
-   curl http://localhost:3000/api/test-ai
-   ```
-
-2. **Interactive tests passing**: Visit `/test-azure` and verify all connections
-
-3. **Azure CLI authenticated**: `az account show` returns your subscription
-
-4. **Docker build successful**: Container runs without errors
-
-## Troubleshooting
-
-### Common Issues
-
-**"DefaultAzureCredential failed"**:
-- Run `az login` and verify authentication
-- Check `az account show` displays correct subscription
-
-**"Storage account not found"**:
-- Verify storage account name in environment variables
-- Check RBAC permissions in Azure Portal
-
-**"Insufficient permissions"**:
-- Ensure proper role assignments:
-  - Storage Blob Data Contributor (Storage Account)
-  - Cognitive Services User (AI Services)
-
-### Debug Commands
-
-```bash
-# Check Azure authentication
-az account show
-
-# Test storage access via CLI
-az storage blob list --account-name shadowpivotaiagentstrg --container-name executions --auth-mode login
-
-# View container logs (if deployed)
-az webapp log tail --name shadow-pivot-ai-agentv2 --resource-group ShadowPivot
+app/                     # Next.js App Router: pages, API routes
+├── api/                 # API endpoints (e.g., Azure testing)
+├── test-azure/          # Interactive Azure testing UI
+lib/                     # Core logic: Azure clients, utilities
+components/              # Reusable React components
+features/                # Feature-specific modules
+docs/                    # Project documentation
+  ├── ai-agent/          # AI Agent specific documents (e.g., PRD)
+  ├── ai-log/            # Logs from AI agent development sessions
+  └── ...                # Other documentation files
+infrastructure.md       # Azure infrastructure setup guide
+project-management.mdc   # Task management and phase planning
+AGENTS.md                # Repository guidelines for contributors
+...                      # Other configuration files (Docker, Next.js, TS, etc.)
 ```
 
 ## Development Workflow
 
-1. **Make changes** to your code
-2. **Test Azure connections** via `/test-azure`
-3. **Verify API endpoints** work correctly
-4. **Test Docker build** (if needed)
-5. **Push to GitHub** for automated deployment
+1. **Make changes** to your code.
+2. **Test Azure connections** locally (see [Azure Integration Guide](./docs/AZURE_INTEGRATION.md)).
+3. **Verify API endpoints** work correctly.
+4. **Test Docker build** (if needed, see [Deployment Guide](./docs/DEPLOYMENT.md)).
+5. **Push to GitHub** for automated deployment.
 
 ## Documentation
 
-- **Infrastructure Setup**: See `infrastructure.md`
-- **Project Management**: See `project-management.mdc`
-- **AI Agent PRD**: See `docs/ai-agent/prd.md`
-- **App Router Overview**: See `docs/app-router-overview.md`
+For more detailed information, please refer to the following documents:
+
+- **Core Project Documents**
+  - [AI Agent PRD](./docs/ai-agent/prd.md): Product Requirements for the AI Agent.
+  - [Project Management](./project-management.mdc): Task breakdown, phases, and progress.
+  - [Repository Guidelines (AGENTS.md)](./AGENTS.md): Guidelines for contributing to this repository.
+- **Technical Guides**
+  - [Azure Infrastructure Setup](./infrastructure.md): Guide to setting up necessary Azure resources.
+  - [Azure Integration Guide](./docs/AZURE_INTEGRATION.md): Details on Azure service configuration and testing.
+  - [Deployment Guide](./docs/DEPLOYMENT.md): Information on Docker and GitHub Actions CI/CD.
+  - [Troubleshooting Guide](./docs/TROUBLESHOOTING.md): Solutions for common issues.
+  - [App Router Overview](./docs/app-router-overview.md): Information about the Next.js App Router.
+- **Development & Testing Specifics**
+  - [Baseline Testing README](./baseline-testing/README.md): Information on baseline testing scripts.
+- **Development Logs & Notes** (primarily for historical context)
+  - [Session Logs](./docs/ai-log/): Contains logs from various development sessions.
+  - [SSR Integration Notes](./docs/session-1-4b-ssr-integration.md)
 
 ---
 
-**Status**: ✅ Azure integration testing complete, ready for deployment pipeline testing
+**Status**: ✅ Full CI/CD pipeline operational. Core feature development (Phase 3) is active.
 
