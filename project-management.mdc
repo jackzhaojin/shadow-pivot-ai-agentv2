@@ -236,9 +236,10 @@
 **Status**: Not Started | **Target**: Prepare for feature development
 
 ### 2.1 Service Principal Setup (Online Compiler)
-- [ ] Create service principal with `az ad sp create-for-rbac`
-- [ ] Add `AZURE_CLIENT_ID` and `AZURE_TENANT_ID` variables to Codex
-- [ ] **Configure `AZURE_CLIENT_SECRET` in Codex**
+- [x] Create service principal with `az ad sp create-for-rbac`
+- [x] Add `AZURE_CLIENT_ID` and `AZURE_TENANT_ID` variables to Codex
+- [x] **Configure `AZURE_CLIENT_SECRET` in Codex**
+  - Verified credentials using `./baseline-testing/quick-auth-test.sh`
 
 ### 2.2 Project Structure Enhancement
 - [x] Implement folder structure from PRD

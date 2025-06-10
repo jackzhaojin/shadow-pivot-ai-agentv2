@@ -7,7 +7,7 @@ This folder contains all baseline system tests for the TSLA AI UI Agent project.
 Before running the tests, ensure you have:
 
 1. **Node.js** installed and in your PATH
-2. **Azure CLI** installed and authenticated (`az login`)
+2. **Azure CLI** installed and authenticated (`az login`) **or** service principal environment variables set (`AZURE_CLIENT_ID`, `AZURE_TENANT_ID`, `AZURE_CLIENT_SECRET`)
 3. **Development server** running for API tests (`npm run dev`)
 
 ## Test Scripts

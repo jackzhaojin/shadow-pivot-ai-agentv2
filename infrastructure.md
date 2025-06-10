@@ -727,6 +727,7 @@ Use a service principal when managed identity or `az login` are not available.
    - `AZURE_TENANT_ID` = `tenant`
    - `AZURE_CLIENT_SECRET` = `password`
 3. `DefaultAzureCredential` will automatically use these values when present.
+4. Verify the credentials by running `./baseline-testing/quick-auth-test.sh`.
 
 ### For GitHub Actions (Required for Automated Deployment - OIDC Authentication)
 
