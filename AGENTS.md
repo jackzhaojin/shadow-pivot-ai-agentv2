@@ -28,7 +28,7 @@ Use the structure outlined in the PRD when adding new code:
 - Leave a blank line, then provide additional context with bullet points if needed.
 
 ## Pull Requests
-- Summarize major changes and reference the PRD or project-management document when relevant.
+- Summarize major changes and reference the PRD or project-management.mdc document when relevant.
 - Provide the results of the programmatic checks listed below.
 
 ## Programmatic Checks
@@ -57,4 +57,5 @@ Or run the authentication test directly:
 node baseline-testing/azure-auth-test.js
 ```
 
-This will help identify if the issue is with Azure credentials, network connectivity, or service configuration. Make sure you're logged in with `az login` before running these tests.
+This will help identify if the issue is with Azure credentials, network connectivity, or service configuration. 
+AZ login does not work, use service principle credentials provided AZURE_CLIENT_SECRET

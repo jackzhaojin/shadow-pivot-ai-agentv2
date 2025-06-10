@@ -2,19 +2,19 @@
 
 ---
 
-### Project Title: TSLA AI UI Agent
+### Project Title: AI UI Agent with Visual Execution
 
 ### Overview:
 
-An AI-powered design-to-code agent embedded within a Next.js app, capable of generating visual UIs (graphs/tables) for web apps. The app guides users through a multistep agent pipeline, enabling retryable design/code cycles.  Azure Blob Storage, and Azure AI Foundry for context and persistence.
+An AI-powered design-to-code agent embedded within a Next.js app, capable of generating visual UIs (graphs/tables) for web apps. The app guides users through a multistep agent pipeline with visual execution tracking, enabling retryable design/code cycles. Integrates with Azure Blob Storage and Azure AI Foundry for context and persistence.
 
 ---
 
 ### Goals:
 
-* Use AI to propose, evaluate, and implement UI features based on TSLA sentiment and stock data.
+* Use AI to propose, evaluate, and implement UI features with visual execution tracking.
 * Support a step-based AI agent with a visual trace and execution log.
-* Enable feature code download and future PR automation.
+* Enable Figma spec download and feature code download.
 * Integrate with MCP server and Azure Blob storage for state and execution data.
 * Support both SSR and CSR within Next.js 15.1.8 using the App Router.
 
@@ -27,36 +27,70 @@ An AI-powered design-to-code agent embedded within a Next.js app, capable of gen
 1. **Design Concept Generation**
 
    * User enters a creative brief (encouraged to pre-collaborate with AI tools like ChatGPT).
-   * LLM generates a clean, modifiable UI design concept (graphs + tables).
+   * LLM generates multiple clean, modifiable UI design concepts (graphs + tables).
 
 2. **Design Evaluation**
 
    * LLM scores and ranks multiple design concepts based on clarity, alignment with data types, and modifiability.
 
-3. **Figma Spec Generation**
+3. **Parallel Figma Spec Generation**
 
-   * Multiple figma-compatible specs generated in parallel.
+   * **3 Figma specs generated in parallel** - displayed in 3 concurrent processing boxes.
+   * Agent tests and validates each Figma spec for usability and design quality.
+   * Real-time visual feedback shows progress for each parallel generation.
 
 4. **Spec Selection**
 
    * LLM selects the most usable spec based on effort vs. clarity tradeoffs.
 
-5. **Code Generation**
+5. **Parallel Code Generation**
 
-   * Generates a full Next.js + TypeScript feature (React components, Tailwind).
-   * Self-contained feature folder with minimal routing logic.
+   * **3 code implementations generated in parallel** - displayed in 3 concurrent processing boxes.
+   * Generates full Next.js + TypeScript features (React components, Tailwind).
+   * Agent tests each generated code implementation for functionality and quality.
+   * Self-contained feature folders with minimal routing logic.
 
-6. **Download Artifacts**
+6. **Code Selection & Testing**
 
-   * Code is downloadable.
+   * Agent evaluates and selects the best code implementation from the 3 generated options.
+   * **Automated testing criteria**: Code quality, functionality, accessibility compliance, and component structure.
+   * **Aggregate scoring system**: Combines multiple evaluation metrics for optimal selection.
+
+7. **Download Artifacts**
+
+   * **ZIP archive download**: Complete package containing selected Figma specs and code.
+   * **Full execution trace**: Detailed log of all agent decisions and evaluations.
+   * **Future enhancement**: Individual file preview capabilities (post-MVP).
    * Execution results stored per-user in Blob Storage: `userId/executionId/`.
 
 #### User Experience:
 
 * Users see visual agent flow with active step indicators (e.g., blinking/highlighted).
 * A collapsible timeline shows step start/end with timestamps.
+* **Parallel Processing Display**: 3 boxes showing concurrent Figma spec generation and 3 boxes for code generation.
+* **Abort Control**: Users can abort the entire agent flow at any time with a prominent abort button.
 * Export full execution (Figma spec + code + summary trace).
 * Users can revisit past runs via execution history.
+
+#### Agent Testing & Evaluation Criteria:
+
+**Figma Spec Testing:**
+* Design clarity and visual hierarchy
+* Component structure and reusability
+* Alignment with modern UI/UX principles
+* Technical feasibility for code generation
+
+**Code Implementation Testing:**
+* **Functionality**: Components render correctly and handle interactions
+* **Code Quality**: Clean, maintainable TypeScript/React code
+* **Accessibility**: WCAG compliance and semantic HTML
+* **Performance**: Optimized rendering and bundle size
+* **Structure**: Proper component organization and routing integration
+
+**Aggregate Scoring System:**
+* Weighted evaluation combining all testing criteria
+* Automatic selection of highest-scoring implementation
+* Detailed scoring breakdown available in execution trace
 
 ---
 
@@ -160,20 +194,23 @@ npx create-next-app@latest
 
 #### Storage Format:
 
-* Design specs: JSON + PNG previews (if applicable)
-* Code bundles: Zip archive
-* Execution metadata: Trace log JSON + agent state JSON
+* **Design specs**: JSON + PNG previews (if applicable)
+* **Code bundles**: ZIP archive containing complete feature implementation
+* **Execution metadata**: Trace log JSON + agent state JSON + scoring breakdown
+* **Download package**: Single ZIP file with all artifacts and execution details
 
 ---
 
 ### MVP Scope:
 
 * ✅ Manual creative brief input
-* ✅ Agent flow w/ visual indicators
-* ✅ Code download (not GitHub PR)
-* ✅ Full run archive export
+* ✅ Agent flow w/ visual indicators and abort functionality
+* ✅ **3-box parallel processing display** for Figma and code generation
+* ✅ **Aggregate scoring system** for automatic selection
+* ✅ **ZIP download** of complete artifacts (not GitHub PR)
+* ✅ Full run archive export with execution trace
 * ✅ Execution storage in Azure Blob
-* ✅ Parallel generation steps
+* ✅ Parallel generation steps (3 Figma specs + 3 code implementations)
 * ✅ MCP client/server in container under shared ASP
 * ✅ Azure AI Foundry integration (if possible)
 * ✅ Managed Identity on Azure, DefaultAzureCredential for local
@@ -181,6 +218,7 @@ npx create-next-app@latest
 * ✅ No Storybook/test code (yet)
 * ✅ All executions and agent runs visible to all users
 * ✅ Infrastructure will be documented and provisioned manually for MVP
+* ❌ Individual file preview (future enhancement)
 
 ---
 
