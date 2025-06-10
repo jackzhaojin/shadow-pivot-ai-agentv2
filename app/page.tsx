@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { checkAzureHealth, validateAzureEnvironment } from "@/lib/azureClient";
 import AgentFlow from '@/features/ai/components/AgentFlow';
 import { AgentFlowProvider } from '@/providers/AgentFlowProvider';
@@ -42,7 +41,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function Home() {
   // Server-side Azure integration test
-  const azureStatus = await getAzureStatus();
+  await getAzureStatus();
   return (
     <AgentFlowProvider>
       <div className="relative">

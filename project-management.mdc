@@ -291,12 +291,12 @@
   - [x] Basic client-side state management for the agent flow (e.g., React Context or Zustand/Jotai).
 
 - **3.1.2 User Identity Management (Client-Side GUID)**
-  - [ ] **Define integration/functional tests for user GUID management** (e.g., test GUID generation, persistence, display, and API usage)
-  - [ ] Implement logic to generate a unique GUID on the client-side for the user (if one doesn't exist in local storage).
-  - [ ] Store the User GUID in local storage to persist across sessions.
-  - [ ] Display the User GUID in the UI (e.g., in a settings or profile area).
-  - [ ] Ensure User GUID is available to be sent with API requests for backend processing (e.g., blob storage paths).
-  - [ ] **Validate by running the defined tests and confirming all pass**
+  - [x] **Define integration/functional tests for user GUID management** (e.g., test GUID generation, persistence, display, and API usage)
+  - [x] Implement logic to generate a unique GUID on the client-side for the user (if one doesn't exist in local storage).
+  - [x] Store the User GUID in local storage to persist across sessions.
+  - [x] Display the User GUID in the UI (e.g., in a settings or profile area).
+  - [x] Ensure User GUID is available to be sent with API requests for backend processing (e.g., blob storage paths).
+  - [x] **Validate by running the defined tests and confirming all pass**
 
 - **3.1.3 Execution Tracking & Display (Client-Side MVP)**
   - [ ] **Define integration/functional tests for execution tracking and timeline UI** (e.g., test execution ID tracking, timeline rendering, event logging)
@@ -429,10 +429,11 @@
 - `infrastructure.md` guide for Azure resources is complete and verified.
 
 - **3.1.1 Basic Agent Flow UI (Sequential) COMPLETE** - Basic sequential UI with abort control and context state.
+- **3.1.2 User Identity Management (Client-Side GUID) COMPLETE** - Client-side GUID generation, persistence, display, and API integration.
 
 ### 🎯 Next When Time Allows (Current Focus: Phase 3 MVP)
 1.  ~~**3.1.1 Basic Agent Flow UI (Sequential)** - Build the foundational UI for the agent.~~ ✅ Completed
-2.  **3.1.2 User Identity Management (Client-Side GUID)** - Implement user identification.
+2.  ~~**3.1.2 User Identity Management (Client-Side GUID)** - Implement user identification.~~ ✅ Completed
 3.  **3.2.1 Azure AI Foundry Service Connection** - Ensure backend can talk to AI.
 4.  **3.2.2 Step 1: Design Concept Generation (LLM)** - First AI step.
 5.  Continue through Phase 3.1 and 3.2 tasks sequentially.
