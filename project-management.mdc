@@ -291,70 +291,91 @@
   - [x] Basic client-side state management for the agent flow (e.g., React Context or Zustand/Jotai).
 
 - **3.1.2 User Identity Management (Client-Side GUID)**
-  - [ ] Generate a unique GUID on the client-side for the user (if one doesn't exist in local storage).
+  - [ ] **Define integration/functional tests for user GUID management** (e.g., test GUID generation, persistence, display, and API usage)
+  - [ ] Implement logic to generate a unique GUID on the client-side for the user (if one doesn't exist in local storage).
   - [ ] Store the User GUID in local storage to persist across sessions.
   - [ ] Display the User GUID in the UI (e.g., in a settings or profile area).
   - [ ] Ensure User GUID is available to be sent with API requests for backend processing (e.g., blob storage paths).
+  - [ ] **Validate by running the defined tests and confirming all pass**
 
 - **3.1.3 Execution Tracking & Display (Client-Side MVP)**
-  - [ ] Basic client-side state to track current execution ID (can be a timestamp or simple counter per session initially).
+  - [ ] **Define integration/functional tests for execution tracking and timeline UI** (e.g., test execution ID tracking, timeline rendering, event logging)
+  - [ ] Implement basic client-side state to track current execution ID (can be a timestamp or simple counter per session initially).
   - [ ] Implement a collapsible timeline UI component.
     - Display start/end timestamps for major agent stages (e.g., Design, Figma, Code).
     - Log key events or decisions in the timeline.
   - [ ] Store a simple execution trace log (JSON object) in client-side state during the agent run.
+  - [ ] **Validate by running the defined tests and confirming all pass**
 
 - **3.1.4 Download Artifacts (Initial Setup)**
+  - [ ] **Define integration/functional tests for artifact download** (e.g., test ZIP packaging, download trigger, file contents)
   - [ ] UI button to trigger download.
   - [ ] Placeholder function for packaging artifacts into a ZIP file (actual zipping and blob retrieval will be in 3.2.8).
+  - [ ] **Validate by running the defined tests and confirming all pass**
 
 ### 3.2 AI Integration & Core Logic (MVP)
 **Complexity**: High | **Effort**: Very High
 
 - **3.2.1 Azure AI Foundry Service Connection**
+  - [ ] **Define integration/functional tests for AI Foundry connectivity** (e.g., test API route, backend connection, error handling)
   - [ ] Verify `lib/aiClient.ts` connectivity to Azure AI Foundry within the agent flow.
   - [ ] Create necessary API routes in Next.js to handle requests from the agent UI to the backend AI logic.
+  - [ ] **Validate by running the defined tests and confirming all pass**
 
 - **3.2.2 Step 1: Design Concept Generation (LLM)**
+  - [ ] **Define integration/functional tests for design concept generation** (e.g., test API input/output, state update, UI display)
   - [ ] API route: `/api/agent/generate-design-concepts`
     - Input: Creative brief, User GUID.
   - [ ] Backend: Use `aiClient.ts` to call LLM (e.g., GPT-4o-mini) to generate 1-3 design concepts (text/JSON).
   - [ ] Store generated concepts in client-side state.
   - [ ] Display concepts in the sequential UI.
+  - [ ] **Validate by running the defined tests and confirming all pass**
 
 - **3.2.3 Step 2: Design Evaluation (LLM)**
+  - [ ] **Define integration/functional tests for design evaluation** (e.g., test scoring/ranking, state update, UI display)
   - [ ] API route: `/api/agent/evaluate-designs`
     - Input: Generated design concepts, User GUID.
   - [ ] Backend: Use `aiClient.ts` to call LLM to score and rank concepts.
   - [ ] Store evaluation results in client-side state.
   - [ ] Display scores/ranking in the UI.
+  - [ ] **Validate by running the defined tests and confirming all pass**
 
 - **3.2.4 Step 3: Figma Spec Generation (LLM - Simplified MVP)**
+  - [ ] **Define integration/functional tests for Figma spec generation** (e.g., test API input/output, state update, UI display)
   - [ ] API route: `/api/agent/generate-figma-spec`
     - Input: Selected design concept, User GUID.
   - [ ] Backend: Use `aiClient.ts` to call LLM to generate a simplified Figma-compatible spec (JSON).
     *(Focus on structure, not pixel-perfect visual fidelity for MVP)*
   - [ ] Store generated spec in client-side state.
   - [ ] Display confirmation or a simple view of the spec structure in UI.
+  - [ ] **Validate by running the defined tests and confirming all pass**
 
 - **3.2.5 Step 4: Spec Selection (LLM or User Choice for MVP)**
+  - [ ] **Define integration/functional tests for spec selection** (e.g., test selection logic, state update, UI confirmation)
   - [ ] If multiple specs were generated (unlikely for MVP's simplified Figma step), allow user to select or have LLM select.
   - [ ] For MVP with single spec: Display the generated spec for user confirmation.
   - [ ] Store selected/confirmed spec in client-side state.
+  - [ ] **Validate by running the defined tests and confirming all pass**
 
 - **3.2.6 Step 5: Code Generation (LLM - Simplified MVP)**
+  - [ ] **Define integration/functional tests for code generation** (e.g., test API input/output, state update, code display)
   - [ ] API route: `/api/agent/generate-code`
     - Input: Selected Figma spec (JSON), User GUID.
   - [ ] Backend: Use `aiClient.ts` to call LLM to generate a basic Next.js + TypeScript feature/component.
     *(Focus on a single, simple component based on the spec for MVP)*
   - [ ] Store generated code (string/file content) in client-side state.
   - [ ] Display a snippet or confirmation of the generated code in UI.
+  - [ ] **Validate by running the defined tests and confirming all pass**
 
 - **3.2.7 Step 6: Code Selection & Testing (LLM Review - Simplified MVP)**
+  - [ ] **Define integration/functional tests for code selection and review** (e.g., test review logic, state update, UI confirmation)
   - [ ] If multiple code versions (unlikely for MVP), allow user or LLM to select.
   - [ ] For MVP with single code output: Use LLM for a very basic review (e.g., "does this code seem to match the spec? any obvious errors?"). This is a lightweight check, not full testing.
   - [ ] Store selected/reviewed code in client-side state.
+  - [ ] **Validate by running the defined tests and confirming all pass**
 
 - **3.2.8 Step 7: Blob Storage Integration & Final Download**
+  - [ ] **Define integration/functional tests for blob storage and artifact download** (e.g., test storage API, ZIP packaging, download, retrieval)
   - [ ] API route: `/api/agent/store-execution`
     - Input: All artifacts (brief, concepts, spec, code), execution trace, User GUID, Execution ID.
   - [ ] Backend:
@@ -374,6 +395,7 @@
   - [ ] API route: `/api/agent/get-execution-details` (Basic for now)
     - Input: User GUID, Execution ID
     - Backend: Retrieve all files for a specific execution from Blob Storage.
+  - [ ] **Validate by running the defined tests and confirming all pass**
 
 ### 3.3 UI Polish & Advanced Features (Post-MVP)
 **Status**: Deferred | **Target**: Enhance UX and agent capabilities after MVP
