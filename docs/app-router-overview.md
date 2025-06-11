@@ -52,6 +52,7 @@ A client component (`'use client'`) that allows testing Azure Storage and AI via
 ### API Routes
 - `app/api/test-storage/route.ts` – Tests Blob Storage connectivity.
 - `app/api/test-ai/route.ts` – Tests Azure OpenAI connectivity.
+- `app/api/agent/test-connection/route.ts` – Tests AI connection via `lib/aiClient`.
 
 ### Additional Routes
 - `app/chat/page.tsx` – Placeholder chat page.
@@ -75,6 +76,7 @@ Files inside `app/` are server components by default unless they include `'use c
 | `app/test-azure/page.tsx` | Page | CSR |
 | `app/api/test-storage/route.ts` | API route | Server |
 | `app/api/test-ai/route.ts` | API route | Server |
+| `app/api/agent/test-connection/route.ts` | API route | Server |
 | `components/azure/ClientSideDemo.tsx` | Component | CSR |
 | `components/chat/ChatInput.tsx` | Component | CSR |
 | `components/charts/ChartPlaceholder.tsx` | Component | SSR |

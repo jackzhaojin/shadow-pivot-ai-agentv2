@@ -60,6 +60,7 @@ Tests:
 
 ```bash
 curl http://localhost:3000/api/test-ai
+curl http://localhost:3000/api/agent/test-connection
 ```
 
 Tests:

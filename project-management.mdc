@@ -317,10 +317,10 @@
 **Complexity**: High | **Effort**: Very High
 
 - **3.2.1 Azure AI Foundry Service Connection**
-  - [ ] **Define integration/functional tests for AI Foundry connectivity** (e.g., test API route, backend connection, error handling)
-  - [ ] Verify `lib/aiClient.ts` connectivity to Azure AI Foundry within the agent flow.
-  - [ ] Create necessary API routes in Next.js to handle requests from the agent UI to the backend AI logic.
-  - [ ] **Validate by running the defined tests and confirming all pass**
+  - [x] **Define integration/functional tests for AI Foundry connectivity** (e.g., test API route, backend connection, error handling)
+  - [x] Verify `lib/aiClient.ts` connectivity to Azure AI Foundry within the agent flow.
+  - [x] Create necessary API routes in Next.js to handle requests from the agent UI to the backend AI logic.
+  - [x] **Validate by running the defined tests and confirming all pass**
 
 - **3.2.2 Step 1: Design Concept Generation (LLM)**
   - [ ] **Define integration/functional tests for design concept generation** (e.g., test API input/output, state update, UI display)
