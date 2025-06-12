@@ -4,7 +4,40 @@ A Next.js application for AI-powered agent workflows with Azure integration, des
 
 ## AI Development Approach
 
-This project is **100% AI agent coded** with no copy-paste code. We use a mix of local GitHub Copilot agents alongside Claude, GPT, Gemini, and Codex cloud-based agents. The human maintainer only makes manual tweaks to file formats that are markdown files. They run tests but rely on AI to fix any issues discovered during test-driven development.
+This project is **100% AI agent coded** with no copy-paste code. We use a mix of local GitHub Copilot agents alongside Claude, GPT, Gemini, and Codex cloud-based agents for all implementation work.
+
+### Development Role Distribution
+
+| **AI Agents Will Handle** | **Human Maintainer Will Handle** |
+|---------------------------|-----------------------------------|
+| ✅ **All Code Implementation** | 📝 **Minor Markdown Adjustments** |
+| • TypeScript/JavaScript code | • Minor edits to  project plan (.mdc files), PRD specifications |
+| • React components and pages | • Minor edits to agent instructions |
+| • API routes and backend logic | • Minor edits to other markdown documentation |
+| • Azure integration code | |
+| • Configuration files (Docker, Next.js, etc.) | |
+| ✅ **Documentation & Test Automation** | 🧪 **Manual Testing** |
+| • All documentation updates after features | • Local development testing |
+| • Unit tests and integration tests | • Azure deployment verification |
+| • Test fixtures and mocks | • End-to-end validation |
+| • CI/CD pipeline configurations | |
+| • Project documentation maintenance | |
+| ✅ **Architecture & Implementation** | ⚙️ **Azure Resource Management** |
+| • System design and code structure | • Manual Azure resource configuration |
+| • Library selection and integration | • Infrastructure setup (no IaC) |
+| • Performance optimizations | • Environment variable management |
+| • Bug fixes and code improvements | • Deployment monitoring |
+
+### Development Workflow
+
+1. **Human**: Updates markdown specifications (PRD, project plan, agent instructions)
+2. **AI**: Implements features based on updated specifications
+3. **Human**: Tests functionality locally and on Azure
+4. **AI**: Fixes any issues discovered during testing
+5. **AI**: Validates fixes and updates project documentation
+6. **Repeat**: Continue iterative development cycle
+
+This approach ensures rapid development while maintaining clear separation of concerns - AI handles all coding complexity, validation, and documentation while humans focus on requirements, testing, and infrastructure management.
 
 ## Project Overview
 
