@@ -2,6 +2,10 @@
 
 A Next.js application for AI-powered agent workflows with Azure integration, designed for deployment-first development.
 
+## AI Development Approach
+
+This project is **100% AI agent coded** with no copy-paste code. We use a mix of local GitHub Copilot agents alongside Claude, GPT, Gemini, and Codex cloud-based agents. The human maintainer only makes manual tweaks to the product specification (`docs/ai-agent/prd.md`) and project plan (`project-management.mdc`). They run tests but rely on AI to fix any issues discovered during test-driven development.
+
 ## Project Overview
 
 - **Framework**: Next.js 15.1.8 with App Router
@@ -10,6 +14,7 @@ A Next.js application for AI-powered agent workflows with Azure integration, des
 - **AI Services**: Azure AI Foundry (OpenAI GPT-4o-mini)
 - **Storage**: Azure Blob Storage
 - **Deployment**: Docker + GitHub Actions + Azure App Service
+
 
 ## Quick Start
 
