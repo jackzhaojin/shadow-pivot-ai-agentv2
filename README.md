@@ -98,6 +98,7 @@ For more detailed information, please refer to the following documents:
   - [App Router Overview](./docs/app-router-overview.md): Information about the Next.js App Router.
 - **Development & Testing Specifics**
   - [Baseline Testing README](./baseline-testing/README.md): Information on baseline testing scripts.
+  - **AI Connection Test:** `npm run test:ai-connection` to verify Azure AI Foundry connectivity.
 - **Development Logs & Notes** (primarily for historical context)
   - [Session Logs](./docs/ai-log/): Contains logs from various development sessions.
   - [SSR Integration Notes](./docs/session-1-4b-ssr-integration.md)
