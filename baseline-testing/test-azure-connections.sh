@@ -31,15 +31,15 @@ else
     echo "❌ Azure AI Foundry connection failed"
     echo "Response: $AI_RESULT"
 fi
-
 # Test Azure CLI login status
 echo "🔐 Testing Azure CLI authentication..."
 if az account show > /dev/null 2>&1; then
     ACCOUNT_NAME=$(az account show --query 'name' -o tsv)
     echo "✅ Azure CLI authenticated as: $ACCOUNT_NAME"
 else
-    echo "❌ Azure CLI not authenticated - run 'az login'"
+    echo "❌ Azure CLI not authenticated - validate az cli credentials"
 fi
+
 
 echo ""
 echo "🎉 Azure Connection Testing Complete!"

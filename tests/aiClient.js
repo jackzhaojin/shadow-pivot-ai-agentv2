@@ -19,24 +19,25 @@ function getAIClient() {
     });
 }
 // Utility functions for common AI operations
-async function generateChatCompletion(messages, model = 'gpt-4o-mini', options = {}) {
+async function generateChatCompletion(messages, options = {}) {
     const client = getAIClient();
+    const deploymentName = process.env.AZURE_OPENAI_DEPLOYMENT_NAME || 'gpt-4o-mini-deployment';
     return await client.chat.completions.create({
-        model,
+        model: deploymentName,
         messages,
         max_tokens: options.maxTokens || 1000,
         temperature: options.temperature || 0.7,
         top_p: options.topP || 1.0
     });
 }
-async function generateText(prompt, model = 'gpt-4o-mini', options = {}) {
+async function generateText(prompt, options = {}) {
     var _a, _b;
     const messages = [];
     if (options.systemPrompt) {
         messages.push({ role: 'system', content: options.systemPrompt });
     }
     messages.push({ role: 'user', content: prompt });
-    const response = await generateChatCompletion(messages, model, {
+    const response = await generateChatCompletion(messages, {
         maxTokens: options.maxTokens,
         temperature: options.temperature
     });
@@ -45,8 +46,7 @@ async function generateText(prompt, model = 'gpt-4o-mini', options = {}) {
 // Test function for AI connectivity
 async function testAIConnection() {
     try {
-        const deployment = process.env.AZURE_OPENAI_DEPLOYMENT_NAME || 'gpt-4o-mini';
-        const response = await generateText('Say "Hello" in one word', deployment, { maxTokens: 5 });
+        const response = await generateText('Say "Hello" in one word', { maxTokens: 5 });
         return { success: true, response };
     }
     catch (error) {
