@@ -14,6 +14,7 @@
     "test:spec-selection": "tsc lib/specSelection.ts --target ES2017 --module commonjs --outDir tests && node tests/spec-selection.test.js",
     "test:spec-selection-ui": "node tests/spec-selection-ui-integration.test.js",
     "test:spec-selection-e2e": "node tests/spec-selection-e2e.test.js",
+    "test:agent-flow-refactor": "TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\",\"jsx\":\"react\"}' node -r ts-node/register -r tsconfig-paths/register tests/agent-flow-refactor.test.js",
     "monitor-deployment": "node baseline-testing/local-node-tests/monitor-deployment.js"
   },
   "dependencies": {
