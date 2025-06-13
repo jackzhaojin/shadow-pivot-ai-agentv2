@@ -21,6 +21,8 @@ interface AgentFlowContextValue {
   currentStep: number;
   completed: Set<number>;
   executionTrace: ExecutionTrace | null;
+  designConcepts: string[];
+  setDesignConcepts: (c: string[]) => void;
   setCurrentStep: (i: number) => void;
   completeStep: (i: number) => void;
   startExecution: () => void;
@@ -37,6 +39,7 @@ export function AgentFlowProvider({ children }: { children: React.ReactNode }) {
   const [executionTrace, setExecutionTrace] = useState<ExecutionTrace | null>(
     null
   );
+  const [designConcepts, setDesignConcepts] = useState<string[]>([]);
 
   const startExecution = () => {
     const trace = createExecutionTrace();
@@ -44,6 +47,7 @@ export function AgentFlowProvider({ children }: { children: React.ReactNode }) {
     setAborted(false);
     setCurrentStep(0);
     setCompleted(new Set());
+    setDesignConcepts([]);
     logEvent(trace, 'Execution started');
   };
 
@@ -69,6 +73,8 @@ export function AgentFlowProvider({ children }: { children: React.ReactNode }) {
         currentStep,
         completed,
         executionTrace,
+        designConcepts,
+        setDesignConcepts,
         setCurrentStep,
         completeStep,
         startExecution,

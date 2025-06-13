@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "test:user-guid": "tsc utils/userGuid.ts --target ES2017 --module commonjs --outDir dist-test && node tests/user-guid.test.js",
-    "test:ai-connection": "tsc lib/aiClient.ts --target ES2017 --module commonjs --esModuleInterop --outDir tests && node tests/ai-connection.test.js"
+    "test:ai-connection": "tsc lib/aiClient.ts --target ES2017 --module commonjs --esModuleInterop --outDir tests && node tests/ai-connection.test.js",
+    "test:design-concepts": "tsc lib/designConcept.ts --target ES2017 --module commonjs --esModuleInterop --outDir tests && node tests/design-concept.test.js"
   },
   "dependencies": {
     "@azure/identity": "^4.10.0",
