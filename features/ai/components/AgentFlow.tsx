@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAgentFlow } from '@/providers/AgentFlowProvider';
 import { selectBestDesignConcept } from '@/lib/specSelection';
 import { createArtifactZipPlaceholder } from '@/utils/download';
@@ -13,7 +13,8 @@ export default function AgentFlow() {
   const [showTimeline, setShowTimeline] = useState(false);
 
   const startFlow = async () => {
-    if (currentStep === 0) {
+    if (currentStep <= 0) {
+      // Reset execution and begin first step
       startExecution();
       try {
         const res = await fetch('/api/agent/generate-design-concepts', {
@@ -56,6 +57,7 @@ export default function AgentFlow() {
           console.error(err);
         }
       }
+      const finished = currentStep;
       completeStep(currentStep);
     }
   };
@@ -75,6 +77,13 @@ export default function AgentFlow() {
   };
 
   const handleAbort = () => abort();
+
+  // Automatically advance through the first three steps when a step completes
+  useEffect(() => {
+    if (currentStep > 0 && currentStep < 3 && !aborted) {
+      nextStep();
+    }
+  }, [currentStep, aborted]);
 
   const getStepIcon = (index: number) => {
     if (completed.has(index)) {
@@ -127,7 +136,7 @@ export default function AgentFlow() {
         </div>
 
         {/* Creative Brief Section */}
-        {currentStep === 0 && !aborted && (
+        {currentStep <= 0 && !aborted && (
           <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 mb-8">
             <div className="max-w-2xl mx-auto">
               <h2 className="text-2xl font-semibold text-gray-900 mb-2">Start Your Journey</h2>
@@ -158,11 +167,13 @@ export default function AgentFlow() {
       {designConcepts.length > 0 && (
         <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 mb-8">
           <h2 className="text-xl font-semibold text-gray-900 mb-4">Design Concepts</h2>
-          <ul className="list-disc pl-5 space-y-2 text-gray-700">
+          <div className="grid sm:grid-cols-2 gap-4 text-gray-700">
             {designConcepts.map((c, i) => (
-              <li key={i}>{c}</li>
+              <div key={i} className="p-4 bg-gray-50 rounded-xl border border-gray-200">
+                {c}
+              </div>
             ))}
-          </ul>
+          </div>
         </div>
       )}
 
@@ -261,17 +272,11 @@ export default function AgentFlow() {
         </div>
 
         {/* Action Buttons */}
-        {!aborted && currentStep > 0 && currentStep < steps.length && (
+        {!aborted && currentStep >= 0 && currentStep < steps.length && (
           <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 mb-8">
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button 
-                onClick={nextStep} 
-                className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-8 rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
-              >
-                Continue to Next Step
-              </button>
-              <button 
-                onClick={handleAbort} 
+              <button
+                onClick={handleAbort}
                 className="bg-gradient-to-r from-red-500 to-pink-500 text-white py-3 px-8 rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
               >
                 Abort Flow
