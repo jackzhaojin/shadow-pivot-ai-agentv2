@@ -219,32 +219,41 @@
   - [x] **Validate by running the defined tests and confirming all pass**
 
 - **3.2.4b Agent Flow UX Improvements (Critical Fix)**
-  **Story**: As a user interacting with the AI agent, I can see a proper flow that doesn't show "currently processing" before I start, and the agent automatically progresses through steps without requiring manual "Continue" clicks so that I experience a truly automated AI agent as described in the PRD.
+  **Story**: As a user interacting with the AI agent, I can experience a fully automated flow with proper visual feedback, error handling, and the ability to start new flows at any time, so that I have a professional and intuitive AI agent experience as described in the PRD.
 
-  - [x] **Define integration/functional tests for agent flow UX** (e.g., test initial state, auto-progression, loading states)
-  - [x] Fix initial state: Don't show "currently processing" until user actually starts the flow
-  - [x] Remove manual "Continue to Next Step" buttons and implement automatic progression
-  - [x] Add proper loading states showing what the AI is actively doing
-  - [x] Implement seamless flow from design concepts → evaluation → selection without user intervention
-  - [x] Update progress indicators to reflect actual processing state (not premature states)
-  - [x] Ensure design concepts display is clear and well-formatted for user understanding
-  - [x] Restore creative brief input so users can start the flow with a prompt
-  - [x] **Validate by running the defined tests and confirming all pass**
+  - [ ] **Define integration/functional tests for agent flow UX** (e.g., test initial state, auto-progression, loading states, error states)
+  - [ ] **Creative Brief Input**: Ensure users can always enter a prompt to start a new flow
+  - [ ] **Fix initial state**: Don't show "currently processing" until user actually starts the flow
+  - [ ] **Remove manual "Continue" buttons**: Implement automatic progression through all steps
+  - [ ] **Visual state management**: Implement proper progress indicators
+    - Waiting state (gray) before processing begins
+    - Active processing state (blue/animated) during AI computation  
+    - Completed state (green) for successful steps
+    - Error state (red) for failed steps
+  - [ ] **Error handling**: 
+    - Display error details below the flow timeline in dedicated error section
+    - Make failed step blocks turn red within the theme
+    - Show clear, actionable error messages
+    - Stop flow on errors but preserve access to successful steps
+  - [ ] **Abort control**: Maintain prominent abort button functionality
+  - [ ] **Seamless flow progression**: Auto-advance from concepts → evaluation → selection without user intervention
+  - [ ] **Validate by running the defined tests and confirming all pass**
 
 - **3.2.4c Interactive Step Results Review**
-  **Story**: As a user watching the automated AI agent flow, I can click on any completed step in the timeline to view the detailed results and outputs from that step so that I can review what the AI generated at each stage without interrupting the automatic progression.
+  **Story**: As a user watching the automated AI agent flow, I can click on any completed step in the timeline to view the detailed input/output from that step so that I can review what the AI generated at each stage without interrupting the automatic progression.
 
   - [ ] **Define integration/functional tests for step results review** (e.g., test clickable steps, result display, state management)
-  - [ ] Make completed steps in the timeline clickable/expandable
-  - [ ] Implement step-specific result views:
-    - Step 1 (Design Concepts): Show generated concept list with descriptions
-    - Step 2 (Design Evaluation): Show scoring breakdown and reasoning
-    - Step 3 (Spec Selection): Show selected concept with justification
-    - Future steps: Figma specs, code generation results, etc.
-  - [ ] Add visual indicators showing which steps have reviewable content
-  - [ ] Implement collapsible/expandable UI for step results without disrupting the flow
-  - [ ] Ensure results remain accessible even after the agent moves to subsequent steps
-  - [ ] Add smooth animations and transitions for better user experience
+  - [ ] **Make completed steps clickable**: Implement interactive timeline steps
+  - [ ] **Step-specific result views**: Display detailed input/output for each step
+    - Step 1 (Design Concepts): Show input brief + generated concept list with descriptions
+    - Step 2 (Design Evaluation): Show input concepts + scoring breakdown and reasoning
+    - Step 3 (Spec Selection): Show evaluation results + selected concept with justification
+    - Future steps: Figma specs, code generation results, quality scores, etc.
+  - [ ] **Visual indicators**: Show which steps have reviewable content available
+  - [ ] **Non-disruptive UI**: Implement collapsible/expandable result panels
+  - [ ] **Persistent access**: Ensure results remain accessible even after agent moves to subsequent steps
+  - [ ] **Smooth UX**: Add animations and transitions for better user experience
+  - [ ] **AI transparency**: Show AI reasoning, decision criteria, and selection logic for each step
   - [ ] **Validate by running the defined tests and confirming all pass**
 
 - **3.2.5 Step 4: Parallel Figma Spec Generation Infrastructure**
@@ -390,18 +399,37 @@
 - [x] Deployed app accessible via public URL ✅ HTTP 200 confirmed
 - [x] Next.js default page loads correctly ✅ SSR working
 
-### Must Have (Core Features) - In Progress
+### Must Have (Core Agent Flow Features) - In Progress
+#### **User Input & Flow Control:**
+- [ ] Creative brief input always available to start new flows
+- [ ] Automated progression through all steps without manual advancement
+- [ ] Prominent abort button functionality throughout flow
+- [ ] No manual "Continue to Next Step" buttons
+
+#### **Visual Flow & State Management:**
+- [ ] Proper progress state indicators: Waiting (gray) → Processing (blue/animated) → Completed (green) → Error (red)
+- [ ] Real-time progress updates showing current AI activity
+- [ ] Visual timeline with step start/end timestamps
+- [ ] Interactive completed steps for input/output review
+
+#### **Error Handling & User Feedback:**
+- [ ] Failed steps display with red theme indicators
+- [ ] Error details section below main flow timeline
+- [ ] Clear, actionable error messages with user guidance
+- [ ] Flow stops on errors but preserves access to successful steps
+
+#### **Core AI Pipeline:**
 - [ ] Complete agent pipeline from creative brief to artifact download
 - [ ] 3-box parallel processing display for both Figma and code generation
 - [ ] Automated testing and selection of best specs and code
 - [ ] ZIP download of complete artifacts with execution trace
-- [ ] User-scoped execution storage and history
-- [ ] Error handling and user feedback throughout pipeline
+- [ ] User-scoped execution storage and history in Azure Blob Storage
 
 ### Nice to Have (Release 1.0 Stretch Goals)
-- [ ] Enhanced visual indicators and progress tracking
+- [ ] Enhanced animations and visual polish
 - [ ] Performance optimizations for large file handling
-- [ ] Improved user experience and UI polish
+- [ ] Advanced error recovery suggestions
+- [ ] Execution history browsing UI
 
 ## Progress Log
 

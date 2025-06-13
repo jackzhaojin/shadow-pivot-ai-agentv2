@@ -64,12 +64,39 @@ An AI-powered design-to-code agent embedded within a Next.js app, capable of gen
 
 #### User Experience:
 
-* Users see visual agent flow with active step indicators (e.g., blinking/highlighted).
-* A collapsible timeline shows step start/end with timestamps.
-* **Parallel Processing Display**: 3 boxes showing concurrent Figma spec generation and 3 boxes for code generation.
-* **Abort Control**: Users can abort the entire agent flow at any time with a prominent abort button.
-* Export full execution (Figma spec + code + summary trace).
-* Users can revisit past runs via execution history.
+* **Agent Input & Flow Control:**
+  * Users can always enter a creative brief to start a new AI agent flow
+  * Users can abort the entire agent flow at any time with a prominent abort button
+  * **No manual step advancement**: Agent automatically progresses through all steps without user intervention
+  * Users can start multiple flows sequentially (previous flow data remains accessible)
+
+* **Visual Flow Indicators:**
+  * Users see visual agent flow with active step indicators (e.g., blinking/highlighted)
+  * A collapsible timeline shows step start/end with timestamps
+  * **Progress states**: Waiting (gray) → Processing (blue/animated) → Completed (green) → Error (red)
+  * Real-time progress updates show what the AI is currently doing
+
+* **Step Results Review:**
+  * **Interactive step inspection**: Users can click on any completed step to view detailed input/output
+  * Step results display without disrupting the automated flow progression
+  * Each step shows: input parameters, processing details, AI reasoning, and generated outputs
+  * Results remain accessible throughout the entire session
+
+* **Error Handling & Feedback:**
+  * **Error visualization**: Failed steps appear with red indicators and error messaging
+  * Error details displayed below the main flow timeline in a dedicated error section
+  * Clear error descriptions with actionable guidance for users
+  * Flow stops on errors but allows users to review previous successful steps
+
+* **Parallel Processing Display:**
+  * **3 boxes showing concurrent Figma spec generation** with real-time progress indicators
+  * **3 boxes showing concurrent code generation** with real-time progress indicators
+  * Each parallel process shows individual status and completion indicators
+
+* **Execution Management:**
+  * Export full execution (Figma spec + code + summary trace)
+  * Users can revisit past runs via execution history
+  * **Download capability**: ZIP archive with complete artifacts and execution trace
 
 #### Agent Testing & Evaluation Criteria:
 
@@ -203,20 +230,48 @@ npx create-next-app@latest
 
 ### Release 1.0 (MVP) Scope:
 
-* ✅ Manual creative brief input
-* ✅ Agent flow w/ visual indicators and abort functionality
+#### **Core Agent Flow Requirements:**
+* ✅ **Creative Brief Input**: Always available prompt input to start new agent flows
+* ✅ **Automated Progression**: Agent flows automatically through all steps without manual advancement
+* ✅ **Abort Control**: Prominent abort button available at any time during flow execution
+* ✅ **Visual Progress Tracking**: Real-time step indicators with proper state management
+  * Waiting state (gray) before processing begins
+  * Active processing state (blue/animated) during AI computation
+  * Completed state (green) for successful steps
+  * Error state (red) for failed steps with detailed error messaging
+
+#### **Step Results & Transparency:**
+* ✅ **Interactive Step Review**: Click any completed step to view detailed input/output
+* ✅ **Persistent Results Access**: Step results remain viewable throughout session
+* ✅ **AI Decision Transparency**: Show reasoning, scoring, and selection criteria for each step
+* ✅ **Non-Disruptive Inspection**: Review previous steps without interrupting automated flow
+
+#### **Error Handling & User Feedback:**
+* ✅ **Visual Error Indicators**: Failed steps display with red theme indicators
+* ✅ **Error Details Section**: Dedicated area below flow timeline for error messaging
+* ✅ **Actionable Error Messages**: Clear descriptions with guidance for users
+* ✅ **Graceful Degradation**: Flow stops on errors but preserves access to successful steps
+
+#### **Parallel Processing Display:**
 * ✅ **3-box parallel processing display** for Figma and code generation
+* ✅ **Real-time progress indicators** for each parallel process
+* ✅ **Individual status tracking** for concurrent operations
+
+#### **Core Features:**
 * ✅ **Aggregate scoring system** for automatic selection
 * ✅ **ZIP download** of complete artifacts (not GitHub PR)
-* ✅ Full run archive export with execution trace
-* ✅ Execution storage in Azure Blob
-* ✅ Parallel generation steps (3 Figma specs + 3 code implementations)
-* ✅ Azure AI Foundry integration (if possible)
-* ✅ Managed Identity on Azure, DefaultAzureCredential for local
-* ✅ No retries or edits for failed steps (yet)
-* ✅ No Storybook/test code (yet)
-* ✅ All executions and agent runs visible to all users
-* ✅ Infrastructure will be documented and provisioned manually for MVP
+* ✅ **Full run archive export** with execution trace
+* ✅ **Execution storage in Azure Blob** with user-scoped paths
+* ✅ **Parallel generation steps** (3 Figma specs + 3 code implementations)
+* ✅ **Azure AI Foundry integration** (if possible)
+* ✅ **Managed Identity** on Azure, DefaultAzureCredential for local
+* ✅ **All executions and agent runs visible to all users** (MVP scope)
+* ✅ **Infrastructure documented and provisioned manually** for MVP
+
+#### **Technical Requirements:**
+* ✅ No retries or edits for failed steps (planned for Release 1.1)
+* ✅ No Storybook/test code generation (planned for Release 1.1)
+* ✅ No multi-user isolation (planned for Release 1.1)
 
 ---
 
