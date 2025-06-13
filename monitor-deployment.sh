@@ -11,4 +11,4 @@ echo ""
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Run the Node.js monitoring script
-node "$SCRIPT_DIR/baseline-testing/monitor-deployment.js"
+node "$SCRIPT_DIR/baseline-testing/local-node-tests/monitor-deployment.js"

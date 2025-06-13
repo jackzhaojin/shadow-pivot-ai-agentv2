@@ -62,24 +62,19 @@ echo ""
 echo "🚀 Starting baseline tests..."
 echo ""
 
-# Test 1: Azure Authentication
-run_test "azure-auth" \
-    "cd '$PROJECT_ROOT' && node baseline-testing/azure-auth-test.js" \
-    "Azure Authentication Test"
+# Test 1: Node.js Integrated Tests (no server required)
+run_test "node-integrated" \
+    "bash '$SCRIPT_DIR/local-node-tests/local-node-integrated-tests.sh'" \
+    "Node.js Integrated Tests (No Server Required)"
 
-# Test 2: Azure Connections (requires dev server)
+# Test 2: Port 3000 Tests (requires dev server)
 echo "💡 Note: The following tests require the development server to be running."
 echo "   If tests fail, start the dev server with 'npm run dev' in another terminal."
 echo ""
 
-run_test "azure-connections" \
-    "bash '$SCRIPT_DIR/test-azure-connections.sh'" \
-    "Azure API Connections Test"
-
-# Test 3: SSR Integration
-run_test "ssr-integration" \
-    "bash '$SCRIPT_DIR/test-ssr-integration.sh'" \
-    "Server-Side Rendering Integration Test"
+run_test "port-3000" \
+    "bash '$SCRIPT_DIR/local-server-test-3000-integrated/local-3000-tests.sh'" \
+    "Port 3000 Tests (Requires Dev Server)"
 
 # Summary
 echo ""

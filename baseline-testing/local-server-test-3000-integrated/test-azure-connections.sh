@@ -33,7 +33,7 @@ else
 fi
 # Test DefaultAzureCredential status via Node.js
 echo "🔐 Testing DefaultAzureCredential authentication..."
-TEST_AUTH_RESULT=$(cd "$(dirname "$0")/.." && node -e "
+TEST_AUTH_RESULT=$(cd "$(dirname "$0")/../.." && node -e "
 const { DefaultAzureCredential } = require('@azure/identity');
 const credential = new DefaultAzureCredential();
 credential.getToken('https://vault.azure.net/.default')

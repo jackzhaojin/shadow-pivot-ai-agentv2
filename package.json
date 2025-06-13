@@ -11,7 +11,7 @@
     "test:ai-connection": "tsc lib/aiClient.ts --target ES2017 --module commonjs --esModuleInterop --outDir tests && node tests/ai-connection.test.js",
     "test:design-concepts": "tsc lib/designConcept.ts --target ES2017 --module commonjs --esModuleInterop --outDir tests && node tests/design-concept.test.js",
     "test:design-evaluation": "tsc lib/designEvaluation.ts --target ES2017 --module commonjs --esModuleInterop --outDir tests && node tests/design-evaluation.test.js",
-    "monitor-deployment": "node baseline-testing/monitor-deployment.js"
+    "monitor-deployment": "node baseline-testing/local-node-tests/monitor-deployment.js"
   },
   "dependencies": {
     "@azure/arm-appservice": "^14.1.0",

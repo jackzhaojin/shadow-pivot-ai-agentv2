@@ -4,9 +4,9 @@ echo "🔐 Quick Azure Authentication Test"
 echo "=================================="
 echo ""
 
-# Get the directory of this script
+# Get the directory of this script and project root
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
+PROJECT_ROOT="$(dirname "$(dirname "$SCRIPT_DIR")")"
 
 # Check prerequisites
 if ! command -v node &> /dev/null; then
@@ -23,7 +23,7 @@ echo ""
 echo "🚀 Running Azure authentication test..."
 echo ""
 
-cd "$PROJECT_ROOT" && node baseline-testing/azure-auth-test.js
+cd "$PROJECT_ROOT" && node baseline-testing/local-node-tests/azure-auth-test.js
 
 if [ $? -eq 0 ]; then
     echo ""

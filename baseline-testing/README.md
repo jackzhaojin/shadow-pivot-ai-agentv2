@@ -1,14 +1,55 @@
-# Baseline Testing
+# Baseline Testing Suite
 
-This folder contains all baseline system tests for the TSLA AI UI Agent project. These tests verify core Azure integrations and system functionality.
+This directory contains comprehensive tests for the Shadow Pivot AI Agent application, organized into two main categories:
+
+## Test Organization
+
+### 📁 local-node-tests/
+Tests that only require Node.js and Azure credentials. No development server needed.
+- `azure-auth-test.js` - Azure authentication testing
+- `quick-auth-test.sh` - Quick credential verification
+- `local-node-integrated-tests.sh` - Main Node.js test runner
+- `monitor-deployment.js` - Azure deployment monitoring
+
+### 📁 local-server-test-3000-integrated/
+Tests that require the development server running on localhost:3000.
+- `local-3000-tests.sh` - Main server test runner
+- `test-azure-connections.sh` - API endpoint testing
+- `test-ssr-integration.sh` - Server-side rendering tests
+
+## Quick Start
+
+### Run All Tests:
+```bash
+./baseline-testing/run-all-tests.sh
+```
+
+### Run Only Node.js Tests (No Server Required):
+```bash
+./baseline-testing/local-node-tests/local-node-integrated-tests.sh
+```
+
+### Run Only Server Tests (Requires `npm run dev`):
+```bash
+# Start server first
+npm run dev
+
+# Then run tests
+./baseline-testing/local-server-test-3000-integrated/local-3000-tests.sh
+```
 
 ## Prerequisites
 
-Before running the tests, ensure you have:
+- Node.js 18+
+- Azure credentials configured via environment variables:
+  - `AZURE_CLIENT_ID`
+  - `AZURE_CLIENT_SECRET`
+  - `AZURE_TENANT_ID`
+  - `AZURE_SUBSCRIPTION_ID`
 
-1. **Node.js** installed and in your PATH
-2. **Azure CLI** installed and authenticated (`az login`) **or** service principal environment variables set (`AZURE_CLIENT_ID`, `AZURE_TENANT_ID`, `AZURE_CLIENT_SECRET`)
-3. **Development server** running for API tests (`npm run dev`)
+## Authentication
+
+All tests use **DefaultAzureCredential** - no Azure CLI required. This works reliably in all environments including Codex.
 
 ## Test Scripts
 
