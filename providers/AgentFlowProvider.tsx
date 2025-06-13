@@ -33,6 +33,9 @@ interface AgentFlowContextValue {
   startExecution: () => void;
   abort: () => void;
   aborted: boolean;
+  errors: string[];
+  addError: (msg: string, step: number) => void;
+  failedStep: number | null;
 }
 
 const AgentFlowContext = createContext<AgentFlowContextValue | undefined>(undefined);
@@ -48,11 +51,15 @@ export function AgentFlowProvider({ children }: { children: React.ReactNode }) {
   const [designConcepts, setDesignConcepts] = useState<string[]>([]);
   const [evaluationResults, setEvaluationResults] = useState<DesignEvaluationResult[]>([]);
   const [selectedConcept, setSelectedConcept] = useState<string | null>(null);
+  const [errors, setErrors] = useState<string[]>([]);
+  const [failedStep, setFailedStep] = useState<number | null>(null);
 
   const startExecution = () => {
     const trace = createExecutionTrace();
     setExecutionTrace(trace);
     setAborted(false);
+    setErrors([]);
+    setFailedStep(null);
     setCurrentStep(0);
     setCompleted(new Set());
     setDesignConcepts([]);
@@ -76,6 +83,14 @@ export function AgentFlowProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const addError = (msg: string, step: number) => {
+    setErrors(prev => [...prev, msg]);
+    setFailedStep(step);
+    if (executionTrace) {
+      logEvent(executionTrace, `Error at step ${step}: ${msg}`);
+    }
+  };
+
   return (
     <AgentFlowContext.Provider
       value={{
@@ -93,7 +108,10 @@ export function AgentFlowProvider({ children }: { children: React.ReactNode }) {
         completeStep,
         startExecution,
         abort,
-        aborted
+        aborted,
+        errors,
+        addError,
+        failedStep
       }}
     >
       {children}

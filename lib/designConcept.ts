@@ -1,7 +1,8 @@
 import { generateChatCompletion } from './aiClient';
 
 export async function generateDesignConcepts(brief: string): Promise<string[]> {
-  const systemPrompt = 'You are a UI design assistant. Return an array of short design concepts as JSON.';
+  const systemPrompt =
+    'You are a UI design assistant. Return three to five short design concepts as a JSON array of strings. Each concept should be a concise, one sentence idea.';
   const response = await generateChatCompletion([
     { role: 'system', content: systemPrompt },
     { role: 'user', content: brief }

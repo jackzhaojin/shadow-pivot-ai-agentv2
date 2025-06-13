@@ -7,7 +7,25 @@ import { formatDate } from '@/utils/format';
 import { useUserGuid } from '@/providers/UserGuidProvider';
 
 export default function AgentFlow() {
-  const { steps, currentStep, completed, completeStep, abort, aborted, startExecution, executionTrace, designConcepts, setDesignConcepts, evaluationResults, setEvaluationResults, selectedConcept, setSelectedConcept } = useAgentFlow();
+  const {
+    steps,
+    currentStep,
+    completed,
+    completeStep,
+    abort,
+    aborted,
+    startExecution,
+    executionTrace,
+    designConcepts,
+    setDesignConcepts,
+    evaluationResults,
+    setEvaluationResults,
+    selectedConcept,
+    setSelectedConcept,
+    errors,
+    addError,
+    failedStep
+  } = useAgentFlow();
   const userGuid = useUserGuid();
   const [brief, setBrief] = useState('');
   const [showTimeline, setShowTimeline] = useState(false);
@@ -28,11 +46,15 @@ export default function AgentFlow() {
         const data = await res.json();
         if (Array.isArray(data.concepts)) {
           setDesignConcepts(data.concepts);
+          completeStep(0);
+        } else {
+          addError('Failed to generate design concepts', 0);
         }
       } catch (err) {
         console.error(err);
+        const message = err instanceof Error ? err.message : 'Unknown error';
+        addError(message, 0);
       }
-      completeStep(0);
     }
   };
 
@@ -52,12 +74,17 @@ export default function AgentFlow() {
           if (Array.isArray(data.evaluations)) {
             setEvaluationResults(data.evaluations);
             setSelectedConcept(selectBestDesignConcept(data.evaluations));
+            completeStep(currentStep);
+          } else {
+            addError('Failed to evaluate designs', currentStep);
           }
         } catch (err) {
           console.error(err);
+          const message = err instanceof Error ? err.message : 'Unknown error';
+          addError(message, currentStep);
         }
+        return;
       }
-      const finished = currentStep;
       completeStep(currentStep);
     }
   };
@@ -80,12 +107,19 @@ export default function AgentFlow() {
 
   // Automatically advance through the first three steps when a step completes
   useEffect(() => {
-    if (currentStep > 0 && currentStep < 3 && !aborted) {
+    if (currentStep > 0 && currentStep < 3 && !aborted && failedStep === null) {
       nextStep();
     }
-  }, [currentStep, aborted]);
+  }, [currentStep, aborted, failedStep]);
 
   const getStepIcon = (index: number) => {
+    if (failedStep === index) {
+      return (
+        <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center text-white text-sm font-semibold">
+          !
+        </div>
+      );
+    }
     if (completed.has(index)) {
       return (
         <div className="w-8 h-8 bg-emerald-500 rounded-full flex items-center justify-center text-white text-sm font-semibold">
@@ -109,12 +143,21 @@ export default function AgentFlow() {
 
   const getConnectorLine = (index: number) => {
     if (index === steps.length - 1) return null;
-    
+
     const isCompleted = completed.has(index);
     const isActive = currentStep > index;
-    
+    const isError = failedStep !== null && failedStep <= index;
+
     return (
-      <div className={`w-0.5 h-12 ml-4 ${isCompleted || isActive ? 'bg-emerald-500' : 'bg-gray-300'} transition-colors duration-300`} />
+      <div
+        className={`w-0.5 h-12 ml-4 ${
+          isError
+            ? 'bg-red-500'
+            : isCompleted || isActive
+              ? 'bg-emerald-500'
+              : 'bg-gray-300'
+        } transition-colors duration-300`}
+      />
     );
   };
 
@@ -237,32 +280,41 @@ export default function AgentFlow() {
                 </div>
                 
                 <div className="ml-4 pb-12 flex-1">
-                  <div className={`p-4 rounded-xl border transition-all duration-300 ${
-                    currentStep === index && !aborted 
-                      ? 'bg-blue-50 border-blue-200 shadow-md' 
-                      : completed.has(index) 
-                        ? 'bg-emerald-50 border-emerald-200' 
-                        : 'bg-gray-50 border-gray-200'
-                  }`}>
-                    <h3 className={`font-semibold mb-1 ${
-                      currentStep === index && !aborted 
-                        ? 'text-blue-900' 
-                        : completed.has(index) 
-                          ? 'text-emerald-900' 
-                          : 'text-gray-700'
+                  <div
+                    className={`p-4 rounded-xl border transition-all duration-300 ${
+                      failedStep === index
+                        ? 'bg-red-50 border-red-200'
+                        : currentStep === index && !aborted
+                          ? 'bg-blue-50 border-blue-200 shadow-md'
+                          : completed.has(index)
+                            ? 'bg-emerald-50 border-emerald-200'
+                            : 'bg-gray-50 border-gray-200'
+                    }`}
+                  >
+                  <h3 className={`font-semibold mb-1 ${
+                      failedStep === index
+                        ? 'text-red-900'
+                        : currentStep === index && !aborted
+                          ? 'text-blue-900'
+                          : completed.has(index)
+                            ? 'text-emerald-900'
+                            : 'text-gray-700'
                     }`}>
                       {step}
                     </h3>
-                    <p className={`text-sm ${
-                      currentStep === index && !aborted 
-                        ? 'text-blue-700' 
-                        : completed.has(index) 
-                          ? 'text-emerald-700' 
-                          : 'text-gray-500'
+                  <p className={`text-sm ${
+                      failedStep === index
+                        ? 'text-red-700'
+                        : currentStep === index && !aborted
+                          ? 'text-blue-700'
+                          : completed.has(index)
+                            ? 'text-emerald-700'
+                            : 'text-gray-500'
                     }`}>
-                      {currentStep === index && !aborted && 'Currently processing...'}
+                      {failedStep === index && 'Error encountered'}
+                      {currentStep === index && !aborted && failedStep === null && 'Currently processing...'}
                       {completed.has(index) && 'Completed successfully'}
-                      {currentStep < index && 'Waiting...'}
+                      {currentStep < index && failedStep === null && 'Waiting...'}
                     </p>
                   </div>
                 </div>
@@ -270,6 +322,17 @@ export default function AgentFlow() {
             ))}
           </div>
         </div>
+
+        {errors.length > 0 && (
+          <div className="bg-red-50 border border-red-200 rounded-2xl p-4 mb-8">
+            <h3 className="text-red-900 font-semibold mb-2">Errors</h3>
+            <ul className="list-disc list-inside text-red-700 text-sm">
+              {errors.map((e, idx) => (
+                <li key={idx}>{e}</li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         {/* Action Buttons */}
         {!aborted && currentStep >= 0 && currentStep < steps.length && (
