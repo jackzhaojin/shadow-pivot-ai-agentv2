@@ -139,7 +139,7 @@ export default function AgentFlow() {
         </div>
 
         {/* Creative Brief Section */}
-        {currentStep === 0 && !aborted && (
+        {currentStep <= 0 && !aborted && (
           <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 mb-8">
             <div className="max-w-2xl mx-auto">
               <h2 className="text-2xl font-semibold text-gray-900 mb-2">Start Your Journey</h2>

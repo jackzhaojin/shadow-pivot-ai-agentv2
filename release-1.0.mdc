@@ -228,6 +228,7 @@
   - [x] Implement seamless flow from design concepts → evaluation → selection without user intervention
   - [x] Update progress indicators to reflect actual processing state (not premature states)
   - [x] Ensure design concepts display is clear and well-formatted for user understanding
+  - [x] Restore creative brief input so users can start the flow with a prompt
   - [x] **Validate by running the defined tests and confirming all pass**
 
 - **3.2.4c Interactive Step Results Review**
