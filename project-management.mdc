@@ -330,6 +330,7 @@
   - [x] Store generated concepts in client-side state.
   - [x] Display concepts in the sequential UI.
   - [x] **Validate by running the defined tests and confirming all pass**
+  - [x] **VALIDATION COMPLETE: API endpoint tested via curl and returns detailed design concepts. AI Foundry integration working correctly with proper deployment name usage.**
 
 - **3.2.3 Step 2: Design Evaluation (LLM)**
   - [ ] **Define integration/functional tests for design evaluation** (e.g., test scoring/ranking, state update, UI display)
