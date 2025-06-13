@@ -4,7 +4,7 @@ This guide outlines the **manual setup steps** required to provision cloud infra
 
 ## 🚀 Quick Start for Web App Deployment
 
-**Prerequisites**: You have Docker and GitHub Actions already set up (see project-management.mdc).
+**Prerequisites**: You have Docker and GitHub Actions already set up (see release-1.0.mdc).
 
 ### Essential Steps (30-45 minutes):
 

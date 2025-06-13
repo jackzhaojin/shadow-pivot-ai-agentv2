@@ -107,7 +107,8 @@ docs/                    # Project documentation
   ├── ai-log/            # Logs from AI agent development sessions
   └── ...                # Other documentation files
 infrastructure.md       # Azure infrastructure setup guide
-project-management.mdc   # Task management and phase planning
+release-1.0.mdc          # Release 1.0 (MVP) task management and progress
+release-1.1.mdc          # Release 1.1 (Post-MVP) task management and planning
 AGENTS.md                # Repository guidelines for contributors
 ...                      # Other configuration files (Docker, Next.js, TS, etc.)
 ```
@@ -126,7 +127,8 @@ For more detailed information, please refer to the following documents:
 
 - **Core Project Documents**
   - [AI Agent PRD](./docs/ai-agent/prd.md): Product Requirements for the AI Agent.
-  - [Project Management](./project-management.mdc): Task breakdown, phases, and progress.
+  - [Release 1.0 Task Management](./release-1.0.mdc): MVP task breakdown, phases, and progress.
+  - [Release 1.1 Task Management](./release-1.1.mdc): Post-MVP enhancements and advanced features.
   - [Repository Guidelines (AGENTS.md)](./AGENTS.md): Guidelines for contributing to this repository.
 - **Technical Guides**
   - [Azure Infrastructure Setup](./infrastructure.md): Guide to setting up necessary Azure resources.

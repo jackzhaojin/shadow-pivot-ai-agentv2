@@ -1,6 +1,10 @@
 # Repository Guidelines
 
-This repo contains the **TSLA AI UI Agent** built with Next.js 15.1.8. All contributions should follow the high level design described in `docs/ai-agent/prd.md` and the task breakdown in `project-management.mdc`.
+This repo contains the **TSLA AI UI Agent** built with Next.js 15.1.8. All contributions should follow the high level design described in `docs/ai-agent/prd.md` and the task breakdown in `release-1.0.mdc` (MVP) or `release-1.1.mdc` (Post-MVP).
+
+We're on 1.0 at the moment, do not do 1.1 yet.
+
+Also I will only ask you take on a bite size, if you finish the 1.2.3 (example) you're on, do not move onto 1.2.4 or 1.3.1.
 
 ## Folder Structure
 Use the structure outlined in the PRD when adding new code:
@@ -21,16 +25,16 @@ Use the structure outlined in the PRD when adding new code:
 ## Development Rules
 - Use **TypeScript** and **TailwindCSS** for new code.
 - Server components and API routes may call Azure SDKs. Do not call them from client components.
-- Keep new documentation under `docs/` and update `project-management.mdc` when a task is completed.
+- Keep new documentation under `docs/` and update `release-1.0.mdc` or `release-1.1.mdc` when a task is completed.
 
 ## Commit Messages
-- Start with the ID in the mdc if possible, if you're requested to work on let's say 3.2.2, make sure 3.2.2 is the first thing in the commit
+- Start with the ID in the mdc if possible, if you're requested to work on let's say 3.2.4, make sure 3.2.4 is the first thing in the commit
 - Start with a short one line summary (<=72 characters).
 - Leave a blank line, then provide additional context with bullet points if needed.
 
 ## Pull Requests
-- Start with the ID in the mdc if possible, if you're requested to work on let's say 3.2.2, make sure 3.2.2 is the first thing in the pull request
-- Summarize major changes and reference the PRD or project-management.mdc document when relevant.
+- Start with the ID in the mdc if possible, if you're requested to work on let's say 3.2.4, make sure 3.2.4 is the first thing in the pull request
+- Summarize major changes and reference the PRD or release-1.0.mdc/release-1.1.mdc document when relevant.
 - Provide the results of the programmatic checks listed below.
 
 ## Programmatic Checks

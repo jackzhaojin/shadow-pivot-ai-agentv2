@@ -1,0 +1,410 @@
+# TSLA AI UI Agent - Release 1.0 (MVP) Task Management
+
+## Project Overview
+- **Project Name**: TSLA AI UI Agent
+- **Framework**: Next.js 15.1.8 with App Router
+- **Release**: 1.0 (MVP)
+- **Status**: ✅ Infrastructure complete, Feature development active
+
+## Release 1.0 Goals
+- **Primary Goal**: Deploy functional AI agent pipeline with core features
+- **Target Users**: Developers and designers needing AI-powered UI generation
+- **Key Deliverables**: Working agent flow, Azure integration, artifact download
+
+---
+
+## Phase 1: IMMEDIATE PRIORITY - Deployment Pipeline ✅ COMPLETED
+**Status**: ✅ COMPLETE | **Target**: Get baseline app running on Azure - **ACHIEVED**
+
+### 1.1 Docker Containerization ✅ COMPLETED
+**Priority**: CRITICAL - Must complete first
+
+- [x] Create Dockerfile based on reference example
+- [x] Create .dockerignore file
+- [x] Local Docker testing
+
+**✅ DOCKER CONTAINERIZATION COMPLETE** 
+- Image: `shadow-pivot-ai-agentv2:latest` (SHA: f1061ac3019b)
+- Build time: ~44 seconds
+- Startup time: ~521ms
+- Status: Ready for GitHub Actions deployment
+
+### 1.2 GitHub Actions Workflow ✅ COMPLETED
+**Priority**: CRITICAL - Second step
+
+- [x] Create GitHub Actions workflow
+
+**✅ GITHUB ACTIONS WORKFLOW COMPLETE**
+- File: `.github/workflows/main_shadow-pivot-ai-agentv2.yml`
+- Features: Docker layer caching, GHCR push, Azure restart
+- Image target: `ghcr.io/[owner]/shadow-pivot-ai-agentv2:latest`
+- Azure OIDC: Configured and working
+- Status: ✅ FULLY COMPLETE - Automated deployment pipeline operational
+
+- [x] Configure Azure deployment
+
+### 1.3 Azure Infrastructure (Manual Setup) ✅ COMPLETED
+**Priority**: HIGH - Parallel with GitHub Actions
+
+#### 1.3a Azure Storage Account Setup ✅ COMPLETED
+- [x] Azure Storage Account setup
+
+✅ **AZURE STORAGE ACCOUNT COMPLETE** 
+- Storage Account Name: `shadowpivotaiagentstrg`
+- Region: East US
+- Container: `executions` (private access)
+- CLI Testing: ✅ Upload/download operations verified with az login
+- Authentication: Storage Blob Data Contributor role assigned
+- Status: Ready for application integration
+
+#### 1.3b Azure AI Foundry Setup ✅ COMPLETED
+- [x] Azure AI Foundry setup
+
+✅ **AZURE AI FOUNDRY COMPLETE** 
+- AI Foundry workspace configured with OpenAI integration
+- Model: GPT-4o-mini deployed (cost-effective option)
+- Authentication: Managed identity-based (no API keys stored)
+- Access: Configured via IAM roles and DefaultAzureCredential
+- Status: Ready for application integration via managed services
+- AI Testing: ✅ Chat completion API verified with managed identity auth
+
+#### 1.3c Managed Identity Configuration ✅ COMPLETED
+- [x] Managed Identity configuration
+
+✅ **MANAGED IDENTITY COMPLETE** 
+- User-assigned managed identity created and configured
+- Storage Account permissions: Storage Blob Data Contributor role assigned
+- AI Foundry permissions: Cognitive Services User role assigned
+- DefaultAzureCredential: Configured for seamless authentication
+- Status: Ready for production deployment
+
+#### 1.3d Azure App Service Setup ✅ COMPLETED
+- [x] Azure App Service setup
+
+✅ **AZURE APP SERVICE COMPLETE** 
+- App Service: `shadow-pivot-ai-agentv2` created with container support
+- Container deployment: Configured for GitHub Container Registry
+- Managed identity: Attached and configured for Azure service access
+- Environment variables: Configured for Storage Account and AI Foundry
+- Custom domain: Not needed for MVP deployment
+- Status: Ready for automated deployments via GitHub Actions
+
+#### 1.3e GitHub Integration ✅ COMPLETED
+- [x] GitHub integration
+
+✅ **GITHUB INTEGRATION COMPLETE** 
+- OIDC authentication configured and working
+- Automated deployment pipeline operational
+- Web App auto-restarts on GitHub image updates
+- Status: Fully functional automated deployment
+
+### 1.4 Azure Integration Testing ✅ COMPLETED
+**Priority**: HIGH - Validation step before deployment
+
+#### 1.4a Basic Azure Connection Tests ✅ COMPLETED
+- [x] Basic Azure connection tests ✅ COMPLETED
+
+✅ **BASIC AZURE CONNECTION TESTS COMPLETE** 
+- API Route `/api/test-storage`: ✅ Working - Storage operations successful
+- API Route `/api/test-ai`: ✅ Working - AI Foundry chat completion successful
+- DefaultAzureCredential: ✅ Working - `az login` authentication verified
+- Environment Variables: ✅ Configured in `.env.local` for development
+- Blob Storage Operations: ✅ Tested - Upload, download, delete all working
+- Test Page: Available at `/test-azure` for interactive testing
+- Testing Script: `test-azure-connections.sh` for automated verification
+- Documentation: README.md updated with comprehensive setup guide
+- Status: All Azure services accessible and functional locally
+- **Commit**: 9d043c7 - Azure integration testing infrastructure complete
+
+#### 1.4b Next.js SSR Azure Integration ✅ COMPLETED
+- [x] Add Azure SDK dependencies to package.json
+- [x] Create lib/azureClient.ts for storage operations
+- [x] Create lib/aiClient.ts for AI Foundry operations
+- [x] Test server-side Azure calls in page.tsx
+- [x] Verify no client-side Azure SDK usage
+
+✅ **NEXT.JS SSR AZURE INTEGRATION COMPLETE** 
+- Azure SDK Dependencies: ✅ Added (@azure/identity, @azure/storage-blob, @azure/openai)
+- Consolidated Azure Client: ✅ Created lib/azureClient.ts with unified API
+- Storage Client: ✅ Enhanced lib/storageClient.ts with utility functions
+- AI Client: ✅ Enhanced lib/aiClient.ts with utility functions
+- Server-Side Integration: ✅ Main page.tsx demonstrates SSR Azure calls
+- Client-Side Demo: ✅ ClientSideDemo component shows proper API route usage
+- API Route Testing: ✅ Both storage and AI routes working (HTTP 200)
+- No Client-Side SDK: ✅ Verified Azure SDKs only used server-side
+- Development Server: ✅ Running on port 3002 with working Azure integration
+- Status: Ready for deployment testing
+- **Commit**: Ready for commit - SSR Azure integration complete
+
+#### 1.4c End-to-End Deployment Testing ✅ COMPLETED
+- [x] End-to-end deployment testing
+
+✅ **END-TO-END DEPLOYMENT TESTING COMPLETE** 
+- GitHub Actions: ✅ Build and push workflow completed successfully
+- Container Deployment: ✅ Azure pulls latest image from ghcr.io/jackzhaojin/shadow-pivot-ai-agentv2:latest
+- App Accessibility: ✅ Public URL responding with HTTP 200
+- Azure Storage: ✅ Blob operations working (create, read, delete test blobs)
+- Azure AI Foundry: ✅ GPT-4o-mini chat completions working with managed identity
+- Next.js Functionality: ✅ SSR and API routes working correctly
+- Managed Identity: ✅ DefaultAzureCredential working in production environment
+- Public URL: https://shadow-pivot-ai-agentv2-fpfzhqgyeqdpdwce.eastus2-01.azurewebsites.net
+- Status: 🎉 **FULL DEPLOYMENT PIPELINE OPERATIONAL**
+
+---
+
+## Phase 2: SECONDARY - Foundation Setup ✅ COMPLETED
+**Status**: ✅ COMPLETE | **Target**: Prepare for feature development
+
+### 2.1 Service Principal Setup (Online Compiler) ✅ COMPLETED
+- [x] Create service principal with `az ad sp create-for-rbac`
+- [x] Add `AZURE_CLIENT_ID` and `AZURE_TENANT_ID` variables to Codex
+- [x] **Configure `AZURE_CLIENT_SECRET` in Codex**
+
+### 2.2 Project Structure Enhancement ✅ COMPLETED
+- [x] Implement folder structure from PRD
+- [x] Set up TypeScript configurations
+- [x] Add essential dependencies for future features
+- [x] Create placeholder components and layouts
+
+### 2.3 Azure Services Preparation ✅ COMPLETED
+- [x] Document Azure Storage Account setup
+  - ✅ Verified blob container configuration and access policies
+- [x] Prepare Azure AI Foundry configuration
+  - ✅ AI Foundry workspace and endpoints fully operational
+- [x] Plan Managed Identity integration
+  - ✅ Verified seamless authentication with DefaultAzureCredential
+- [x] Create infrastructure.md guide
+
+**✅ AZURE SERVICES PREPARATION COMPLETE**
+- All Azure services are fully configured and integrated.
+- Documentation is up-to-date and verified.
+- Status: Ready for feature development and production use.
+
+---
+
+## Phase 3: Release 1.0 MVP - AI Agent Core Functionality
+**Status**: ACTIVE | **Target**: Implement core AI agent pipeline and UI for MVP
+
+### 3.1 Agent Pipeline UI & Foundation (MVP) ✅ COMPLETED
+**Complexity**: Medium | **Effort**: High
+
+- **3.1.1 Basic Agent Flow UI (Sequential)** ✅ COMPLETED
+
+- **3.1.2 User Identity Management (Client-Side GUID)** ✅ COMPLETED
+
+- **3.1.3 Execution Tracking & Display (Client-Side MVP)** ✅ COMPLETED
+
+- **3.1.4 Download Artifacts (Initial Setup)** ✅ COMPLETED
+
+### 3.2 AI Integration & Core Logic (MVP)
+**Complexity**: High | **Effort**: Very High
+
+- **3.2.1 Azure AI Foundry Service Connection** ✅ COMPLETED
+
+- **3.2.2 Step 1: Design Concept Generation (LLM)** ✅ COMPLETED
+
+- **3.2.3 Step 2: Design Evaluation (LLM)** - **IN PROGRESS (Different PR/Agent)**
+
+- **3.2.4 Step 3: Spec Selection UI and Logic**
+  **Story**: As a user designing a UI feature, I can view AI-generated design evaluation results and see the selected design concept so that I understand which design the agent chose and why before proceeding to implementation.
+
+  - [ ] **Define integration/functional tests for spec selection UI** (e.g., test evaluation display, selection logic, state update)
+  - [ ] Display design evaluation scores and reasoning in the UI
+  - [ ] Show selected design concept with visual indicators
+  - [ ] Provide clear transition to next step
+  - [ ] Store selected design concept in client-side state
+  - [ ] **Validate by running the defined tests and confirming all pass**
+
+- **3.2.5 Step 4: Parallel Figma Spec Generation Infrastructure**
+  **Story**: As a user waiting for design specifications, I can see 3 parallel Figma spec generation processes with real-time progress indicators so that I understand the system is actively working and can see the parallel processing capability.
+
+  - [ ] **Define integration/functional tests for parallel processing UI** (e.g., test 3-box display, progress indicators, state management)
+  - [ ] Implement 3-box concurrent processing display for Figma spec generation
+  - [ ] Show real-time progress for each generation process
+  - [ ] Handle completion and error states for each parallel process
+  - [ ] Implement client-side state management for parallel processes
+  - [ ] **Validate by running the defined tests and confirming all pass**
+
+- **3.2.6 Step 5: Figma Spec Generation and Validation**
+  **Story**: As a designer needing implementation specs, I can receive AI-generated Figma specifications that are tested for usability and design quality so that I have validated, implementable design specifications for my UI features.
+
+  - [ ] **Define integration/functional tests for Figma spec generation** (e.g., test API input/output, parallel generation, validation logic)
+  - [ ] API route: `/api/agent/generate-figma-specs` (parallel generation)
+    - Input: Selected design concept, User GUID
+    - Generate 3 different Figma specs in parallel
+  - [ ] Backend: Use `aiClient.ts` to call LLM for parallel spec generation
+  - [ ] Validate each spec for design quality and technical feasibility
+  - [ ] Store specifications in structured format for selection
+  - [ ] Display generated specs in the 3-box UI
+  - [ ] **Validate by running the defined tests and confirming all pass**
+
+- **3.2.7 Step 6: Figma Spec Testing and Quality Assurance**
+  **Story**: As a developer receiving design specifications, I can trust that Figma specs have been automatically tested for design clarity, component structure, and technical feasibility so that I can proceed with implementation knowing the specs are of high quality.
+
+  - [ ] **Define integration/functional tests for spec quality validation** (e.g., test validation criteria, scoring logic, quality metrics)
+  - [ ] Implement automated testing for design clarity and visual hierarchy
+  - [ ] Validate component structure and reusability
+  - [ ] Check technical feasibility for code generation
+  - [ ] Generate quality scores for each spec
+  - [ ] Display quality metrics in the UI
+  - [ ] **Validate by running the defined tests and confirming all pass**
+
+- **3.2.8 Step 7: Best Figma Spec Selection**
+  **Story**: As a user in the design pipeline, I can see the agent automatically select the most usable Figma spec based on effort vs. clarity tradeoffs so that the system proceeds with the optimal design specification without manual intervention.
+
+  - [ ] **Define integration/functional tests for spec selection** (e.g., test scoring algorithm, selection logic, UI updates)
+  - [ ] Implement scoring algorithm for spec selection
+  - [ ] Display selection reasoning and scores
+  - [ ] Automatically proceed with best spec
+  - [ ] Store selected spec in client-side state
+  - [ ] **Validate by running the defined tests and confirming all pass**
+
+- **3.2.9 Step 8: Parallel Code Generation Infrastructure**
+  **Story**: As a user waiting for code implementation, I can see 3 parallel code generation processes with real-time progress indicators so that I understand the system is actively generating multiple implementation options.
+
+  - [ ] **Define integration/functional tests for parallel code generation UI** (e.g., test 3-box display, progress tracking, state management)
+  - [ ] Implement 3-box concurrent processing display for code generation
+  - [ ] Show real-time progress for each generation process
+  - [ ] Handle completion and error states for each parallel process
+  - [ ] Implement client-side state management for code generation
+  - [ ] **Validate by running the defined tests and confirming all pass**
+
+- **3.2.10 Step 9: Full Feature Code Generation**
+  **Story**: As a developer needing a complete UI feature, I can receive AI-generated Next.js + TypeScript implementations with React components and Tailwind styling so that I have fully functional, self-contained feature code ready for integration.
+
+  - [ ] **Define integration/functional tests for code generation** (e.g., test API input/output, parallel generation, code structure)
+  - [ ] API route: `/api/agent/generate-code` (parallel generation)
+    - Input: Selected Figma spec (JSON), User GUID
+    - Generate 3 different implementation approaches
+  - [ ] Backend: Use `aiClient.ts` to call LLM for parallel code generation
+  - [ ] Generate complete Next.js + TypeScript features
+  - [ ] Include React components with Tailwind CSS
+  - [ ] Create self-contained feature folders with minimal routing logic
+  - [ ] Display generated code in the 3-box UI
+  - [ ] **Validate by running the defined tests and confirming all pass**
+
+- **3.2.11 Step 10: Automated Code Testing and Quality Validation**
+  **Story**: As a developer receiving generated code, I can trust that all code implementations have been automatically tested for functionality, quality, accessibility, and structure so that I receive production-ready code that meets quality standards.
+
+  - [ ] **Define integration/functional tests for code quality validation** (e.g., test validation criteria, quality metrics, scoring)
+  - [ ] Test functionality: components render and handle interactions correctly
+  - [ ] Validate code quality: clean, maintainable TypeScript/React code
+  - [ ] Check accessibility: WCAG compliance and semantic HTML
+  - [ ] Verify performance: optimized rendering and bundle size
+  - [ ] Validate structure: proper component organization
+  - [ ] Generate quality scores for each implementation
+  - [ ] **Validate by running the defined tests and confirming all pass**
+
+- **3.2.12 Step 11: Aggregate Scoring and Best Code Selection**
+  **Story**: As a user in the code generation pipeline, I can see the agent automatically select the best code implementation using aggregate scoring that combines multiple evaluation metrics so that I receive the optimal implementation without manual review.
+
+  - [ ] **Define integration/functional tests for code selection** (e.g., test scoring algorithm, selection logic, UI updates)
+  - [ ] Implement weighted evaluation combining all testing criteria
+  - [ ] Automatically select highest-scoring implementation
+  - [ ] Provide detailed scoring breakdown in execution trace
+  - [ ] Display selection reasoning in the UI
+  - [ ] Store selected code in client-side state
+  - [ ] **Validate by running the defined tests and confirming all pass**
+
+- **3.2.13 Step 12: Complete Artifact Download Package**
+  **Story**: As a user completing the AI agent pipeline, I can download a complete ZIP archive containing the selected Figma specs, generated code, and full execution trace so that I have all deliverables and can understand the agent's decision-making process.
+
+  - [ ] **Define integration/functional tests for artifact download** (e.g., test ZIP packaging, download functionality, blob storage)
+  - [ ] Create ZIP archive with selected Figma specs and code
+  - [ ] Include detailed execution trace with all agent decisions
+  - [ ] Provide download functionality from the UI
+  - [ ] Store artifacts in user-specific blob storage path (`userId/executionId/`)
+  - [ ] API route: `/api/agent/store-execution` for blob storage integration
+  - [ ] **Validate by running the defined tests and confirming all pass**
+
+### 3.3 Execution Management & User Experience (MVP)
+**Complexity**: Medium | **Effort**: High
+
+- **3.3.1 Execution History and User-Scoped Storage**
+  **Story**: As a user with multiple AI agent runs, I can access my execution history and download artifacts from past runs so that I can retrieve previous work and track my project iterations.
+
+  - [ ] **Define integration/functional tests for execution history** (e.g., test storage retrieval, UI display, download functionality)
+  - [ ] Store all executions under user-specific blob storage paths (`userId/executionId/`)
+  - [ ] API route: `/api/agent/get-execution-history` - List execution IDs for the user
+  - [ ] API route: `/api/agent/get-execution-details` - Retrieve specific execution artifacts
+  - [ ] Provide UI to browse execution history
+  - [ ] Enable download of artifacts from past executions
+  - [ ] Maintain execution metadata and trace logs
+  - [ ] **Validate by running the defined tests and confirming all pass**
+
+- **3.3.2 Error Handling and User Feedback**
+  **Story**: As a user when the AI agent encounters errors, I can see clear error messages and understand what went wrong in the pipeline so that I can take appropriate action or retry with different inputs.
+
+  - [ ] **Define integration/functional tests for error handling** (e.g., test error scenarios, user feedback, recovery options)
+  - [ ] Implement comprehensive error handling for all pipeline steps
+  - [ ] Provide clear, actionable error messages to users
+  - [ ] Log errors for debugging while protecting user privacy
+  - [ ] Enable graceful degradation when possible
+  - [ ] Display error states in the UI with recovery suggestions
+  - [ ] **Validate by running the defined tests and confirming all pass**
+
+---
+
+## Success Criteria for Release 1.0
+
+### Must Have (MVP Features) ✅ Completed Infrastructure
+- [x] Docker image builds successfully ✅ GitHub Actions build completed
+- [x] Container runs locally without errors ✅ Tested and verified
+- [x] Azure Storage Account accessible via DefaultAzureCredential ✅ Blob operations working
+- [x] Azure AI Foundry accessible via DefaultAzureCredential ✅ GPT-4o-mini responses working
+- [x] Basic Azure integration tests pass locally ✅ All tests passing
+- [x] GitHub Actions workflow completes without failures ✅ Automated pipeline operational
+- [x] Azure App Service shows "Running" status ✅ Service is running
+- [x] Deployed app accessible via public URL ✅ HTTP 200 confirmed
+- [x] Next.js default page loads correctly ✅ SSR working
+
+### Must Have (Core Features) - In Progress
+- [ ] Complete agent pipeline from creative brief to artifact download
+- [ ] 3-box parallel processing display for both Figma and code generation
+- [ ] Automated testing and selection of best specs and code
+- [ ] ZIP download of complete artifacts with execution trace
+- [ ] User-scoped execution storage and history
+- [ ] Error handling and user feedback throughout pipeline
+
+### Nice to Have (Release 1.0 Stretch Goals)
+- [ ] Enhanced visual indicators and progress tracking
+- [ ] Performance optimizations for large file handling
+- [ ] Improved user experience and UI polish
+
+## Progress Log
+
+### ✅ Completed Tasks
+- **Phase 1: Deployment Pipeline COMPLETE** - Full CI/CD, Azure infrastructure, and baseline Next.js app deployed and operational.
+- **Phase 2: Foundation Setup COMPLETE** - Project structure, SP setup, and Azure service preparation documentation finalized.
+- **3.1.1 Basic Agent Flow UI (Sequential) COMPLETE** - Basic sequential UI with abort control and context state.
+- **3.1.2 User Identity Management (Client-Side GUID) COMPLETE** - Client-side GUID generation, persistence, display, and API integration.
+- **3.1.3 Execution Tracking & Display (Client-Side MVP) COMPLETE** - Timeline UI and execution state tracking.
+- **3.1.4 Download Artifacts (Initial Setup) COMPLETE** - UI and placeholder functionality for artifact download.
+- **3.2.1 Azure AI Foundry Service Connection COMPLETE** - Backend can communicate with AI services.
+- **3.2.2 Step 1: Design Concept Generation (LLM) COMPLETE** - First AI step implemented.
+
+### 🎯 Next Priorities (Active Development)
+1. **3.2.3 Step 2: Design Evaluation (LLM)** - IN PROGRESS (Different PR/Agent)
+2. **3.2.4 Step 3: Spec Selection UI and Logic** - Display evaluation results and selection
+3. **3.2.5 Step 4: Parallel Figma Spec Generation Infrastructure** - 3-box parallel processing UI
+4. **3.2.6 Step 5: Figma Spec Generation and Validation** - Core Figma generation logic
+5. **3.2.7 Step 6: Figma Spec Testing and Quality Assurance** - Automated spec validation
+6. **3.2.8 Step 7: Best Figma Spec Selection** - Agent-based spec selection
+7. **3.2.9 Step 8: Parallel Code Generation Infrastructure** - 3-box code generation UI
+8. **3.2.10 Step 9: Full Feature Code Generation** - Complete code implementation
+9. **3.2.11 Step 10: Automated Code Testing and Quality Validation** - Code quality assurance
+10. **3.2.12 Step 11: Aggregate Scoring and Best Code Selection** - Best code selection
+11. **3.2.13 Step 12: Complete Artifact Download Package** - ZIP download with blob storage
+12. **3.3.1 Execution History and User-Scoped Storage** - User execution management
+13. **3.3.2 Error Handling and User Feedback** - Comprehensive error handling
+
+### 📝 Work Session Notes
+- **Session 1**: Docker setup complete - everything working smoothly
+- **Session 2**: GitHub Actions workflow complete - ready for Azure deployment
+- **Session 3**: ✅ OIDC authentication configured - automated deployment pipeline fully operational
+- **Session 4**: ✅ Azure infrastructure setup (Storage Account, AI Foundry, Managed Identity)
+- **Session 5**: ✅ Azure integration testing - all services working locally
+- **Session 6**: ✅ Next.js SSR Azure integration - server-side calls working
+- **Session 7**: 🎉 **END-TO-END DEPLOYMENT COMPLETE** - Full pipeline operational!
+- **Session 8**: Basic agent flow UI and user identity management complete
+- **Session 9**: Azure AI integration and design concept generation complete

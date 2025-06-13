@@ -199,7 +199,7 @@ npx create-next-app@latest
 
 ---
 
-### MVP Scope:
+### Release 1.0 (MVP) Scope:
 
 * ✅ Manual creative brief input
 * ✅ Agent flow w/ visual indicators and abort functionality
@@ -215,7 +215,29 @@ npx create-next-app@latest
 * ✅ No Storybook/test code (yet)
 * ✅ All executions and agent runs visible to all users
 * ✅ Infrastructure will be documented and provisioned manually for MVP
-* ❌ Individual file preview (future enhancement)
+
+---
+
+### Release 1.1 (Post-MVP) Scope:
+
+* **Enhanced User Experience**
+  * Individual file preview capabilities
+  * Retry/modify steps and re-run failed executions
+  * Multi-user execution isolation and privacy controls
+  * Enhanced visual indicators and progress tracking
+
+* **Advanced Features**
+  * GitHub PR integration for code delivery
+  * Storybook/test support in generated features
+  * Multi-agent collaboration workflows
+  * AI metrics dashboard per execution
+  * Advanced scoring refinements and selection criteria
+
+* **Infrastructure & DevOps**
+  * Full Infrastructure as Code automation (e.g., Terraform, Bicep)
+  * Cost optimization for blob cleanup policies
+  * Automated token rotation for blob SAS
+  * Performance monitoring and optimization
 
 ---
 
@@ -242,7 +264,7 @@ npx create-next-app@latest
 
 ---
 
-### Future Enhancements (Post-MVP):
+### Release 1.1 Enhancements (Post-MVP):
 
 * Retry/modify steps and re-run
 * GitHub PR integration
@@ -250,6 +272,8 @@ npx create-next-app@latest
 * Multi-agent collaboration
 * AI metrics dashboard per execution
 * Full Infrastructure as Code automation (e.g., Terraform, Bicep)
+* Individual file preview capabilities
+* Multi-user execution isolation and privacy controls
 
 ---
 
