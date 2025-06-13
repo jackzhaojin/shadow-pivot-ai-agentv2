@@ -229,6 +229,7 @@
   - [x] Update progress indicators to reflect actual processing state (not premature states)
   - [x] Ensure design concepts display is clear and well-formatted for user understanding
   - [x] Restore creative brief input so users can start the flow with a prompt
+  - [x] Fix concept list formatting and auto-advance to step 2
   - [x] **Validate by running the defined tests and confirming all pass**
 
 - **3.2.4c Interactive Step Results Review**

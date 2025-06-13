@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAgentFlow } from '@/providers/AgentFlowProvider';
 import { selectBestDesignConcept } from '@/lib/specSelection';
 import { createArtifactZipPlaceholder } from '@/utils/download';
@@ -33,10 +33,6 @@ export default function AgentFlow() {
         console.error(err);
       }
       completeStep(0);
-      // Automatically proceed to the next step
-      setTimeout(() => {
-        nextStep();
-      }, 10);
     }
   };
 
@@ -63,12 +59,6 @@ export default function AgentFlow() {
       }
       const finished = currentStep;
       completeStep(currentStep);
-      // Auto-progress through early steps without manual clicks
-      if (finished + 1 < 3) {
-        setTimeout(() => {
-          nextStep();
-        }, 10);
-      }
     }
   };
 
@@ -87,6 +77,13 @@ export default function AgentFlow() {
   };
 
   const handleAbort = () => abort();
+
+  // Automatically advance through the first three steps when a step completes
+  useEffect(() => {
+    if (currentStep > 0 && currentStep < 3 && !aborted) {
+      nextStep();
+    }
+  }, [currentStep, aborted]);
 
   const getStepIcon = (index: number) => {
     if (completed.has(index)) {
@@ -170,11 +167,13 @@ export default function AgentFlow() {
       {designConcepts.length > 0 && (
         <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 mb-8">
           <h2 className="text-xl font-semibold text-gray-900 mb-4">Design Concepts</h2>
-          <ul className="list-disc pl-5 space-y-2 text-gray-700">
+          <div className="grid sm:grid-cols-2 gap-4 text-gray-700">
             {designConcepts.map((c, i) => (
-              <li key={i}>{c}</li>
+              <div key={i} className="p-4 bg-gray-50 rounded-xl border border-gray-200">
+                {c}
+              </div>
             ))}
-          </ul>
+          </div>
         </div>
       )}
 
