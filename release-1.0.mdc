@@ -245,150 +245,187 @@
   - [x] **Abort control**: Maintain prominent abort button functionality ✅
   - [x] **Validate by running the defined tests and confirming all pass** ✅
 
-- **3.2.4c Interactive Step Results Review**
-  **Story**: As a user watching the automated AI agent flow, I can click on any completed step in the timeline to view the detailed input/output from that step so that I can review what the AI generated at each stage without interrupting the automatic progression.
+### 3.3 Agent Flow Component Refactoring (Critical Architecture)
+**Complexity**: High | **Effort**: High
+**Story**: As a developer maintaining the AI agent codebase, I need the agent flow component to be properly modularized according to PRD architecture so that the codebase remains maintainable as we add more complex features and parallel processing capabilities.
 
-  - [ ] **Define integration/functional tests for step results review** (e.g., test clickable steps, result display, state management)
-  - [ ] **Make completed steps clickable**: Implement interactive timeline steps
-  - [ ] **Step-specific result views**: Display detailed input/output for each step
-    - Step 1 (Design Concepts): Show input brief + generated concept list with descriptions
-    - Step 2 (Design Evaluation): Show input concepts + scoring breakdown and reasoning
-    - Step 3 (Spec Selection): Show evaluation results + selected concept with justification
-    - Future steps: Figma specs, code generation results, quality scores, etc.
-  - [ ] **Visual indicators**: Show which steps have reviewable content available
-  - [ ] **Non-disruptive UI**: Implement collapsible/expandable result panels
-  - [ ] **Persistent access**: Ensure results remain accessible even after agent moves to subsequent steps
-  - [ ] **Smooth UX**: Add animations and transitions for better user experience
-  - [ ] **AI transparency**: Show AI reasoning, decision criteria, and selection logic for each step
-  - [ ] **Validate by running the defined tests and confirming all pass**
+- [ ] **Define integration/functional tests for refactored components** (e.g., test component separation, state management, prop passing)
+- [ ] **Component separation**: Break down large agent flow component into focused sub-components
+  - `AgentFlowTimeline` - Progress visualization and step management
+  - `StepExecutor` - Individual step execution logic and state
+  - `ResultsDisplay` - Step output formatting and display
+  - `ErrorHandler` - Error state management and user feedback
+  - `ProgressIndicator` - Real-time progress and loading states
+- [ ] **State management refactoring**: Implement proper state separation between components
+- [ ] **Props and interface design**: Define clear component interfaces and data flow
+- [ ] **Context providers**: Set up proper context for agent flow state sharing
+- [ ] **Testing infrastructure**: Ensure all refactored components maintain test coverage
+- [ ] **Performance optimization**: Implement proper memoization and re-render optimization
+- [ ] **Validate by running the defined tests and confirming all pass**
 
-- **3.2.5 Step 4: Parallel Figma Spec Generation Infrastructure**
-  **Story**: As a user waiting for design specifications, I can see 3 parallel Figma spec generation processes with real-time progress indicators so that I understand the system is actively working and can see the parallel processing capability.
+### 3.4 Interactive Step Results Review
+**Complexity**: Medium | **Effort**: Medium
+**Story**: As a user watching the automated AI agent flow, I can click on any completed step in the timeline to view the detailed input/output from that step so that I can review what the AI generated at each stage without interrupting the automatic progression.
 
-  - [ ] **Define integration/functional tests for parallel processing UI** (e.g., test 3-box display, progress indicators, state management)
-  - [ ] Implement 3-box concurrent processing display for Figma spec generation
-  - [ ] Show real-time progress for each generation process
-  - [ ] Handle completion and error states for each parallel process
-  - [ ] Implement client-side state management for parallel processes
-  - [ ] **Validate by running the defined tests and confirming all pass**
+- [ ] **Define integration/functional tests for step results review** (e.g., test clickable steps, result display, state management)
+- [ ] **Make completed steps clickable**: Implement interactive timeline steps
+- [ ] **Step-specific result views**: Display detailed input/output for each step
+  - Step 1 (Design Concepts): Show input brief + generated concept list with descriptions
+  - Step 2 (Design Evaluation): Show input concepts + scoring breakdown and reasoning
+  - Step 3 (Spec Selection): Show evaluation results + selected concept with justification
+  - Future steps: Figma specs, code generation results, quality scores, etc.
+- [ ] **Visual indicators**: Show which steps have reviewable content available
+- [ ] **Non-disruptive UI**: Implement collapsible/expandable result panels
+- [ ] **Persistent access**: Ensure results remain accessible even after agent moves to subsequent steps
+- [ ] **Smooth UX**: Add animations and transitions for better user experience
+- [ ] **AI transparency**: Show AI reasoning, decision criteria, and selection logic for each step
+- [ ] **Validate by running the defined tests and confirming all pass**
 
-- **3.2.6 Step 5: Figma Spec Generation and Validation**
-  **Story**: As a designer needing implementation specs, I can receive AI-generated Figma specifications that are tested for usability and design quality so that I have validated, implementable design specifications for my UI features.
-
-  - [ ] **Define integration/functional tests for Figma spec generation** (e.g., test API input/output, parallel generation, validation logic)
-  - [ ] API route: `/api/agent/generate-figma-specs` (parallel generation)
-    - Input: Selected design concept, User GUID
-    - Generate 3 different Figma specs in parallel
-  - [ ] Backend: Use `aiClient.ts` to call LLM for parallel spec generation
-  - [ ] Validate each spec for design quality and technical feasibility
-  - [ ] Store specifications in structured format for selection
-  - [ ] Display generated specs in the 3-box UI
-  - [ ] **Validate by running the defined tests and confirming all pass**
-
-- **3.2.7 Step 6: Figma Spec Testing and Quality Assurance**
-  **Story**: As a developer receiving design specifications, I can trust that Figma specs have been automatically tested for design clarity, component structure, and technical feasibility so that I can proceed with implementation knowing the specs are of high quality.
-
-  - [ ] **Define integration/functional tests for spec quality validation** (e.g., test validation criteria, scoring logic, quality metrics)
-  - [ ] Implement automated testing for design clarity and visual hierarchy
-  - [ ] Validate component structure and reusability
-  - [ ] Check technical feasibility for code generation
-  - [ ] Generate quality scores for each spec
-  - [ ] Display quality metrics in the UI
-  - [ ] **Validate by running the defined tests and confirming all pass**
-
-- **3.2.8 Step 7: Best Figma Spec Selection**
-  **Story**: As a user in the design pipeline, I can see the agent automatically select the most usable Figma spec based on effort vs. clarity tradeoffs so that the system proceeds with the optimal design specification without manual intervention.
-
-  - [ ] **Define integration/functional tests for spec selection** (e.g., test scoring algorithm, selection logic, UI updates)
-  - [ ] Implement scoring algorithm for spec selection
-  - [ ] Display selection reasoning and scores
-  - [ ] Automatically proceed with best spec
-  - [ ] Store selected spec in client-side state
-  - [ ] **Validate by running the defined tests and confirming all pass**
-
-- **3.2.9 Step 8: Parallel Code Generation Infrastructure**
-  **Story**: As a user waiting for code implementation, I can see 3 parallel code generation processes with real-time progress indicators so that I understand the system is actively generating multiple implementation options.
-
-  - [ ] **Define integration/functional tests for parallel code generation UI** (e.g., test 3-box display, progress tracking, state management)
-  - [ ] Implement 3-box concurrent processing display for code generation
-  - [ ] Show real-time progress for each generation process
-  - [ ] Handle completion and error states for each parallel process
-  - [ ] Implement client-side state management for code generation
-  - [ ] **Validate by running the defined tests and confirming all pass**
-
-- **3.2.10 Step 9: Full Feature Code Generation**
-  **Story**: As a developer needing a complete UI feature, I can receive AI-generated Next.js + TypeScript implementations with React components and Tailwind styling so that I have fully functional, self-contained feature code ready for integration.
-
-  - [ ] **Define integration/functional tests for code generation** (e.g., test API input/output, parallel generation, code structure)
-  - [ ] API route: `/api/agent/generate-code` (parallel generation)
-    - Input: Selected Figma spec (JSON), User GUID
-    - Generate 3 different implementation approaches
-  - [ ] Backend: Use `aiClient.ts` to call LLM for parallel code generation
-  - [ ] Generate complete Next.js + TypeScript features
-  - [ ] Include React components with Tailwind CSS
-  - [ ] Create self-contained feature folders with minimal routing logic
-  - [ ] Display generated code in the 3-box UI
-  - [ ] **Validate by running the defined tests and confirming all pass**
-
-- **3.2.11 Step 10: Automated Code Testing and Quality Validation**
-  **Story**: As a developer receiving generated code, I can trust that all code implementations have been automatically tested for functionality, quality, accessibility, and structure so that I receive production-ready code that meets quality standards.
-
-  - [ ] **Define integration/functional tests for code quality validation** (e.g., test validation criteria, quality metrics, scoring)
-  - [ ] Test functionality: components render and handle interactions correctly
-  - [ ] Validate code quality: clean, maintainable TypeScript/React code
-  - [ ] Check accessibility: WCAG compliance and semantic HTML
-  - [ ] Verify performance: optimized rendering and bundle size
-  - [ ] Validate structure: proper component organization
-  - [ ] Generate quality scores for each implementation
-  - [ ] **Validate by running the defined tests and confirming all pass**
-
-- **3.2.12 Step 11: Aggregate Scoring and Best Code Selection**
-  **Story**: As a user in the code generation pipeline, I can see the agent automatically select the best code implementation using aggregate scoring that combines multiple evaluation metrics so that I receive the optimal implementation without manual review.
-
-  - [ ] **Define integration/functional tests for code selection** (e.g., test scoring algorithm, selection logic, UI updates)
-  - [ ] Implement weighted evaluation combining all testing criteria
-  - [ ] Automatically select highest-scoring implementation
-  - [ ] Provide detailed scoring breakdown in execution trace
-  - [ ] Display selection reasoning in the UI
-  - [ ] Store selected code in client-side state
-  - [ ] **Validate by running the defined tests and confirming all pass**
-
-- **3.2.13 Step 12: Complete Artifact Download Package**
-  **Story**: As a user completing the AI agent pipeline, I can download a complete ZIP archive containing the selected Figma specs, generated code, and full execution trace so that I have all deliverables and can understand the agent's decision-making process.
-
-  - [ ] **Define integration/functional tests for artifact download** (e.g., test ZIP packaging, download functionality, blob storage)
-  - [ ] Create ZIP archive with selected Figma specs and code
-  - [ ] Include detailed execution trace with all agent decisions
-  - [ ] Provide download functionality from the UI
-  - [ ] Store artifacts in user-specific blob storage path (`userId/executionId/`)
-  - [ ] API route: `/api/agent/store-execution` for blob storage integration
-  - [ ] **Validate by running the defined tests and confirming all pass**
-
-### 3.3 Execution Management & User Experience (MVP)
+### 3.5 Step 4: Parallel Figma Spec Generation Infrastructure
 **Complexity**: Medium | **Effort**: High
+**Story**: As a user waiting for design specifications, I can see 3 parallel Figma spec generation processes with real-time progress indicators so that I understand the system is actively working and can see the parallel processing capability.
 
-- **3.3.1 Execution History and User-Scoped Storage**
-  **Story**: As a user with multiple AI agent runs, I can access my execution history and download artifacts from past runs so that I can retrieve previous work and track my project iterations.
+- [ ] **Define integration/functional tests for parallel processing UI** (e.g., test 3-box display, progress indicators, state management)
+- [ ] Implement 3-box concurrent processing display for Figma spec generation
+- [ ] Show real-time progress for each generation process
+- [ ] Handle completion and error states for each parallel process
+- [ ] Implement client-side state management for parallel processes
+- [ ] **Validate by running the defined tests and confirming all pass**
 
-  - [ ] **Define integration/functional tests for execution history** (e.g., test storage retrieval, UI display, download functionality)
-  - [ ] Store all executions under user-specific blob storage paths (`userId/executionId/`)
-  - [ ] API route: `/api/agent/get-execution-history` - List execution IDs for the user
-  - [ ] API route: `/api/agent/get-execution-details` - Retrieve specific execution artifacts
-  - [ ] Provide UI to browse execution history
-  - [ ] Enable download of artifacts from past executions
-  - [ ] Maintain execution metadata and trace logs
-  - [ ] **Validate by running the defined tests and confirming all pass**
+### 3.6 Step 5: Figma Spec Generation and Validation
+**Complexity**: High | **Effort**: Very High
+**Story**: As a designer needing implementation specs, I can receive AI-generated Figma specifications that are tested for usability and design quality so that I have validated, implementable design specifications for my UI features.
 
-- **3.3.2 Error Handling and User Feedback**
-  **Story**: As a user when the AI agent encounters errors, I can see clear error messages and understand what went wrong in the pipeline so that I can take appropriate action or retry with different inputs.
+- [ ] **Define integration/functional tests for Figma spec generation** (e.g., test API input/output, parallel generation, validation logic)
+- [ ] API route: `/api/agent/generate-figma-specs` (parallel generation)
+  - Input: Selected design concept, User GUID
+  - Generate 3 different Figma specs in parallel
+- [ ] Backend: Use `aiClient.ts` to call LLM for parallel spec generation
+- [ ] Validate each spec for design quality and technical feasibility
+- [ ] Store specifications in structured format for selection
+- [ ] Display generated specs in the 3-box UI
+- [ ] **Validate by running the defined tests and confirming all pass**
 
-  - [ ] **Define integration/functional tests for error handling** (e.g., test error scenarios, user feedback, recovery options)
-  - [ ] Implement comprehensive error handling for all pipeline steps
-  - [ ] Provide clear, actionable error messages to users
-  - [ ] Log errors for debugging while protecting user privacy
-  - [ ] Enable graceful degradation when possible
-  - [ ] Display error states in the UI with recovery suggestions
-  - [ ] **Validate by running the defined tests and confirming all pass**
+### 3.7 Step 6: Figma Spec Testing and Quality Assurance
+**Complexity**: High | **Effort**: High
+**Story**: As a developer receiving design specifications, I can trust that Figma specs have been automatically tested for design clarity, component structure, and technical feasibility so that I can proceed with implementation knowing the specs are of high quality.
+
+- [ ] **Define integration/functional tests for spec quality validation** (e.g., test validation criteria, scoring logic, quality metrics)
+- [ ] Implement automated testing for design clarity and visual hierarchy
+- [ ] Validate component structure and reusability
+- [ ] Check technical feasibility for code generation
+- [ ] Generate quality scores for each spec
+- [ ] Display quality metrics in the UI
+- [ ] **Validate by running the defined tests and confirming all pass**
+
+### 3.8 Step 7: Best Figma Spec Selection
+**Complexity**: Medium | **Effort**: Medium
+**Story**: As a user in the design pipeline, I can see the agent automatically select the most usable Figma spec based on effort vs. clarity tradeoffs so that the system proceeds with the optimal design specification without manual intervention.
+
+- [ ] **Define integration/functional tests for spec selection** (e.g., test scoring algorithm, selection logic, UI updates)
+- [ ] Implement scoring algorithm for spec selection
+- [ ] Display selection reasoning and scores
+- [ ] Automatically proceed with best spec
+- [ ] Store selected spec in client-side state
+- [ ] **Validate by running the defined tests and confirming all pass**
+
+### 3.9 Step 8: Parallel Code Generation Infrastructure
+**Complexity**: Medium | **Effort**: High
+**Story**: As a user waiting for code implementation, I can see 3 parallel code generation processes with real-time progress indicators so that I understand the system is actively generating multiple implementation options.
+
+- [ ] **Define integration/functional tests for parallel code generation UI** (e.g., test 3-box display, progress tracking, state management)
+- [ ] Implement 3-box concurrent processing display for code generation
+- [ ] Show real-time progress for each generation process
+- [ ] Handle completion and error states for each parallel process
+- [ ] Implement client-side state management for code generation
+- [ ] **Validate by running the defined tests and confirming all pass**
+
+### 3.10 Step 9: Full Feature Code Generation
+**Complexity**: Very High | **Effort**: Very High
+**Story**: As a developer needing a complete UI feature, I can receive AI-generated Next.js + TypeScript implementations with React components and Tailwind styling so that I have fully functional, self-contained feature code ready for integration.
+
+- [ ] **Define integration/functional tests for code generation** (e.g., test API input/output, parallel generation, code structure)
+- [ ] API route: `/api/agent/generate-code` (parallel generation)
+  - Input: Selected Figma spec (JSON), User GUID
+  - Generate 3 different implementation approaches
+- [ ] Backend: Use `aiClient.ts` to call LLM for parallel code generation
+- [ ] Generate complete Next.js + TypeScript features
+- [ ] Include React components with Tailwind CSS
+- [ ] Create self-contained feature folders with minimal routing logic
+- [ ] Display generated code in the 3-box UI
+- [ ] **Validate by running the defined tests and confirming all pass**
+
+### 3.11 Step 10: Automated Code Testing and Quality Validation
+**Complexity**: Very High | **Effort**: Very High
+**Story**: As a developer receiving generated code, I can trust that all code implementations have been automatically tested for functionality, quality, accessibility, and structure so that I receive production-ready code that meets quality standards.
+
+- [ ] **Define integration/functional tests for code quality validation** (e.g., test validation criteria, quality metrics, scoring)
+- [ ] Test functionality: components render and handle interactions correctly
+- [ ] Validate code quality: clean, maintainable TypeScript/React code
+- [ ] Check accessibility: WCAG compliance and semantic HTML
+- [ ] Verify performance: optimized rendering and bundle size
+- [ ] Validate structure: proper component organization
+- [ ] Generate quality scores for each implementation
+- [ ] **Validate by running the defined tests and confirming all pass**
+
+### 3.12 Step 11: Aggregate Scoring and Best Code Selection
+**Complexity**: High | **Effort**: Medium
+**Story**: As a user in the code generation pipeline, I can see the agent automatically select the best code implementation using aggregate scoring that combines multiple evaluation metrics so that I receive the optimal implementation without manual review.
+
+- [ ] **Define integration/functional tests for code selection** (e.g., test scoring algorithm, selection logic, UI updates)
+- [ ] Implement weighted evaluation combining all testing criteria
+- [ ] Automatically select highest-scoring implementation
+- [ ] Provide detailed scoring breakdown in execution trace
+- [ ] Display selection reasoning in the UI
+- [ ] Store selected code in client-side state
+- [ ] **Validate by running the defined tests and confirming all pass**
+
+### 3.13 Step 12: Complete Artifact Download Package
+**Complexity**: High | **Effort**: High
+**Story**: As a user completing the AI agent pipeline, I can download a complete ZIP archive containing the selected Figma specs, generated code, and full execution trace so that I have all deliverables and can understand the agent's decision-making process.
+
+- [ ] **Define integration/functional tests for artifact download** (e.g., test ZIP packaging, download functionality, blob storage)
+- [ ] Create ZIP archive with selected Figma specs and code
+- [ ] Include detailed execution trace with all agent decisions
+- [ ] Provide download functionality from the UI
+- [ ] Store artifacts in user-specific blob storage path (`userId/executionId/`)
+- [ ] API route: `/api/agent/store-execution` for blob storage integration
+- [ ] **Validate by running the defined tests and confirming all pass**
+
+---
+
+## Phase 4: Execution Management & History (release 1.1 Prep)
+**Status**: FUTURE | **Target**: Advanced user management and execution tracking
+
+### 4.1 Execution History and User-Scoped Storage
+**Complexity**: High | **Effort**: High
+**Story**: As a user with multiple AI agent runs, I can access my execution history and download artifacts from past runs so that I can retrieve previous work and track my project iterations.
+
+- [ ] **Define integration/functional tests for execution history** (e.g., test storage retrieval, UI display, download functionality)
+- [ ] Store all executions under user-specific blob storage paths (`userId/executionId/`)
+- [ ] API route: `/api/agent/get-execution-history` - List execution IDs for the user
+- [ ] API route: `/api/agent/get-execution-details` - Retrieve specific execution artifacts
+- [ ] Provide UI to browse execution history
+- [ ] Enable download of artifacts from past executions
+- [ ] Maintain execution metadata and trace logs
+- [ ] **Validate by running the defined tests and confirming all pass**
+
+---
+
+## Phase 5: Advanced Error Handling & Polish (release 1.1 Prep)
+**Status**: FUTURE | **Target**: Production-grade reliability and user experience
+
+### 5.1 Error Handling and User Feedback
+**Complexity**: Medium | **Effort**: High
+**Story**: As a user when the AI agent encounters errors, I can see clear error messages and understand what went wrong in the pipeline so that I can take appropriate action or retry with different inputs.
+
+- [ ] **Define integration/functional tests for error handling** (e.g., test error scenarios, user feedback, recovery options)
+- [ ] Implement comprehensive error handling for all pipeline steps
+- [ ] Provide clear, actionable error messages to users
+- [ ] Log errors for debugging while protecting user privacy
+- [ ] Enable graceful degradation when possible
+- [ ] Display error states in the UI with recovery suggestions
+- [ ] **Validate by running the defined tests and confirming all pass**
 
 ---
 
@@ -454,18 +491,21 @@
 - **3.2.4b Agent Flow UX Improvements COMPLETE** ✅ - Automated flow progression, comprehensive error handling, enhanced visual states, multiple design concept generation, and modern UI polish all implemented successfully by Codex.
 
 ### 🎯 Next Priorities (Active Development)
-1. **3.2.4c Interactive Step Results Review** - Clickable steps to review previous results
-2. **3.2.5 Step 4: Parallel Figma Spec Generation Infrastructure** - 3-box parallel processing UI
-3. **3.2.6 Step 5: Figma Spec Generation and Validation** - Core Figma generation logic
-4. **3.2.7 Step 6: Figma Spec Testing and Quality Assurance** - Automated spec validation
-5. **3.2.8 Step 7: Best Figma Spec Selection** - Agent-based spec selection
-6. **3.2.9 Step 8: Parallel Code Generation Infrastructure** - 3-box code generation UI
-7. **3.2.10 Step 9: Full Feature Code Generation** - Complete code implementation
-8. **3.2.11 Step 10: Automated Code Testing and Quality Validation** - Code quality assurance
-9. **3.2.12 Step 11: Aggregate Scoring and Best Code Selection** - Best code selection
-10. **3.2.13 Step 12: Complete Artifact Download Package** - ZIP download with blob storage
-11. **3.3.1 Execution History and User-Scoped Storage** - User execution management
-12. **3.3.2 Error Handling and User Feedback** - Comprehensive error handling
+1. **3.3 Agent Flow Component Refactoring** - Break down large component into focused modules (CRITICAL ARCHITECTURE)
+2. **3.4 Interactive Step Results Review** - Clickable steps to review previous results
+3. **3.5 Step 4: Parallel Figma Spec Generation Infrastructure** - 3-box parallel processing UI
+4. **3.6 Step 5: Figma Spec Generation and Validation** - Core Figma generation logic
+5. **3.7 Step 6: Figma Spec Testing and Quality Assurance** - Automated spec validation
+6. **3.8 Step 7: Best Figma Spec Selection** - Agent-based spec selection
+7. **3.9 Step 8: Parallel Code Generation Infrastructure** - 3-box code generation UI
+8. **3.10 Step 9: Full Feature Code Generation** - Complete code implementation
+9. **3.11 Step 10: Automated Code Testing and Quality Validation** - Code quality assurance
+10. **3.12 Step 11: Aggregate Scoring and Best Code Selection** - Best code selection
+11. **3.13 Step 12: Complete Artifact Download Package** - ZIP download with blob storage
+
+### 📝 Future Phases (release 1.1 Prep)
+- **Phase 4**: Execution Management & History (4.1 - Execution history and user-scoped storage)
+- **Phase 5**: Advanced Error Handling & Polish (5.1 - Comprehensive error handling and user feedback)
 
 ### 📝 Work Session Notes
 - **Session 1**: Docker setup complete - everything working smoothly
