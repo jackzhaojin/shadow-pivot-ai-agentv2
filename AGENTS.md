@@ -37,6 +37,17 @@ Use the structure outlined in the PRD when adding new code:
 - Summarize major changes and reference the PRD or release-1.0.mdc/release-1.1.mdc document when relevant.
 - Provide the results of the programmatic checks listed below.
 
+## Setup
+Run `npm install` as soon as you open a new environment or after cloning the repository. This installs dependencies required by TypeScript builds and tests like `npm run test:ai-connection`.
+
+After dependencies are installed, validate your environment by running the baseline authentication script:
+
+```bash
+./baseline-testing/quick-auth-test.sh
+```
+
+Resolve any missing tools or login issues the script reports before continuing. Always install packages and run this baseline test before running lint, build, or other test commands. Emphasize a test-driven workflow by executing available test scripts whenever adding new code.
+
 ## Programmatic Checks
 Run the following before committing:
 
@@ -53,18 +64,10 @@ If `npm run lint` or `npm run build` fail with "next: not found", run `npm insta
 Feel free to create inside the docs/ai-log folder, follow existing naming with yyyy-mm-dd-codex-topic
 
 ## Azure Authentication Troubleshooting
-If you encounter Azure authentication issues during development or testing:
-
-```bash
-# Run baseline Azure authentication test for triaging
-./baseline-testing/quick-auth-test.sh
-```
-
-Or run the authentication test directly:
+If you encounter Azure authentication issues during development or testing, run the detailed authentication test:
 
 ```bash
 node baseline-testing/azure-auth-test.js
 ```
 
-This will help identify if the issue is with Azure credentials, network connectivity, or service configuration. 
-AZ login does not work, use service principle credentials provided AZURE_CLIENT_SECRET
+This will help identify if the issue is with Azure credentials, network connectivity, or service configuration. AZ login does not work; use service principle credentials provided `AZURE_CLIENT_SECRET`.
