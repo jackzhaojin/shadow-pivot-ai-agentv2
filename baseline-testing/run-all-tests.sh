@@ -16,31 +16,31 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Test results tracking
-TOTAL_TESTS=0
-PASSED_TESTS=0
-FAILED_TESTS=()
+TOTAL_SUITES=0
+PASSED_SUITES=0
+FAILED_SUITES=()
 
-run_test() {
-    local test_name="$1"
-    local test_command="$2"
-    local test_description="$3"
+run_test_suite() {
+    local suite_name="$1"
+    local suite_script="$2"
+    local suite_description="$3"
     
-    echo -e "${BLUE}📋 Running: $test_description${NC}"
-    echo "Command: $test_command"
+    echo -e "${BLUE}🏃 Running Test Suite: $suite_description${NC}"
+    echo "Script: $suite_script"
     echo ""
     
-    TOTAL_TESTS=$((TOTAL_TESTS + 1))
+    TOTAL_SUITES=$((TOTAL_SUITES + 1))
     
-    if eval "$test_command"; then
-        echo -e "${GREEN}✅ PASSED: $test_name${NC}"
-        PASSED_TESTS=$((PASSED_TESTS + 1))
+    if bash "$suite_script"; then
+        echo -e "${GREEN}✅ SUITE PASSED: $suite_name${NC}"
+        PASSED_SUITES=$((PASSED_SUITES + 1))
     else
-        echo -e "${RED}❌ FAILED: $test_name${NC}"
-        FAILED_TESTS+=("$test_name")
+        echo -e "${RED}❌ SUITE FAILED: $suite_name${NC}"
+        FAILED_SUITES+=("$suite_name")
     fi
     
     echo ""
-    echo "----------------------------------------"
+    echo "========================================"
     echo ""
 }
 
@@ -58,42 +58,44 @@ echo "   - Node.js: $(node --version)"
 echo "   - Authentication: DefaultAzureCredential (Service Principal or Managed Identity)"
 echo ""
 
-# Run the tests
-echo "🚀 Starting baseline tests..."
+# Run the test suites
+echo "🚀 Starting baseline test suites..."
 echo ""
 
-# Test 1: Node.js Integrated Tests (no server required)
-run_test "node-integrated" \
-    "bash '$SCRIPT_DIR/local-node-tests/local-node-integrated-tests.sh'" \
+# Run Node.js integrated tests (no server required)
+run_test_suite "node-integrated" \
+    "$SCRIPT_DIR/local-node-integrated-tests.sh" \
     "Node.js Integrated Tests (No Server Required)"
 
-# Test 2: Port 3000 Tests (requires dev server)
-echo "💡 Note: The following tests require the development server to be running."
-echo "   If tests fail, start the dev server with 'npm run dev' in another terminal."
-echo ""
-
-run_test "port-3000" \
-    "bash '$SCRIPT_DIR/local-server-test-3000-integrated/local-3000-tests.sh'" \
-    "Port 3000 Tests (Requires Dev Server)"
+# Run server-dependent tests (requires dev server)
+run_test_suite "server-3000" \
+    "$SCRIPT_DIR/local-3000-tests.sh" \
+    "Port 3000 Server Tests (Requires Dev Server)"
 
 # Summary
 echo ""
-echo "📊 Test Summary"
-echo "==============="
-echo -e "Total tests: $TOTAL_TESTS"
-echo -e "${GREEN}Passed: $PASSED_TESTS${NC}"
-echo -e "${RED}Failed: ${#FAILED_TESTS[@]}${NC}"
+echo "📊 Test Suite Summary"
+echo "===================="
+echo -e "Total test suites: $TOTAL_SUITES"
+echo -e "${GREEN}Passed suites: $PASSED_SUITES${NC}"
+echo -e "${RED}Failed suites: ${#FAILED_SUITES[@]}${NC}"
 
-if [ ${#FAILED_TESTS[@]} -gt 0 ]; then
+if [ ${#FAILED_SUITES[@]} -gt 0 ]; then
     echo ""
-    echo -e "${RED}Failed tests:${NC}"
-    for test in "${FAILED_TESTS[@]}"; do
-        echo "  - $test"
+    echo -e "${RED}Failed test suites:${NC}"
+    for suite in "${FAILED_SUITES[@]}"; do
+        echo "  - $suite"
     done
     echo ""
-    echo -e "${RED}❌ Some tests failed. Please check the output above for details.${NC}"
+    echo -e "${RED}❌ Some test suites failed. Please check the output above for details.${NC}"
+    echo -e "${YELLOW}💡 You can run individual test suites:${NC}"
+    echo "   - Node.js tests: ./baseline-testing/local-node-integrated-tests.sh"
+    echo "   - Server tests: ./baseline-testing/local-3000-tests.sh"
     exit 1
 else
     echo ""
-    echo -e "${GREEN}🎉 All tests passed successfully!${NC}"
+    echo -e "${GREEN}🎉 All test suites passed successfully!${NC}"
+    echo -e "${BLUE}💡 Individual test suites available:${NC}"
+    echo "   - Node.js tests: ./baseline-testing/local-node-integrated-tests.sh"
+    echo "   - Server tests: ./baseline-testing/local-3000-tests.sh"
 fi

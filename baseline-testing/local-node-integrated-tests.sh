@@ -63,32 +63,37 @@ echo ""
 echo "🚀 Starting Node.js integrated tests..."
 echo ""
 
-# Test 1: Azure Authentication (using existing script)
+# Test 1: Quick Azure Authentication (using script from subfolder)
+run_test "quick-auth" \
+    "bash '$SCRIPT_DIR/local-node-tests/quick-auth-test.sh'" \
+    "Quick Azure Authentication Test"
+
+# Test 2: Azure Authentication (using script from subfolder)
 run_test "azure-auth" \
-    "cd '$PROJECT_ROOT' && node baseline-testing/azure-auth-test.js" \
+    "node '$SCRIPT_DIR/local-node-tests/azure-auth-test.js'" \
     "Azure Authentication Test"
 
-# Test 2: Azure AI Client Direct Test
+# Test 3: Azure AI Client Direct Test
 run_test "ai-connection" \
     "cd '$PROJECT_ROOT' && npm run test:ai-connection" \
     "Azure AI Client Direct Connection Test"
 
-# Test 3: User GUID Generation Test
+# Test 4: User GUID Generation Test
 run_test "user-guid" \
     "cd '$PROJECT_ROOT' && npm run test:user-guid" \
     "User GUID Generation Test"
 
-# Test 4: Design Concepts Test
+# Test 5: Design Concepts Test
 run_test "design-concepts" \
     "cd '$PROJECT_ROOT' && npm run test:design-concepts" \
     "Design Concepts Generation Test"
 
-# Test 5: Design Evaluation Test
+# Test 6: Design Evaluation Test
 run_test "design-evaluation" \
     "cd '$PROJECT_ROOT' && npm run test:design-evaluation" \
     "Design Evaluation Test"
 
-# Test 6: DefaultAzureCredential Direct Test
+# Test 7: DefaultAzureCredential Direct Test
 run_test "credential-direct" \
     "cd '$PROJECT_ROOT' && node -e \"
 const { DefaultAzureCredential } = require('@azure/identity');

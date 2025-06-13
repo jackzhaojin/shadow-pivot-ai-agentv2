@@ -125,6 +125,16 @@ run_test "agent-page" \
     "curl -s -w '%{http_code}' http://localhost:3000/agent -o /dev/null | grep -q '200'" \
     "Agent Page Load Test"
 
+# Test 9: Azure Connections Test (using script from subfolder)
+run_test "azure-connections" \
+    "bash '$SCRIPT_DIR/local-server-test-3000-integrated/test-azure-connections.sh'" \
+    "Azure API Connections Integration Test"
+
+# Test 10: SSR Integration Test (using script from subfolder)
+run_test "ssr-integration" \
+    "bash '$SCRIPT_DIR/local-server-test-3000-integrated/test-ssr-integration.sh'" \
+    "Server-Side Rendering Integration Test"
+
 # Summary
 echo ""
 echo "📊 Test Summary"
