@@ -1,5 +1,6 @@
 'use client';
 import { createContext, useContext, useState } from 'react';
+import type { DesignEvaluationResult } from '@/lib/designEvaluation';
 import {
   type ExecutionTrace,
   createExecutionTrace,
@@ -23,6 +24,8 @@ interface AgentFlowContextValue {
   executionTrace: ExecutionTrace | null;
   designConcepts: string[];
   setDesignConcepts: (c: string[]) => void;
+  evaluationResults: DesignEvaluationResult[];
+  setEvaluationResults: (r: DesignEvaluationResult[]) => void;
   setCurrentStep: (i: number) => void;
   completeStep: (i: number) => void;
   startExecution: () => void;
@@ -40,6 +43,7 @@ export function AgentFlowProvider({ children }: { children: React.ReactNode }) {
     null
   );
   const [designConcepts, setDesignConcepts] = useState<string[]>([]);
+  const [evaluationResults, setEvaluationResults] = useState<DesignEvaluationResult[]>([]);
 
   const startExecution = () => {
     const trace = createExecutionTrace();
@@ -48,6 +52,7 @@ export function AgentFlowProvider({ children }: { children: React.ReactNode }) {
     setCurrentStep(0);
     setCompleted(new Set());
     setDesignConcepts([]);
+    setEvaluationResults([]);
     logEvent(trace, 'Execution started');
   };
 
@@ -75,6 +80,8 @@ export function AgentFlowProvider({ children }: { children: React.ReactNode }) {
         executionTrace,
         designConcepts,
         setDesignConcepts,
+        evaluationResults,
+        setEvaluationResults,
         setCurrentStep,
         completeStep,
         startExecution,

@@ -333,13 +333,13 @@
   - [x] **VALIDATION COMPLETE: API endpoint tested via curl and returns detailed design concepts. AI Foundry integration working correctly with proper deployment name usage.**
 
 - **3.2.3 Step 2: Design Evaluation (LLM)**
-  - [ ] **Define integration/functional tests for design evaluation** (e.g., test scoring/ranking, state update, UI display)
-  - [ ] API route: `/api/agent/evaluate-designs`
+  - [x] **Define integration/functional tests for design evaluation** (e.g., test scoring/ranking, state update, UI display)
+  - [x] API route: `/api/agent/evaluate-designs`
     - Input: Generated design concepts, User GUID.
-  - [ ] Backend: Use `aiClient.ts` to call LLM to score and rank concepts.
-  - [ ] Store evaluation results in client-side state.
-  - [ ] Display scores/ranking in the UI.
-  - [ ] **Validate by running the defined tests and confirming all pass**
+  - [x] Backend: Use `aiClient.ts` to call LLM to score and rank concepts.
+  - [x] Store evaluation results in client-side state.
+  - [x] Display scores/ranking in the UI.
+  - [x] **Validate by running the defined tests and confirming all pass**
 
 - **3.2.4 Step 3: Figma Spec Generation (LLM - Simplified MVP)**
   - [ ] **Define integration/functional tests for Figma spec generation** (e.g., test API input/output, state update, UI display)

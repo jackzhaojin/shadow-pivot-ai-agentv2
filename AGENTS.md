@@ -49,6 +49,9 @@ If a command fails due to environment limitations, mention it in the PR body.
 
 If `npm run lint` or `npm run build` fail with "next: not found", run `npm install` to set up dependencies.
 
+## Error logging and maintaining a dev AI log
+Feel free to create inside the docs/ai-log folder, follow existing naming with yyyy-mm-dd-codex-topic
+
 ## Azure Authentication Troubleshooting
 If you encounter Azure authentication issues during development or testing:
 
