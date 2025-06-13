@@ -231,6 +231,11 @@
   - [x] Ensure design concepts display is clear and well-formatted for user understanding
   - [x] Restore creative brief input so users can start the flow with a prompt
   - [x] Fix concept list formatting and auto-advance to step 2
+  - [ ] **Fix multiple design concept generation**: Current implementation only returns 1 concept, but PRD requires multiple concepts for proper evaluation
+    - **Issue**: The AI prompt in `lib/designConcept.ts` is too vague: "You are a UI design assistant. Return an array of short design concepts as JSON."
+    - **Root cause**: Prompt doesn't explicitly request multiple concepts, so AI typically returns only 1 concept in the array
+    - **Impact**: Design evaluation step becomes meaningless with only 1 concept to evaluate
+    - **Fix needed**: Update prompt to explicitly request 3-5 design concepts with clear instructions
   - [ ] **Visual state management**: Implement comprehensive progress indicators
     - Waiting state (gray) before processing begins
     - Active processing state (blue/animated) during AI computation  

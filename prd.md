@@ -27,10 +27,12 @@ An AI-powered design-to-code agent embedded within a Next.js app, capable of gen
 
    * User enters a creative brief (encouraged to pre-collaborate with AI tools like ChatGPT).
    * LLM generates multiple clean, modifiable UI design concepts (graphs + tables).
+   * **Critical requirement**: Must generate 3-5 distinct design concepts to enable meaningful evaluation in step 2.
 
 2. **Design Evaluation**
 
    * LLM scores and ranks multiple design concepts based on clarity, alignment with data types, and modifiability.
+   * **Dependencies**: Requires multiple concepts from step 1 to perform meaningful evaluation and ranking.
 
 3. **Parallel Figma Spec Generation**
 
