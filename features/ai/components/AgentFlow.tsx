@@ -1,12 +1,13 @@
 'use client';
 import { useState } from 'react';
 import { useAgentFlow } from '@/providers/AgentFlowProvider';
+import { selectBestDesignConcept } from '@/lib/specSelection';
 import { createArtifactZipPlaceholder } from '@/utils/download';
 import { formatDate } from '@/utils/format';
 import { useUserGuid } from '@/providers/UserGuidProvider';
 
 export default function AgentFlow() {
-  const { steps, currentStep, completed, completeStep, abort, aborted, startExecution, executionTrace, designConcepts, setDesignConcepts, evaluationResults, setEvaluationResults } = useAgentFlow();
+  const { steps, currentStep, completed, completeStep, abort, aborted, startExecution, executionTrace, designConcepts, setDesignConcepts, evaluationResults, setEvaluationResults, selectedConcept, setSelectedConcept } = useAgentFlow();
   const userGuid = useUserGuid();
   const [brief, setBrief] = useState('');
   const [showTimeline, setShowTimeline] = useState(false);
@@ -49,6 +50,7 @@ export default function AgentFlow() {
           const data = await res.json();
           if (Array.isArray(data.evaluations)) {
             setEvaluationResults(data.evaluations);
+            setSelectedConcept(selectBestDesignConcept(data.evaluations));
           }
         } catch (err) {
           console.error(err);
@@ -169,9 +171,20 @@ export default function AgentFlow() {
           <h2 className="text-xl font-semibold text-gray-900 mb-4">Design Evaluation</h2>
           <ul className="space-y-2 text-gray-700">
             {evaluationResults.map((r, i) => (
-              <li key={i}>{r.concept} - Score: {r.score}</li>
+              <li
+                key={i}
+                className={`p-2 rounded-md ${selectedConcept === r.concept ? 'bg-emerald-50' : ''}`}
+              >
+                <span className="font-semibold">{r.concept}</span> - Score: {r.score}
+                {r.reason && <div className="text-sm text-gray-500">{r.reason}</div>}
+              </li>
             ))}
           </ul>
+          {selectedConcept && (
+            <div className="mt-4 p-2 bg-emerald-100 rounded-md text-emerald-800 text-sm">
+              Selected Concept: {selectedConcept}
+            </div>
+          )}
         </div>
       )}
 

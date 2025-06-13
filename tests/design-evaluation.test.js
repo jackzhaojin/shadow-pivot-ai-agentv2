@@ -7,6 +7,9 @@ const { evaluateDesigns } = require('./designEvaluation');
   result.forEach(r => {
     assert.ok(typeof r.concept === 'string');
     assert.ok(typeof r.score === 'number');
+    if (r.reason !== undefined) {
+      assert.ok(typeof r.reason === 'string');
+    }
   });
 })();
 

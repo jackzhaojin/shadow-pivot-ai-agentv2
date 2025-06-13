@@ -4,7 +4,7 @@ exports.evaluateDesigns = evaluateDesigns;
 const aiClient_1 = require("./aiClient");
 async function evaluateDesigns(concepts) {
     var _a, _b;
-    const systemPrompt = 'You are a UI design evaluator. Return a JSON array of {"concept":"...","score":number} objects sorted by score descending.';
+    const systemPrompt = 'You are a UI design evaluator. Return a JSON array of {"concept":"...","score":number,"reason":"short explanation"} objects sorted by score descending.';
     const userPrompt = concepts.map((c, i) => `${i + 1}. ${c}`).join('\n');
     const response = await (0, aiClient_1.generateChatCompletion)([
         { role: 'system', content: systemPrompt },
@@ -18,7 +18,8 @@ async function evaluateDesigns(concepts) {
                 const obj = d;
                 return {
                     concept: String(obj.concept),
-                    score: Number(obj.score)
+                    score: Number(obj.score),
+                    reason: obj.reason ? String(obj.reason) : undefined
                 };
             });
         }

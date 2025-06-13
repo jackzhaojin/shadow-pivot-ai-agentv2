@@ -10,8 +10,8 @@ import {
 export const agentSteps = [
   'Design Concept Generation',
   'Design Evaluation',
-  'Figma Spec Generation',
   'Spec Selection / Confirmation',
+  'Figma Spec Generation',
   'Code Generation',
   'Code Selection / Confirmation',
   'Download Artifacts'
@@ -26,6 +26,8 @@ interface AgentFlowContextValue {
   setDesignConcepts: (c: string[]) => void;
   evaluationResults: DesignEvaluationResult[];
   setEvaluationResults: (r: DesignEvaluationResult[]) => void;
+  selectedConcept: string | null;
+  setSelectedConcept: (c: string | null) => void;
   setCurrentStep: (i: number) => void;
   completeStep: (i: number) => void;
   startExecution: () => void;
@@ -44,6 +46,7 @@ export function AgentFlowProvider({ children }: { children: React.ReactNode }) {
   );
   const [designConcepts, setDesignConcepts] = useState<string[]>([]);
   const [evaluationResults, setEvaluationResults] = useState<DesignEvaluationResult[]>([]);
+  const [selectedConcept, setSelectedConcept] = useState<string | null>(null);
 
   const startExecution = () => {
     const trace = createExecutionTrace();
@@ -53,6 +56,7 @@ export function AgentFlowProvider({ children }: { children: React.ReactNode }) {
     setCompleted(new Set());
     setDesignConcepts([]);
     setEvaluationResults([]);
+    setSelectedConcept(null);
     logEvent(trace, 'Execution started');
   };
 
@@ -82,6 +86,8 @@ export function AgentFlowProvider({ children }: { children: React.ReactNode }) {
         setDesignConcepts,
         evaluationResults,
         setEvaluationResults,
+        selectedConcept,
+        setSelectedConcept,
         setCurrentStep,
         completeStep,
         startExecution,
