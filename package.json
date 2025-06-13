@@ -11,6 +11,7 @@
     "test:ai-connection": "tsc lib/aiClient.ts --target ES2017 --module commonjs --esModuleInterop --outDir tests && node tests/ai-connection.test.js",
     "test:design-concepts": "tsc lib/designConcept.ts --target ES2017 --module commonjs --esModuleInterop --outDir tests && node tests/design-concept.test.js",
     "test:design-evaluation": "tsc lib/designEvaluation.ts --target ES2017 --module commonjs --esModuleInterop --outDir tests && node tests/design-evaluation.test.js",
+    "test:spec-selection": "tsc lib/specSelection.ts --target ES2017 --module commonjs --outDir tests && node tests/spec-selection.test.js",
     "monitor-deployment": "node baseline-testing/local-node-tests/monitor-deployment.js"
   },
   "dependencies": {

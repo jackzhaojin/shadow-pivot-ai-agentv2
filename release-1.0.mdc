@@ -211,12 +211,12 @@
 - **3.2.4 Step 3: Spec Selection UI and Logic**
   **Story**: As a user designing a UI feature, I can view AI-generated design evaluation results and see the selected design concept so that I understand which design the agent chose and why before proceeding to implementation.
 
-  - [ ] **Define integration/functional tests for spec selection UI** (e.g., test evaluation display, selection logic, state update)
-  - [ ] Display design evaluation scores and reasoning in the UI
-  - [ ] Show selected design concept with visual indicators
-  - [ ] Provide clear transition to next step
-  - [ ] Store selected design concept in client-side state
-  - [ ] **Validate by running the defined tests and confirming all pass**
+  - [x] **Define integration/functional tests for spec selection UI** (e.g., test evaluation display, selection logic, state update)
+  - [x] Display design evaluation scores and reasoning in the UI
+  - [x] Show selected design concept with visual indicators
+  - [x] Provide clear transition to next step
+  - [x] Store selected design concept in client-side state
+  - [x] **Validate by running the defined tests and confirming all pass**
 
 - **3.2.5 Step 4: Parallel Figma Spec Generation Infrastructure**
   **Story**: As a user waiting for design specifications, I can see 3 parallel Figma spec generation processes with real-time progress indicators so that I understand the system is actively working and can see the parallel processing capability.
