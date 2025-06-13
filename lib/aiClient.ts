@@ -18,7 +18,6 @@ export function getAIClient() {
 // Utility functions for common AI operations
 export async function generateChatCompletion(
   messages: Array<{ role: 'user' | 'assistant' | 'system', content: string }>,
-  model: string = 'gpt-4o-mini',
   options: {
     maxTokens?: number;
     temperature?: number;
@@ -26,9 +25,10 @@ export async function generateChatCompletion(
   } = {}
 ) {
   const client = getAIClient();
+  const deploymentName = process.env.AZURE_OPENAI_DEPLOYMENT_NAME || 'gpt-4o-mini-deployment';
   
   return await client.chat.completions.create({
-    model,
+    model: deploymentName,
     messages,
     max_tokens: options.maxTokens || 1000,
     temperature: options.temperature || 0.7,
@@ -38,7 +38,6 @@ export async function generateChatCompletion(
 
 export async function generateText(
   prompt: string,
-  model: string = 'gpt-4o-mini',
   options: {
     maxTokens?: number;
     temperature?: number;
@@ -53,7 +52,7 @@ export async function generateText(
   
   messages.push({ role: 'user' as const, content: prompt });
   
-  const response = await generateChatCompletion(messages, model, {
+  const response = await generateChatCompletion(messages, {
     maxTokens: options.maxTokens,
     temperature: options.temperature
   });
@@ -64,8 +63,7 @@ export async function generateText(
 // Test function for AI connectivity
 export async function testAIConnection(): Promise<{ success: boolean; response?: string; error?: string }> {
   try {
-    const deployment = process.env.AZURE_OPENAI_DEPLOYMENT_NAME || 'gpt-4o-mini';
-    const response = await generateText('Say "Hello" in one word', deployment, { maxTokens: 5 });
+    const response = await generateText('Say "Hello" in one word', { maxTokens: 5 });
     return { success: true, response };
   } catch (error) {
     return { 
