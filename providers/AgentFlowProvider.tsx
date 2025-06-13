@@ -38,7 +38,8 @@ interface AgentFlowContextValue {
 const AgentFlowContext = createContext<AgentFlowContextValue | undefined>(undefined);
 
 export function AgentFlowProvider({ children }: { children: React.ReactNode }) {
-  const [currentStep, setCurrentStep] = useState(0);
+  // Start at -1 so UI shows waiting state until flow begins
+  const [currentStep, setCurrentStep] = useState(-1);
   const [completed, setCompleted] = useState<Set<number>>(new Set());
   const [aborted, setAborted] = useState(false);
   const [executionTrace, setExecutionTrace] = useState<ExecutionTrace | null>(

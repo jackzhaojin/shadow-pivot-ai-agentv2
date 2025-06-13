@@ -13,7 +13,8 @@ export default function AgentFlow() {
   const [showTimeline, setShowTimeline] = useState(false);
 
   const startFlow = async () => {
-    if (currentStep === 0) {
+    if (currentStep <= 0) {
+      // Reset execution and begin first step
       startExecution();
       try {
         const res = await fetch('/api/agent/generate-design-concepts', {
@@ -32,6 +33,10 @@ export default function AgentFlow() {
         console.error(err);
       }
       completeStep(0);
+      // Automatically proceed to the next step
+      setTimeout(() => {
+        nextStep();
+      }, 10);
     }
   };
 
@@ -56,7 +61,14 @@ export default function AgentFlow() {
           console.error(err);
         }
       }
+      const finished = currentStep;
       completeStep(currentStep);
+      // Auto-progress through early steps without manual clicks
+      if (finished + 1 < 3) {
+        setTimeout(() => {
+          nextStep();
+        }, 10);
+      }
     }
   };
 
@@ -261,17 +273,11 @@ export default function AgentFlow() {
         </div>
 
         {/* Action Buttons */}
-        {!aborted && currentStep > 0 && currentStep < steps.length && (
+        {!aborted && currentStep >= 0 && currentStep < steps.length && (
           <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 mb-8">
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button 
-                onClick={nextStep} 
-                className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-8 rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
-              >
-                Continue to Next Step
-              </button>
-              <button 
-                onClick={handleAbort} 
+              <button
+                onClick={handleAbort}
                 className="bg-gradient-to-r from-red-500 to-pink-500 text-white py-3 px-8 rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
               >
                 Abort Flow

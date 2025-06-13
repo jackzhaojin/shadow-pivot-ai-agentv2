@@ -221,14 +221,14 @@
 - **3.2.4b Agent Flow UX Improvements (Critical Fix)**
   **Story**: As a user interacting with the AI agent, I can see a proper flow that doesn't show "currently processing" before I start, and the agent automatically progresses through steps without requiring manual "Continue" clicks so that I experience a truly automated AI agent as described in the PRD.
 
-  - [ ] **Define integration/functional tests for agent flow UX** (e.g., test initial state, auto-progression, loading states)
-  - [ ] Fix initial state: Don't show "currently processing" until user actually starts the flow
-  - [ ] Remove manual "Continue to Next Step" buttons and implement automatic progression
-  - [ ] Add proper loading states showing what the AI is actively doing
-  - [ ] Implement seamless flow from design concepts → evaluation → selection without user intervention
-  - [ ] Update progress indicators to reflect actual processing state (not premature states)
-  - [ ] Ensure design concepts display is clear and well-formatted for user understanding
-  - [ ] **Validate by running the defined tests and confirming all pass**
+  - [x] **Define integration/functional tests for agent flow UX** (e.g., test initial state, auto-progression, loading states)
+  - [x] Fix initial state: Don't show "currently processing" until user actually starts the flow
+  - [x] Remove manual "Continue to Next Step" buttons and implement automatic progression
+  - [x] Add proper loading states showing what the AI is actively doing
+  - [x] Implement seamless flow from design concepts → evaluation → selection without user intervention
+  - [x] Update progress indicators to reflect actual processing state (not premature states)
+  - [x] Ensure design concepts display is clear and well-formatted for user understanding
+  - [x] **Validate by running the defined tests and confirming all pass**
 
 - **3.2.4c Interactive Step Results Review**
   **Story**: As a user watching the automated AI agent flow, I can click on any completed step in the timeline to view the detailed results and outputs from that step so that I can review what the AI generated at each stage without interrupting the automatic progression.
@@ -416,10 +416,9 @@
 - **3.2.3 Step 2: Design Evaluation (LLM) COMPLETE** - Design evaluation logic and testing implemented.
 
 ### 🎯 Next Priorities (Active Development)
-1. **3.2.4b Agent Flow UX Improvements (Critical Fix)** - Fix premature processing states and auto-progression
-2. **3.2.4c Interactive Step Results Review** - Clickable steps to review previous results 
-3. **3.2.5 Step 4: Parallel Figma Spec Generation Infrastructure** - 3-box parallel processing UI
-4. **3.2.6 Step 5: Figma Spec Generation and Validation** - Core Figma generation logic
+1. **3.2.4c Interactive Step Results Review** - Clickable steps to review previous results
+2. **3.2.5 Step 4: Parallel Figma Spec Generation Infrastructure** - 3-box parallel processing UI
+3. **3.2.6 Step 5: Figma Spec Generation and Validation** - Core Figma generation logic
 4. **3.2.7 Step 6: Figma Spec Testing and Quality Assurance** - Automated spec validation
 5. **3.2.8 Step 7: Best Figma Spec Selection** - Agent-based spec selection
 6. **3.2.9 Step 8: Parallel Code Generation Infrastructure** - 3-box code generation UI
