@@ -126,7 +126,7 @@ AGENTS.md                # Repository guidelines for contributors
 For more detailed information, please refer to the following documents:
 
 - **Core Project Documents**
-  - [AI Agent PRD](./docs/ai-agent/prd.md): Product Requirements for the AI Agent.
+  - [AI Agent PRD](./prd.md): Product Requirements for the AI Agent.
   - [Release 1.0 Task Management](./release-1.0.mdc): MVP task breakdown, phases, and progress.
   - [Release 1.1 Task Management](./release-1.1.mdc): Post-MVP enhancements and advanced features.
   - [Repository Guidelines (AGENTS.md)](./AGENTS.md): Guidelines for contributing to this repository.

@@ -1,6 +1,10 @@
 # TSLA AI UI Agent - Release 1.1 (Post-MVP) Task Management
 
 ## Project Overview
+
+**Reference the PRD, always at prd.md for general context and release 1.1 **
+
+
 - **Project Name**: TSLA AI UI Agent
 - **Framework**: Next.js 15.1.8 with App Router
 - **Release**: 1.1 (Post-MVP Enhancements)

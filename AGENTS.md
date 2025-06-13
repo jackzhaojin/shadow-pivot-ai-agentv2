@@ -1,6 +1,6 @@
 # Repository Guidelines
 
-This repo contains the **TSLA AI UI Agent** built with Next.js 15.1.8. All contributions should follow the high level design described in `docs/ai-agent/prd.md` and the task breakdown in `release-1.0.mdc` (MVP) or `release-1.1.mdc` (Post-MVP).
+This repo contains the **TSLA AI UI Agent** built with Next.js 15.1.8. All contributions should follow the high level design described in `prd.md` in root project and the task breakdown in `release-1.0.mdc` (MVP) or `release-1.1.mdc` (Post-MVP).
 
 We're on 1.0 at the moment, do not do 1.1 yet.
 
