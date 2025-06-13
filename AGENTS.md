@@ -24,10 +24,12 @@ Use the structure outlined in the PRD when adding new code:
 - Keep new documentation under `docs/` and update `project-management.mdc` when a task is completed.
 
 ## Commit Messages
+- Start with the ID in the mdc if possible, if you're requested to work on let's say 3.2.2, make sure 3.2.2 is the first thing in the commit
 - Start with a short one line summary (<=72 characters).
 - Leave a blank line, then provide additional context with bullet points if needed.
 
 ## Pull Requests
+- Start with the ID in the mdc if possible, if you're requested to work on let's say 3.2.2, make sure 3.2.2 is the first thing in the pull request
 - Summarize major changes and reference the PRD or project-management.mdc document when relevant.
 - Provide the results of the programmatic checks listed below.
 
