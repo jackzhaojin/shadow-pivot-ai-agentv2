@@ -42,6 +42,7 @@ export default function AgentFlow() {
 
         <StepExecutor brief={brief} setBrief={setBrief} />
         <ResultsDisplay
+          brief={brief}
           designConcepts={designConcepts}
           evaluationResults={evaluationResults}
           selectedConcept={selectedConcept}

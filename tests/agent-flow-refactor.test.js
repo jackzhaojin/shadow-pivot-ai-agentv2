@@ -23,6 +23,7 @@ function testTimelineRendering() {
 function testResultsDisplay() {
   const html = ReactDOMServer.renderToStaticMarkup(
     React.createElement(ResultsDisplay, {
+      brief: 'hello',
       designConcepts: ['One'],
       evaluationResults: [{ concept: 'One', score: 1 }],
       selectedConcept: 'One',
@@ -45,7 +46,7 @@ function testProgressIndicator() {
   const html = ReactDOMServer.renderToStaticMarkup(
     React.createElement(ProgressIndicator, { aborted: true, currentStep: 0, stepsLength: 3, executionTrace: null })
   );
-  assert.ok(html.includes('Flow Aborted'), 'Progress indicator should show aborted message');
+  assert.ok(html.includes('Flow Aborted') && html.includes('Restart Flow'), 'Progress indicator should show aborted message');
 }
 
 function runAll() {

@@ -32,7 +32,13 @@ export default function ProgressIndicator({ aborted, currentStep, stepsLength, e
           </svg>
         </div>
         <h3 className="text-xl font-semibold text-red-900 mb-2">Flow Aborted</h3>
-        <p className="text-red-700">The AI agent flow has been stopped. You can start a new flow anytime.</p>
+        <p className="text-red-700 mb-4">The AI agent flow has been stopped.</p>
+        <button
+          onClick={() => window.location.reload()}
+          className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-2 px-6 rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
+        >
+          Restart Flow
+        </button>
       </div>
     );
   }

@@ -65,7 +65,7 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
           if (Array.isArray(data.evaluations)) {
             setEvaluationResults(data.evaluations);
             setSelectedConcept(selectBestDesignConcept(data.evaluations));
-            completeStep(currentStep);
+            completeStep(currentStep, false);
           } else {
             addError('Failed to evaluate designs', currentStep);
           }
@@ -80,7 +80,7 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
   };
 
   useEffect(() => {
-    if (currentStep > 0 && currentStep < 3 && !aborted && failedStep === null) {
+    if (currentStep > 0 && currentStep < 2 && !aborted && failedStep === null) {
       nextStep();
     }
   }, [currentStep, aborted, failedStep]);
@@ -112,6 +112,12 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
               </button>
             </div>
           </div>
+        </div>
+      )}
+      {currentStep > 0 && !aborted && (
+        <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 mb-8">
+          <h2 className="text-xl font-semibold text-gray-900 mb-2">Creative Brief</h2>
+          <p className="whitespace-pre-line text-gray-700">{brief}</p>
         </div>
       )}
       {!aborted && currentStep >= 0 && currentStep < steps.length && (

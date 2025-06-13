@@ -485,19 +485,19 @@
 - **3.2.3 Step 2: Design Evaluation (LLM) COMPLETE** - Design evaluation logic and testing implemented.
 - **3.2.4 Step 3: Spec Selection UI and Logic COMPLETE** - Display evaluation results and selection.
 - **3.2.4b Agent Flow UX Improvements COMPLETE** ✅ - Automated flow progression, comprehensive error handling, enhanced visual states, multiple design concept generation, and modern UI polish all implemented successfully by Codex.
+- **3.3 Agent Flow Component Refactoring COMPLETE** - Core flow split into modular components with tests.
 
 ### 🎯 Next Priorities (Active Development)
-1. **3.3 Agent Flow Component Refactoring** - Break down large component into focused modules (CRITICAL ARCHITECTURE)
-2. **3.4 Interactive Step Results Review** - Clickable steps to review previous results
-3. **3.5 Step 4: Parallel Figma Spec Generation Infrastructure** - 3-box parallel processing UI
-4. **3.6 Step 5: Figma Spec Generation and Validation** - Core Figma generation logic
-5. **3.7 Step 6: Figma Spec Testing and Quality Assurance** - Automated spec validation
-6. **3.8 Step 7: Best Figma Spec Selection** - Agent-based spec selection
-7. **3.9 Step 8: Parallel Code Generation Infrastructure** - 3-box code generation UI
-8. **3.10 Step 9: Full Feature Code Generation** - Complete code implementation
-9. **3.11 Step 10: Automated Code Testing and Quality Validation** - Code quality assurance
-10. **3.12 Step 11: Aggregate Scoring and Best Code Selection** - Best code selection
-11. **3.13 Step 12: Complete Artifact Download Package** - ZIP download with blob storage
+1. **3.4 Interactive Step Results Review** - Clickable steps to review previous results
+2. **3.5 Step 4: Parallel Figma Spec Generation Infrastructure** - 3-box parallel processing UI
+3. **3.6 Step 5: Figma Spec Generation and Validation** - Core Figma generation logic
+4. **3.7 Step 6: Figma Spec Testing and Quality Assurance** - Automated spec validation
+5. **3.8 Step 7: Best Figma Spec Selection** - Agent-based spec selection
+6. **3.9 Step 8: Parallel Code Generation Infrastructure** - 3-box code generation UI
+7. **3.10 Step 9: Full Feature Code Generation** - Complete code implementation
+8. **3.11 Step 10: Automated Code Testing and Quality Validation** - Code quality assurance
+9. **3.12 Step 11: Aggregate Scoring and Best Code Selection** - Best code selection
+10. **3.13 Step 12: Complete Artifact Download Package** - ZIP download with blob storage
 
 ### 📝 Future Phases (release 1.1 Prep)
 - **Phase 4**: Execution Management & History (4.1 - Execution history and user-scoped storage)
