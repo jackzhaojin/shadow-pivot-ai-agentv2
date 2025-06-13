@@ -39,23 +39,24 @@ brew install azure-cli
 curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
 ```
 
-#### 2. Login to Azure
+#### 2. Set up Azure Authentication
 
-1. **Authenticate with Azure**:
+1. **Configure Service Principal credentials**:
    ```bash
-   az login
+   # Set environment variables for DefaultAzureCredential
+   export AZURE_CLIENT_ID="your-client-id"
+   export AZURE_CLIENT_SECRET="your-client-secret"
+   export AZURE_TENANT_ID="your-tenant-id"
+   export AZURE_SUBSCRIPTION_ID="your-subscription-id"
    ```
-   - This opens your web browser for authentication
-   - Sign in with your Azure account credentials
-   - The CLI will automatically configure access
+   - Use Service Principal for consistent authentication
+   - Works in both local development and CI/CD environments
+   - DefaultAzureCredential will automatically use these values
 
-2. **Set Default Subscription** (if you have multiple):
+2. **Verify Authentication**:
    ```bash
-   # List all subscriptions
-   az account list --output table
-   
-   # Set the correct subscription
-   az account set --subscription "[Your Subscription Name or ID]"
+   # Test authentication using Node.js
+   node baseline-testing/azure-auth-test.js
    ```
 
 3. **Verify Access**:

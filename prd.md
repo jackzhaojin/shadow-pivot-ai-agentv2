@@ -167,7 +167,8 @@ npx create-next-app@latest
   * **Managed Identity** on Azure server.
   * **DefaultAzureCredential** for local development:
 
-    * Uses local `az login` identity via Azure CLI token
+    * If you are Codex: Uses Service Principal credentials (AZURE_CLIENT_ID, AZURE_CLIENT_SECRET, AZURE_TENANT_ID)
+    * If you are local user or github co pilot: Uses az login
     * Automatically resolves to Managed Identity on Azure App Service
     * Enables unified credential usage across environments
 * Storage: **Azure Blob Storage (Hot v2 tier)**
@@ -180,10 +181,11 @@ npx create-next-app@latest
 
 #### Local Development Notes:
 
-* When running `npm run dev`, `DefaultAzureCredential` resolves to your local Azure CLI session.
-* Developers should run `az login` beforehand.
+* When running `npm run dev`, `DefaultAzureCredential` resolves to your Service Principal credentials.
+* Developers should set environment variables: AZURE_CLIENT_ID, AZURE_CLIENT_SECRET, AZURE_TENANT_ID, AZURE_SUBSCRIPTION_ID.
 * For debugging auth, use `AZURE_LOG_LEVEL=verbose npm run dev` to confirm which credential is being used.
 * SDK calls must be made only within server components or API routes (never client components).
+* When developing with test driven development, always use Node.js and DefaultAzureCredential instead of az CLI commands, since they work reliably across all environments
 
 #### User Identity:
 
@@ -296,3 +298,4 @@ npx create-next-app@latest
   * API and storage integration (mocked or real, as appropriate)
   * Accessibility and usability of generated UIs
 * Unit testing is **not required** unless it directly supports integration or functional validation.
+* when developing test driven development which is always needed, never use az cli commands since it doesn't work on codex, always use node and then DefaultAzureCredential, which works for everyone

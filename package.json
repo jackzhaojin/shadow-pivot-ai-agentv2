@@ -10,15 +10,18 @@
     "test:user-guid": "tsc utils/userGuid.ts --target ES2017 --module commonjs --outDir dist-test && node tests/user-guid.test.js",
     "test:ai-connection": "tsc lib/aiClient.ts --target ES2017 --module commonjs --esModuleInterop --outDir tests && node tests/ai-connection.test.js",
     "test:design-concepts": "tsc lib/designConcept.ts --target ES2017 --module commonjs --esModuleInterop --outDir tests && node tests/design-concept.test.js",
-    "test:design-evaluation": "tsc lib/designEvaluation.ts --target ES2017 --module commonjs --esModuleInterop --outDir tests && node tests/design-evaluation.test.js"
+    "test:design-evaluation": "tsc lib/designEvaluation.ts --target ES2017 --module commonjs --esModuleInterop --outDir tests && node tests/design-evaluation.test.js",
+    "monitor-deployment": "node baseline-testing/monitor-deployment.js"
   },
   "dependencies": {
+    "@azure/arm-appservice": "^14.1.0",
     "@azure/identity": "^4.10.0",
     "@azure/keyvault-secrets": "^4.9.0",
     "@azure/openai": "^2.0.0",
     "@azure/storage-blob": "^12",
     "clsx": "^2",
     "next": "15.3.3",
+    "node-fetch": "^3.3.2",
     "openai": "^5.1.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

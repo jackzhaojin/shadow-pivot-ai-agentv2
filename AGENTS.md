@@ -26,6 +26,8 @@ Use the structure outlined in the PRD when adding new code:
 - Use **TypeScript** and **TailwindCSS** for new code.
 - Server components and API routes may call Azure SDKs. Do not call them from client components.
 - Keep new documentation under `docs/` and update `release-1.0.mdc` or `release-1.1.mdc` when a task is completed.
+- when developing test driven development which is always needed, never use az cli commands since it doesn't work on codex, always use node and then DefaultAzureCredential, which works for everyone
+- All Azure authentication and testing should use DefaultAzureCredential with Service Principal credentials (AZURE_CLIENT_ID, AZURE_CLIENT_SECRET, AZURE_TENANT_ID)
 
 ## Commit Messages
 - Start with the ID in the mdc if possible, if you're requested to work on let's say 3.2.4, make sure 3.2.4 is the first thing in the commit
@@ -70,4 +72,4 @@ If you encounter Azure authentication issues during development or testing, run 
 node baseline-testing/azure-auth-test.js
 ```
 
-This will help identify if the issue is with Azure credentials, network connectivity, or service configuration. AZ login does not work; use service principle credentials provided `AZURE_CLIENT_SECRET`.
+This will help identify if the issue is with Azure credentials, network connectivity, or service configuration. Azure CLI is not supported in Codex; use Service Principal credentials with environment variables (AZURE_CLIENT_ID, AZURE_CLIENT_SECRET, AZURE_TENANT_ID).

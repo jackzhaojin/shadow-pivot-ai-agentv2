@@ -53,9 +53,13 @@ This approach ensures rapid development while maintaining clear separation of co
 
 ### Prerequisites
 
-1. **Azure CLI** - Install and authenticate:
+1. **Azure Authentication** - Set up Service Principal credentials:
    ```bash
-   az login
+   # Set environment variables for DefaultAzureCredential
+   export AZURE_CLIENT_ID="your-client-id"
+   export AZURE_CLIENT_SECRET="your-client-secret"
+   export AZURE_TENANT_ID="your-tenant-id"
+   export AZURE_SUBSCRIPTION_ID="your-subscription-id"
    ```
 
 2. **Node.js** - Version 18+ required

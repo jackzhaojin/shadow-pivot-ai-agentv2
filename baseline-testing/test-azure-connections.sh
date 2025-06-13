@@ -31,13 +31,21 @@ else
     echo "❌ Azure AI Foundry connection failed"
     echo "Response: $AI_RESULT"
 fi
-# Test Azure CLI login status
-echo "🔐 Testing Azure CLI authentication..."
-if az account show > /dev/null 2>&1; then
-    ACCOUNT_NAME=$(az account show --query 'name' -o tsv)
-    echo "✅ Azure CLI authenticated as: $ACCOUNT_NAME"
+# Test DefaultAzureCredential status via Node.js
+echo "🔐 Testing DefaultAzureCredential authentication..."
+TEST_AUTH_RESULT=$(cd "$(dirname "$0")/.." && node -e "
+const { DefaultAzureCredential } = require('@azure/identity');
+const credential = new DefaultAzureCredential();
+credential.getToken('https://vault.azure.net/.default')
+  .then(() => console.log('SUCCESS'))
+  .catch(err => console.log('ERROR:', err.message));
+" 2>&1)
+
+if echo "$TEST_AUTH_RESULT" | grep -q "SUCCESS"; then
+    echo "✅ DefaultAzureCredential authentication successful"
 else
-    echo "❌ Azure CLI not authenticated - validate az cli credentials"
+    echo "❌ DefaultAzureCredential authentication failed"
+    echo "Details: $TEST_AUTH_RESULT"
 fi
 
 

@@ -52,7 +52,9 @@ async function testAuth() {
     if (err.message.includes('timeout')) {
       console.error("   This may indicate network issues or Azure service unavailability");
     } else {
-      console.error("   Make sure you're logged in with 'az login' or have proper environment variables set");
+      console.error("   Make sure you have proper environment variables set:");
+      console.error("   - AZURE_CLIENT_ID, AZURE_CLIENT_SECRET, AZURE_TENANT_ID (Service Principal)");
+      console.error("   - Or use Managed Identity when running on Azure");
     }
     process.exit(1);
   }

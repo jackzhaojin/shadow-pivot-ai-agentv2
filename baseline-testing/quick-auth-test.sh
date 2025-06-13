@@ -14,19 +14,9 @@ if ! command -v node &> /dev/null; then
     exit 1
 fi
 
-if ! command -v az &> /dev/null; then
-    echo "❌ Azure CLI is not installed or not in PATH"
-    exit 1
-fi
-
-if ! az account show &> /dev/null; then
-    echo "⚠️  Azure CLI not authenticated. Please run 'az login' first."
-    exit 1
-fi
-
 echo "✅ Prerequisites met"
 echo "   - Node.js: $(node --version)"
-echo "   - Azure CLI authenticated"
+echo "   - Authentication: DefaultAzureCredential (Service Principal or Managed Identity)"
 echo ""
 
 # Run the authentication test
