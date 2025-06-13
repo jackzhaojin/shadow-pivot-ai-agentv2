@@ -6,7 +6,7 @@ import { formatDate } from '@/utils/format';
 import { useUserGuid } from '@/providers/UserGuidProvider';
 
 export default function AgentFlow() {
-  const { steps, currentStep, completed, completeStep, abort, aborted, startExecution, executionTrace, designConcepts, setDesignConcepts } = useAgentFlow();
+  const { steps, currentStep, completed, completeStep, abort, aborted, startExecution, executionTrace, designConcepts, setDesignConcepts, evaluationResults, setEvaluationResults } = useAgentFlow();
   const userGuid = useUserGuid();
   const [brief, setBrief] = useState('');
   const [showTimeline, setShowTimeline] = useState(false);
@@ -34,8 +34,26 @@ export default function AgentFlow() {
     }
   };
 
-  const nextStep = () => {
+  const nextStep = async () => {
     if (currentStep < steps.length) {
+      if (currentStep === 1 && designConcepts.length > 0) {
+        try {
+          const res = await fetch('/api/agent/evaluate-designs', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'x-user-guid': userGuid
+            },
+            body: JSON.stringify({ concepts: designConcepts })
+          });
+          const data = await res.json();
+          if (Array.isArray(data.evaluations)) {
+            setEvaluationResults(data.evaluations);
+          }
+        } catch (err) {
+          console.error(err);
+        }
+      }
       completeStep(currentStep);
     }
   };
@@ -141,6 +159,17 @@ export default function AgentFlow() {
           <ul className="list-disc pl-5 space-y-2 text-gray-700">
             {designConcepts.map((c, i) => (
               <li key={i}>{c}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {evaluationResults.length > 0 && (
+        <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 mb-8">
+          <h2 className="text-xl font-semibold text-gray-900 mb-4">Design Evaluation</h2>
+          <ul className="space-y-2 text-gray-700">
+            {evaluationResults.map((r, i) => (
+              <li key={i}>{r.concept} - Score: {r.score}</li>
             ))}
           </ul>
         </div>
