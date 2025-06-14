@@ -140,6 +140,11 @@ run_test "ssr-integration" \
     "bash '$SCRIPT_DIR/local-server-test-3000-integrated/test-ssr-integration.sh'" \
     "Server-Side Rendering Integration Test"
 
+# Test 11: End-to-End Tests
+run_test "e2e-tests" \
+    "cd '$PROJECT_ROOT' && npm run test:e2e" \
+    "End-to-End Tests"
+
 # Summary
 echo ""
 echo "📊 Test Summary"

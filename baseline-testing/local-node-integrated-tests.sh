@@ -80,29 +80,27 @@ run_test "azure-auth" \
     "node '$SCRIPT_DIR/local-node-tests/azure-auth-test.js'" \
     "Azure Authentication Test"
 
-# Test 3: Azure AI Client Direct Test
-run_test "ai-connection" \
-    "cd '$PROJECT_ROOT' && npm run test:ai-connection" \
-    "Azure AI Client Direct Connection Test"
+# Test 3: DAO Layer Tests
+run_test "dao-tests" \
+    "cd '$PROJECT_ROOT' && npm run test:dao" \
+    "DAO Layer Tests"
 
-# Test 4: User GUID Generation Test
-run_test "user-guid" \
-    "cd '$PROJECT_ROOT' && npm run test:user-guid" \
-    "User GUID Generation Test"
-
+# Test 4: Service and API Layer Tests (may skip OpenAI dependent tests)
 if [ -n "$CODEX_ENV_NODE_VERSION" ] || ! check_openai_access; then
     echo -e "${YELLOW}⚠️  Skipping design-concepts and design-evaluation tests due to Codex environment or unreachable Azure OpenAI endpoint${NC}"
+    run_test "service-tests" \
+        "cd '$PROJECT_ROOT' && CODEX_ENV_NODE_VERSION=1 npm run test:services" \
+        "Service Layer Tests (partial)"
 else
-    # Test 5: Design Concepts Test
-    run_test "design-concepts" \
-        "cd '$PROJECT_ROOT' && npm run test:design-concepts" \
-        "Design Concepts Generation Test"
-
-    # Test 6: Design Evaluation Test
-    run_test "design-evaluation" \
-        "cd '$PROJECT_ROOT' && npm run test:design-evaluation" \
-        "Design Evaluation Test"
+    run_test "service-tests" \
+        "cd '$PROJECT_ROOT' && npm run test:services" \
+        "Service Layer Tests"
 fi
+
+# Test 5: UI Component Tests
+run_test "ui-tests" \
+    "cd '$PROJECT_ROOT' && npm run test:ui" \
+    "UI Component Tests"
 
 # Test 7: DefaultAzureCredential Direct Test
 run_test "credential-direct" \

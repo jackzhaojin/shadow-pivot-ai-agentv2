@@ -1,9 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getOrCreateUserGuid = getOrCreateUserGuid;
-function getOrCreateUserGuid(storage) {
-    if (storage === void 0) { storage = window.localStorage; }
-    var guid = storage.getItem('userGuid');
+function getOrCreateUserGuid(storage = window.localStorage) {
+    let guid = storage.getItem('userGuid');
     if (!guid) {
         guid = crypto.randomUUID();
         storage.setItem('userGuid', guid);

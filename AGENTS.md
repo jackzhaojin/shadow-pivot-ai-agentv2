@@ -40,7 +40,7 @@ Use the structure outlined in the PRD when adding new code:
 - Provide the results of the programmatic checks listed below.
 
 ## Setup
-Run `npm install` as soon as you open a new environment or after cloning the repository. This installs dependencies required by TypeScript builds and tests like `npm run test:ai-connection`.
+Run `npm install` as soon as you open a new environment or after cloning the repository. This installs dependencies required by TypeScript builds and tests like `npm run test:all`.
 
 After dependencies are installed, validate your environment by running the baseline authentication script:
 
@@ -56,6 +56,17 @@ Run the following before committing:
 ```bash
 npm run lint
 npm run build
+```
+
+### Test Commands
+
+Run `npm run test:all` to execute the full test suite. Individual groups can be run with:
+
+```bash
+npm run test:dao      # DAO layer tests
+npm run test:services # Service and API tests
+npm run test:ui       # UI component tests
+npm run test:e2e      # End-to-end tests (requires dev server)
 ```
 
 If a command fails due to environment limitations, mention it in the PR body.
