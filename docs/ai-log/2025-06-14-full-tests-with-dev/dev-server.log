@@ -1,0 +1,63 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> shadow-pivot-ai-agentv2@0.1.0 dev
+> next dev --turbopack
+
+   ▲ Next.js 15.3.3 (Turbopack)
+   - Local:        http://localhost:3000
+   - Network:      http://172.24.0.2:3000
+
+ ✓ Starting...
+ ✓ Ready in 1014ms
+ ○ Compiling / ...
+Failed to download `Geist Mono` from Google Fonts. Using fallback font instead.
+Failed to download `Geist` from Google Fonts. Using fallback font instead.
+ ✓ Compiled / in 4.5s
+ ⚠ [next]/internal/font/google/geist_e531dabc.module.css
+Error while requesting resource
+There was an issue establishing a connection while requesting https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap.
+
+
+ ⚠ [next]/internal/font/google/geist_mono_68a01160.module.css
+Error while requesting resource
+There was an issue establishing a connection while requesting https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&display=swap.
+
+
+ GET / 200 in 5025ms
+ ○ Compiling /agent ...
+ ✓ Compiled /agent in 897ms
+ ⚠ [next]/internal/font/google/geist_e531dabc.module.css
+Error while requesting resource
+There was an issue establishing a connection while requesting https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap.
+
+
+ ⚠ [next]/internal/font/google/geist_mono_68a01160.module.css
+Error while requesting resource
+There was an issue establishing a connection while requesting https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&display=swap.
+
+
+ GET /agent 200 in 944ms
+ ○ Compiling /api/agent/generate-design-concepts ...
+ ✓ Compiled /api/agent/generate-design-concepts in 2.1s
+ ⚠ [next]/internal/font/google/geist_e531dabc.module.css
+Error while requesting resource
+There was an issue establishing a connection while requesting https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap.
+
+
+ ⚠ [next]/internal/font/google/geist_mono_68a01160.module.css
+Error while requesting resource
+There was an issue establishing a connection while requesting https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&display=swap.
+
+
+ ⚠ [next]/internal/font/google/geist_e531dabc.module.css
+Error while requesting resource
+There was an issue establishing a connection while requesting https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap.
+
+
+ ⚠ [next]/internal/font/google/geist_mono_68a01160.module.css
+Error while requesting resource
+There was an issue establishing a connection while requesting https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&display=swap.
+
+
+ POST /api/agent/generate-design-concepts 500 in 4801ms
+[?25h

@@ -1,0 +1,10 @@
+🧪 Azure Authentication Baseline Test
+=====================================
+🔐 Testing Azure authentication...
+✅ Azure credential obtained successfully
+   Token type: Valid
+   Expires on: 2025-06-14T20:50:19.000Z
+⚠️  Key Vault URL not configured - skipping Key Vault test
+   To test Key Vault access, update the 'url' variable with your Key Vault URL
+
+🎉 Authentication test completed successfully!
