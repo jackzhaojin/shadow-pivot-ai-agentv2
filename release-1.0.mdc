@@ -403,6 +403,43 @@
 - Architecture: Integrated with prompt template system for maintainability
 - Results: System now provides meaningful scores, rankings, and reasoning for all concepts
 
+#### 3.3.6 Test Architecture Refactoring
+**Complexity**: Medium | **Effort**: Medium  
+**Story**: As a developer maintaining the application, I need a structured testing strategy with clear separation between test types so that tests are reliable, maintainable, and provide meaningful coverage across all layers of the application.
+
+- [x] **Define test architecture plan**: Create comprehensive testing strategy
+  - [x] Document test types (unit, integration, e2e) with clear guidelines for each
+  - [x] Standardize directory structure under unified `/tests` folder
+  - [x] Create test data management system with fixtures and helpers
+- [x] **Unify testing folders**: Consolidate baseline-testing and tests folders
+  - [x] Create `/tests/unit` for pure business logic tests
+  - [x] Create `/tests/integration` for DAO and service layer tests
+  - [x] Create `/tests/api` for API route testing
+  - [x] Create `/tests/ui` for UI component and page tests
+  - [x] Create `/tests/e2e` for end-to-end user journey tests
+  - [x] Create `/tests/fixtures` for shared test data and helpers
+- [x] **Refactor test scripts**: Update package.json test scripts
+  - [x] Create master test script for running all tests
+  - [x] Create category-specific test scripts for selective testing
+  - [x] Update test references in CI/CD pipeline
+- [x] **Test data separation**: Create comprehensive test data management
+  - [x] Move mock data to dedicated fixture files
+  - [x] Create test data generators for dynamic test data
+  - [x] Implement test data cleanup for integration tests
+- [x] **Documentation**: Create detailed testing guide
+  - [x] Document running different test categories
+  - [x] Provide guidelines for creating new tests
+  - [x] Document mock data and fixture usage
+
+**✅ TEST ARCHITECTURE REFACTORING INITIATED** 
+- Directory Structure: Created 5 main test categories with clear separation
+- Test Data Management: Implemented centralized fixtures and test data helpers
+- Test Runners: Created master test runner and category-specific runners
+- Package.json: Updated to support both new test structure and legacy scripts
+- Documentation: Added detailed README.md with test architecture guidelines
+- Migration Progress: Successfully migrated initial test files to new structure
+- Next Steps: Complete migration of remaining test files (tracked in REFACTORING_PROGRESS.md)
+
 ### 3.4 Interactive Step Results Review
 **Complexity**: Medium | **Effort**: Medium
 **Story**: As a user watching the automated AI agent flow, I can click on any completed step in the timeline to view the detailed input/output from that step so that I can review what the AI generated at each stage without interrupting the automatic progression.

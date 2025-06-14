@@ -398,5 +398,28 @@ lib/
 └── utils/             # Shared utilities
     ├── graphUtils.ts  # Graph/chart utilities
     ├── promptUtils.ts # AI prompt utilities
-    └── index.ts       # Re-exports for utilities
-```
+    └── index.ts       # Re-exports for utils
+
+#### **Test Architecture:**
+
+* **Test Categories:** Tests are organized by their purpose and dependencies:
+  * **Unit Tests** (`tests/unit/`): Test pure business logic with no external dependencies
+  * **Integration Tests** (`tests/integration/`): Test integration with Azure services
+  * **API Tests** (`tests/api/`): Test API routes with service layers
+  * **UI Tests** (`tests/ui/`): Test UI components with NextJS dependencies
+  * **End-to-End Tests** (`tests/e2e/`): Test complete user journeys
+
+* **Test Data Management:** Centralized test fixtures for reusable test data:
+  * **Fixtures** (`tests/fixtures/`): Shared mock data and test helpers
+  * **Test Utilities** (`tests/utils/`): Helper functions for testing
+
+* **Test Naming Conventions:**
+  * Unit tests: `*.unit.test.js`
+  * Integration tests: `*.integration.test.js`
+  * API tests: `*.api.test.js`
+  * UI tests: `*.ui.test.js`
+  * E2E tests: `*.e2e.test.js`
+
+* **Running Tests:**
+  * All tests: `npm run test`
+  * Category tests: `npm run test:<category>` (e.g., `npm run test:unit`)

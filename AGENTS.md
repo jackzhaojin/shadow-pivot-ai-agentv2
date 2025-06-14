@@ -26,8 +26,37 @@ Use the structure outlined in the PRD when adding new code:
 - Use **TypeScript** and **TailwindCSS** for new code.
 - Server components and API routes may call Azure SDKs. Do not call them from client components.
 - Keep new documentation under `docs/` and update `release-1.0.mdc` or `release-1.1.mdc` when a task is completed.
-- when developing test driven development which is always needed, never use az cli commands since it doesn't work on codex, always use node and then DefaultAzureCredential, which works for everyone
+- When developing test driven development which is always needed, never use az cli commands since it doesn't work on codex, always use node and then DefaultAzureCredential, which works for everyone
 - All Azure authentication and testing should use DefaultAzureCredential with Service Principal credentials (AZURE_CLIENT_ID, AZURE_CLIENT_SECRET, AZURE_TENANT_ID)
+
+## Test Architecture
+
+Tests are organized by purpose and dependencies in the `/tests` directory:
+
+```
+/tests
+  /unit          - Pure business logic tests (no external dependencies)
+  /integration   - Tests for external services (Azure, etc.)
+  /api           - API route tests (requires server)
+  /ui            - UI component tests (requires NextJS)
+  /e2e           - End-to-end user journey tests
+  /fixtures      - Shared test data and helpers
+```
+
+### Test Naming Conventions
+- Unit tests: `*.unit.test.js`
+- Integration tests: `*.integration.test.js`
+- API tests: `*.api.test.js`
+- UI tests: `*.ui.test.js`
+- E2E tests: `*.e2e.test.js`
+
+### Running Tests
+- `npm run test`: Run all tests
+- `npm run test:unit`: Run unit tests only
+- `npm run test:integration`: Run integration tests only
+- `npm run test:api`: Run API tests only
+- `npm run test:ui`: Run UI tests only
+- `npm run test:e2e`: Run E2E tests only
 
 ## Commit Messages
 - Start with the ID in the mdc if possible, if you're requested to work on let's say 3.2.4, make sure 3.2.4 is the first thing in the commit
