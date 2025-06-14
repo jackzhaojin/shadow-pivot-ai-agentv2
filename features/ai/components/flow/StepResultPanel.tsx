@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 import type { DesignEvaluationResult } from '../../../../lib/services/designEvaluation';
 import { useAgentFlow as originalUseAgentFlow } from '../../../../providers/AgentFlowProvider';
 import ValidationPanel from './ValidationPanel';
@@ -31,6 +31,7 @@ export default function StepResultPanel({
   selectedConcept
 }: StepResultPanelProps) {
   const { validatedSteps, invalidatedSteps, markStepValidated, markStepInvalidated } = useAgentFlow();
+  const [showDetails, setShowDetails] = useState(false);
   
   const isValidated = validatedSteps.has(stepIndex);
   const isInvalidated = invalidatedSteps.has(stepIndex);
@@ -41,6 +42,11 @@ export default function StepResultPanel({
     } else {
       markStepInvalidated(stepIndex, feedback);
     }
+  };
+
+  // Toggle function for showing/hiding details
+  const toggleDetails = () => {
+    setShowDetails(prev => !prev);
   };
 
   let content: React.ReactNode = null;
@@ -88,7 +94,38 @@ export default function StepResultPanel({
       isInvalidated ? 'border-red-300' : 
       'border-gray-200'
     }`}>
-      {content}
+      <div className="flex justify-between items-center mb-3">
+        <h3 className="font-semibold text-lg text-gray-800">
+          Step {stepIndex + 1} Results
+        </h3>
+        <button
+          onClick={toggleDetails}
+          className="flex items-center text-blue-600 hover:text-blue-800 transition-colors text-sm"
+        >
+          {showDetails ? (
+            <>
+              <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+              Hide Details
+            </>
+          ) : (
+            <>
+              <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+              View Details
+            </>
+          )}
+        </button>
+      </div>
+      
+      {/* Details content with transition */}
+      <div className={`overflow-hidden transition-all duration-300 ${
+        showDetails ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'
+      }`}>
+        {content}
+      </div>
       
       {/* Status indicator */}
       {(isValidated || isInvalidated) && (
