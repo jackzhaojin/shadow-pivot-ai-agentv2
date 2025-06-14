@@ -76,14 +76,16 @@ export default function AgentFlow() {
             invalidatedSteps={invalidatedSteps}
           />
           {Array.from(openSteps).sort().map(i => (
-            <StepResultPanel
-              key={i}
-              stepIndex={i}
-              brief={brief}
-              designConcepts={designConcepts}
-              evaluationResults={evaluationResults}
-              selectedConcept={selectedConcept}
-            />
+            <div key={i} className="mt-4 animate-fadeIn">
+              <StepResultPanel
+                stepIndex={i}
+                brief={brief}
+                designConcepts={designConcepts}
+                evaluationResults={evaluationResults}
+                selectedConcept={selectedConcept}
+                onClose={() => toggleStep(i)}
+              />
+            </div>
           ))}
         </div>
         <ErrorHandler errors={errors} />

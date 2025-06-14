@@ -21,6 +21,7 @@ interface StepResultPanelProps {
   designConcepts: string[];
   evaluationResults: DesignEvaluationResult[];
   selectedConcept: string | null;
+  onClose?: () => void;
 }
 
 export default function StepResultPanel({
@@ -28,10 +29,11 @@ export default function StepResultPanel({
   brief,
   designConcepts,
   evaluationResults,
-  selectedConcept
+  selectedConcept,
+  onClose
 }: StepResultPanelProps) {
   const { validatedSteps, invalidatedSteps, markStepValidated, markStepInvalidated } = useAgentFlow();
-  const [showDetails, setShowDetails] = useState(false);
+  const [showDetails, setShowDetails] = useState(true); // Initially show details for a better user experience
   
   const isValidated = validatedSteps.has(stepIndex);
   const isInvalidated = invalidatedSteps.has(stepIndex);
@@ -98,34 +100,46 @@ export default function StepResultPanel({
         <h3 className="font-semibold text-lg text-gray-800">
           Step {stepIndex + 1} Results
         </h3>
-        <button
-          onClick={toggleDetails}
-          className="flex items-center text-blue-600 hover:text-blue-800 transition-colors text-sm"
-        >
-          {showDetails ? (
-            <>
-              <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="flex items-center space-x-2">
+          {/* Toggle details button */}
+          <button 
+            onClick={toggleDetails}
+            className="flex items-center text-gray-500 hover:text-gray-700 transition-colors"
+            aria-label={showDetails ? "Hide details" : "Show details"}
+            title={showDetails ? "Hide details" : "Show details"}
+          >
+            {showDetails ? (
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
               </svg>
-              Hide Details
-            </>
-          ) : (
-            <>
-              <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            ) : (
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
-              View Details
-            </>
+            )}
+          </button>
+          
+          {/* Close button */}
+          {onClose && (
+            <button
+              onClick={onClose}
+              className="flex items-center text-gray-500 hover:text-gray-700 transition-colors"
+              aria-label="Close details"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
           )}
-        </button>
+        </div>
       </div>
       
-      {/* Details content with transition */}
-      <div className={`overflow-hidden transition-all duration-300 ${
-        showDetails ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'
-      }`}>
-        {content}
-      </div>
+      {/* Content - shown only when showDetails is true */}
+      {showDetails && (
+        <div className="mt-4 animate-fadeIn">
+          {content}
+        </div>
+      )}
       
       {/* Status indicator */}
       {(isValidated || isInvalidated) && (
