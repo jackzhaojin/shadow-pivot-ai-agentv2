@@ -85,16 +85,21 @@ run_test "dao-tests" \
     "cd '$PROJECT_ROOT' && npm run test:dao" \
     "DAO Layer Tests"
 
-# Test 4: Service and API Layer Tests (may skip OpenAI dependent tests)
+# Test 4: Service Layer Tests
+run_test "service-tests" \
+    "cd '$PROJECT_ROOT' && npm run test:services" \
+    "Service Layer Tests"
+
+# Test 5: Endpoint Tests (may skip OpenAI dependent tests)
 if [ -n "$CODEX_ENV_NODE_VERSION" ] || ! check_openai_access; then
-    echo -e "${YELLOW}⚠️  Skipping design-concepts and design-evaluation tests due to Codex environment or unreachable Azure OpenAI endpoint${NC}"
-    run_test "service-tests" \
-        "cd '$PROJECT_ROOT' && CODEX_ENV_NODE_VERSION=1 npm run test:services" \
-        "Service Layer Tests (partial)"
+    echo -e "${YELLOW}⚠️  Skipping endpoint tests due to Codex environment or unreachable Azure OpenAI endpoint${NC}"
+    run_test "endpoint-tests" \
+        "cd '$PROJECT_ROOT' && CODEX_ENV_NODE_VERSION=1 npm run test:endpoints" \
+        "Endpoint Tests (skipped)"
 else
-    run_test "service-tests" \
-        "cd '$PROJECT_ROOT' && npm run test:services" \
-        "Service Layer Tests"
+    run_test "endpoint-tests" \
+        "cd '$PROJECT_ROOT' && npm run test:endpoints" \
+        "Endpoint Tests"
 fi
 
 # Test 5: UI Component Tests

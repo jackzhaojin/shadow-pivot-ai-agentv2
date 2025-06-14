@@ -64,7 +64,8 @@ Run `npm run test:all` to execute the full test suite. Individual groups can be 
 
 ```bash
 npm run test:dao      # DAO layer tests
-npm run test:services # Service and API tests
+npm run test:services # Service logic tests
+npm run test:endpoints # External API/endpoint tests
 npm run test:ui       # UI component tests
 npm run test:e2e      # End-to-end tests (requires dev server)
 ```

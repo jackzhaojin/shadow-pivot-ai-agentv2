@@ -7,12 +7,9 @@ function run(cmd) {
 function runServiceTests() {
   run('npm run test:user-guid');
   run('npm run test:spec-selection');
-  if (!process.env.CODEX_ENV_NODE_VERSION) {
-    run('npm run test:design-concepts');
-    run('npm run test:design-evaluation');
-  } else {
-    console.log('⚠️  Skipping design-concepts and design-evaluation tests in Codex environment');
-  }
+  // Execution and download tests are simple logic checks
+  run('node tests/services/execution.test.js');
+  run('node tests/services/download.test.js');
 }
 
 if (require.main === module) {
