@@ -407,7 +407,7 @@
 **Complexity**: Medium | **Effort**: Medium
 **Story**: As a developer, I need the tests organized by layer with simple runners so I can execute them quickly and reliably.
 
- - [x] Categorized tests into dao, services, endpoints, ui, and e2e folders
+ - [x] Categorized tests into baseline, dao, services, endpoints, ui, and e2e folders
 - [x] Created runner scripts for each category and a master `test:all` script
 - [x] Updated baseline scripts and documentation
 - [x] Validated by running `npm run lint` and `npm run build`
