@@ -7,6 +7,8 @@ interface AgentFlowTimelineProps {
   completed: Set<number>;
   failedStep: number | null;
   aborted: boolean;
+  onStepClick?: (i: number) => void;
+  openSteps?: Set<number>;
 }
 
 function StepIcon({ index, currentStep, completed, failedStep, aborted }: { index: number; currentStep: number; completed: Set<number>; failedStep: number | null; aborted: boolean }) {
@@ -44,7 +46,7 @@ function ConnectorLine({ index, stepsLength, completed, currentStep, failedStep 
   );
 }
 
-export default function AgentFlowTimeline({ steps, currentStep, completed, failedStep, aborted }: AgentFlowTimelineProps) {
+export default function AgentFlowTimeline({ steps, currentStep, completed, failedStep, aborted, onStepClick, openSteps }: AgentFlowTimelineProps) {
   return (
     <div className="space-y-0">
       {steps.map((step, index) => (
@@ -55,7 +57,8 @@ export default function AgentFlowTimeline({ steps, currentStep, completed, faile
           </div>
           <div className="ml-4 pb-12 flex-1">
             <div
-              className={`p-4 rounded-xl border transition-all duration-300 ${failedStep === index ? 'bg-red-50 border-red-200' : currentStep === index && !aborted ? 'bg-blue-50 border-blue-200 shadow-md' : completed.has(index) ? 'bg-emerald-50 border-emerald-200' : 'bg-gray-50 border-gray-200'}`}
+              onClick={() => completed.has(index) && onStepClick?.(index)}
+              className={`p-4 rounded-xl border transition-all duration-300 ${failedStep === index ? 'bg-red-50 border-red-200' : currentStep === index && !aborted ? 'bg-blue-50 border-blue-200 shadow-md' : completed.has(index) ? 'bg-emerald-50 border-emerald-200' : 'bg-gray-50 border-gray-200'} ${completed.has(index) ? 'cursor-pointer' : ''} ${openSteps?.has(index) ? 'ring-2 ring-blue-300' : ''}`}
             >
               <h3
                 className={`font-semibold mb-1 ${failedStep === index ? 'text-red-900' : currentStep === index && !aborted ? 'text-blue-900' : completed.has(index) ? 'text-emerald-900' : 'text-gray-700'}`}
@@ -69,6 +72,7 @@ export default function AgentFlowTimeline({ steps, currentStep, completed, faile
                 {currentStep === index && !aborted && failedStep === null && 'Currently processing...'}
                 {completed.has(index) && 'Completed successfully'}
                 {currentStep < index && failedStep === null && 'Waiting...'}
+                {completed.has(index) && ' – Click to review results'}
               </p>
             </div>
           </div>
