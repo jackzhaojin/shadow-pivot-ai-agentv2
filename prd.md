@@ -83,6 +83,8 @@ An AI-powered design-to-code agent embedded within a Next.js app, capable of gen
   * Step results display without disrupting the automated flow progression
   * Each step shows: input parameters, processing details, AI reasoning, and generated outputs
   * Results remain accessible throughout the entire session
+  * **Toggle details view**: Users can show/hide detailed results using a "View/Hide Details" toggle button
+  * **Step validation in modal**: Validation controls appear in a modal dialog when users choose to validate a step
 
 * **Error Handling & Feedback:**
   * **Error visualization**: Failed steps appear with red indicators and error messaging
@@ -267,6 +269,8 @@ npx create-next-app@latest
 * ✅ **Persistent Results Access**: Step results remain viewable throughout session
 * ✅ **AI Decision Transparency**: Show reasoning, scoring, and selection criteria for each step
 * ✅ **Non-Disruptive Inspection**: Review previous steps without interrupting automated flow
+* ✅ **Toggle Details View**: Toggle between showing and hiding step details with a View/Hide Details button
+* ✅ **Modal Validation**: Present validation controls in a modal dialog for focused user interaction
 
 #### **Error Handling & User Feedback:**
 * ✅ **Visual Error Indicators**: Failed steps display with red theme indicators
