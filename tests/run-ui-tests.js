@@ -7,8 +7,8 @@ function runUiTests() {
     'agent-flow-ux.test.js',
     'spec-selection-ui-integration.test.js',
     'step-results-review.test.js',
-    'ValidationPanel.test.tsx',
-    'agent-flow-validation.test.tsx'
+    'validation-panel.test.js',
+    'agent-flow-validation.test.js'
   ];
   files.forEach(f => {
     const testPath = path.join(__dirname, 'ui', f);
