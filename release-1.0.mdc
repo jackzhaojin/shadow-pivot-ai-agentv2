@@ -305,7 +305,41 @@
 - Integration: Updated design concept generation to use the new system
 - Result: System now reliably generates multiple design concepts (3-5)
 
-#### 3.3.3 Fix Multi-Concept Generation Bug (Critical Fix) ✅ COMPLETED
+#### 3.3.3 Code Architecture Refactoring (DAO & Service Layer) ✅ COMPLETED
+**Complexity**: Medium | **Effort**: Medium
+**Story**: As a developer maintaining the application codebase, I need clear separation between data access logic and business logic so that the code is more maintainable, testable, and easier to extend in future releases.
+
+- [x] **Define architecture plan**: Design directory structure for separation of concerns
+  - ✅ `lib/daos/` - Data Access Objects for external service interfaces
+  - ✅ `lib/services/` - Business logic components
+  - ✅ `lib/utils/` - Shared utility functions
+- [x] **Create directory structure**: Set up folders and index files
+  - ✅ Create directories with proper index.ts files
+  - ✅ Document the purpose of each layer in comments
+- [x] **Migrate DAO files**: Move data access code to the DAO layer
+  - ✅ Move `aiClient.ts` to `lib/daos/` (Azure AI integration)
+  - ✅ Move `azureClient.ts` to `lib/daos/` (Azure core services)
+  - ✅ Move `storageClient.ts` to `lib/daos/` (Blob storage)
+  - ✅ Move `cosmosClient.ts` to `lib/daos/` (CosmosDB)
+- [x] **Migrate service files**: Move business logic to the services layer
+  - ✅ Move `designConcept.ts` to `lib/services/` (Concept generation)
+  - ✅ Move `designEvaluation.ts` to `lib/services/` (Evaluation logic)
+  - ✅ Move `specSelection.ts` to `lib/services/` (Selection logic)
+- [x] **Migrate utility files**: Move shared utilities to utils layer
+  - ✅ Move `promptUtils.ts` to `lib/utils/` (Prompt management)
+  - ✅ Move `graphUtils.ts` to `lib/utils/` (Chart utilities)
+- [x] **Update imports**: Fix all import paths throughout the codebase
+  - ✅ Update imports in code files
+  - ✅ Update imports in documentation
+- [x] **Documentation updates**: Document the new architecture
+  - ✅ Update PRD with architecture diagram
+  - ✅ Update README with directory structure
+  - ✅ Update release documentation
+- [x] **Validate refactoring**: Ensure no functionality is broken
+  - ✅ Fix any errors from path changes
+  - ✅ Test key functionality after refactoring
+
+#### 3.3.4 Fix Multi-Concept Generation Bug (Critical Fix) ✅ COMPLETED
 **Complexity**: Medium | **Effort**: Medium
 **Story**: As a user expecting multiple design concepts from the AI agent, I need the design concept generation to reliably produce 3-5 distinct concepts instead of a single-element array so that I have meaningful options to evaluate and the agent pipeline works as intended.
 
@@ -335,7 +369,7 @@
 - Architecture: Implemented as part of the prompt engineering system with version control
 - Results: System now reliably generates 3-5 diverse design concepts for any input brief
 
-#### 3.3.4 Fix Design Evaluation Scoring Logic (Critical Fix) ✅ COMPLETED
+#### 3.3.5 Fix Design Evaluation Scoring Logic (Critical Fix) ✅ COMPLETED
 **Complexity**: Medium | **Effort**: Medium  
 **Story**: As a user viewing design evaluation results, I need the evaluation scoring to return meaningful non-zero weights and scores when multiple concepts are provided so that I can understand the relative merits of each design concept and see proper selection logic.
 

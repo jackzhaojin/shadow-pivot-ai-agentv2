@@ -1,6 +1,6 @@
 'use client';
 import { createContext, useContext, useState } from 'react';
-import type { DesignEvaluationResult } from '@/lib/designEvaluation';
+import type { DesignEvaluationResult } from '@/lib/services/designEvaluation';
 import {
   type ExecutionTrace,
   createExecutionTrace,

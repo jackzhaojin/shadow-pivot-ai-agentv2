@@ -1,4 +1,4 @@
-import { checkAzureHealth, validateAzureEnvironment } from "@/lib/azureClient";
+import { checkAzureHealth, validateAzureEnvironment } from "@/lib/daos/azureClient";
 import AgentFlow from '@/features/ai/components/AgentFlow';
 import { AgentFlowProvider } from '@/providers/AgentFlowProvider';
 import Link from 'next/link';

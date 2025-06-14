@@ -87,14 +87,14 @@ This script verifies:
 
 ### Helper Libraries
 
-**Azure Storage Client** (`lib/storageClient.ts`):
+**Azure Storage Client** (`lib/daos/storageClient.ts`):
 
 ```typescript
-import { getBlobServiceClient, getExecutionsContainer } from '@/lib/storageClient';
+import { getBlobServiceClient, getExecutionsContainer } from '@/lib/daos/storageClient';
 ```
 
-**Azure AI Client** (`lib/aiClient.ts`):
+**Azure AI Client** (`lib/daos/aiClient.ts`):
 
 ```typescript
-import { getAIClient } from '@/lib/aiClient';
+import { getAIClient } from '@/lib/daos/aiClient';
 ```

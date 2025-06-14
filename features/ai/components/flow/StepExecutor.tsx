@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect } from 'react';
 import { useAgentFlow } from '@/providers/AgentFlowProvider';
-import { selectBestDesignConcept } from '@/lib/specSelection';
+import { selectBestDesignConcept } from '@/lib/services/specSelection';
 import { useUserGuid } from '@/providers/UserGuidProvider';
 
 interface StepExecutorProps {

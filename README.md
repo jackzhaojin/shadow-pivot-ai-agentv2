@@ -103,7 +103,10 @@ This approach ensures rapid development while maintaining clear separation of co
 app/                     # Next.js App Router: pages, API routes
 ├── api/                 # API endpoints (e.g., Azure testing)
 ├── test-azure/          # Interactive Azure testing UI
-lib/                     # Core logic: Azure clients, utilities
+lib/                     # Core logic and services
+├── daos/                # Data Access Objects for external services (Azure, storage)
+├── services/            # Business logic for application features
+├── utils/               # Utility functions and helpers
 components/              # Reusable React components
 features/                # Feature-specific modules
 docs/                    # Project documentation

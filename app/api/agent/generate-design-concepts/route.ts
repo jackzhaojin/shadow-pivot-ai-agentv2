@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { generateDesignConcepts } from '@/lib/designConcept';
+import { generateDesignConcepts } from '@/lib/services/designConcept';
 
 export async function POST(req: Request) {
   try {

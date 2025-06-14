@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { testAIConnection } from '@/lib/aiClient';
+import { testAIConnection } from '@/lib/daos/aiClient';
 
 export async function GET() {
   const result = await testAIConnection();

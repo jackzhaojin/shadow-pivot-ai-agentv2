@@ -28,12 +28,12 @@
 ### Server-Side Only Pattern
 ```typescript
 // ✅ CORRECT: Server-side usage
-import { checkAzureHealth } from "@/lib/azureClient";
+import { checkAzureHealth } from "@/lib/daos/azureClient";
 const health = await checkAzureHealth(); // Only in server components
 
 // ❌ WRONG: Client-side usage  
 'use client';
-import { getAIClient } from "@/lib/azureClient"; // Never do this
+import { getAIClient } from "@/lib/daos/azureClient"; // Never do this
 ```
 
 ### Proper Client/Server Separation

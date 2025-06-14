@@ -356,3 +356,47 @@ npx create-next-app@latest
   * Accessibility and usability of generated UIs
 * Unit testing is **not required** unless it directly supports integration or functional validation.
 * when developing test driven development which is always needed, never use az cli commands since it doesn't work on codex, always use node and then DefaultAzureCredential, which works for everyone
+
+---
+
+### Code Architecture:
+
+#### **Core Structure:**
+
+* **Layered Architecture:** Clear separation of concerns with distinct layers:
+  * **Data Access Objects (DAOs)** (`lib/daos/`): Interfaces with external services like Azure
+  * **Business Services** (`lib/services/`): Core business logic implementation
+  * **Utilities** (`lib/utils/`): Shared helper functions across the application
+  * **Components** (`components/`): Reusable UI elements
+  * **Features** (`features/`): Feature-specific modules and components
+
+#### **Key Design Principles:**
+
+* **Separation of Concerns:** Each layer has a distinct responsibility
+  * DAOs handle external resource access (Azure AI, Blob Storage, Cosmos DB)
+  * Services implement business logic and workflows
+  * Utils provide shared functionality used across the application
+* **Clean Interfaces:** Each module exposes a well-defined interface
+* **Testability:** Separation facilitates unit testing of each layer
+* **Maintainability:** Makes the codebase easier to understand, extend and refactor
+
+#### **File Organization:**
+
+```
+lib/
+├── daos/              # Data Access Objects for external services
+│   ├── aiClient.ts    # Azure AI client wrapper
+│   ├── azureClient.ts # Azure base client utilities
+│   ├── cosmosClient.ts # Cosmos DB client
+│   ├── storageClient.ts # Azure Blob Storage client
+│   └── index.ts       # Re-exports for DAOs
+├── services/          # Business logic implementation
+│   ├── designConcept.ts # Design concept generation service
+│   ├── designEvaluation.ts # Design evaluation service
+│   ├── specSelection.ts # Design selection service
+│   └── index.ts       # Re-exports for services
+└── utils/             # Shared utilities
+    ├── graphUtils.ts  # Graph/chart utilities
+    ├── promptUtils.ts # AI prompt utilities
+    └── index.ts       # Re-exports for utilities
+```

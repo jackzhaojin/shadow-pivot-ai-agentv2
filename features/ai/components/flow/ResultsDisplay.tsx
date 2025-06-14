@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import type { DesignEvaluationResult } from '@/lib/designEvaluation';
+import type { DesignEvaluationResult } from '@/lib/services/designEvaluation';
 import type { ExecutionTrace } from '@/utils/execution';
 import { formatDate } from '@/utils/format';
 
