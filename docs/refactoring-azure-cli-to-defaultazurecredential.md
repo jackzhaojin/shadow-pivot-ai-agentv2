@@ -7,24 +7,24 @@ Successfully refactored all Azure CLI (`az`) commands and dependencies to use on
 
 ### 1. Shell Scripts Updated
 
-#### `baseline-testing/quick-auth-test.sh`
+#### `tests/baseline/local-node-tests/quick-auth-test.sh`
 - **Before**: Required Azure CLI installation and `az login`
 - **After**: Only requires Node.js and DefaultAzureCredential authentication
 - **Change**: Removed Azure CLI dependency checks and `az account show` verification
 
-#### `baseline-testing/test-azure-connections.sh`
+#### `tests/baseline/local-server-test-3000-integrated/test-azure-connections.sh`
 - **Before**: Used `az account show` to verify authentication
 - **After**: Uses Node.js inline script with DefaultAzureCredential to test authentication
 - **Change**: Replaced CLI command with programmatic credential check
 
-#### `baseline-testing/run-all-tests.sh`
+#### `tests/baseline/run-all-tests.sh`
 - **Before**: Required Azure CLI installation and authentication
 - **After**: Only requires Node.js
 - **Change**: Removed all Azure CLI prerequisite checks
 
 ### 2. New Monitoring Script
 
-#### `baseline-testing/monitor-deployment.js` (NEW)
+#### `tests/baseline/local-node-tests/monitor-deployment.js` (NEW)
 - **Purpose**: Replaces `az` CLI commands for deployment monitoring
 - **Features**: 
   - Uses `@azure/arm-appservice` SDK for App Service operations
@@ -49,7 +49,7 @@ Successfully refactored all Azure CLI (`az`) commands and dependencies to use on
 
 ```json
 {
-  "monitor-deployment": "node baseline-testing/monitor-deployment.js"
+  "monitor-deployment": "node tests/baseline/local-node-tests/monitor-deployment.js"
 }
 ```
 
@@ -74,7 +74,7 @@ Successfully refactored all Azure CLI (`az`) commands and dependencies to use on
 
 ### 6. Authentication Test Updates
 
-#### `baseline-testing/azure-auth-test.js`
+#### `tests/baseline/local-node-tests/azure-auth-test.js`
 - **Before**: Error message suggested using `az login`
 - **After**: Error message suggests setting Service Principal environment variables
 - **Functionality**: Unchanged - still tests DefaultAzureCredential
@@ -108,10 +108,10 @@ export AZURE_SUBSCRIPTION_ID="your-subscription-id"  # Required for deployment m
 
 ## Files Modified
 
-- `baseline-testing/quick-auth-test.sh`
-- `baseline-testing/test-azure-connections.sh`
-- `baseline-testing/run-all-tests.sh`
-- `baseline-testing/azure-auth-test.js`
+- `tests/baseline/local-node-tests/quick-auth-test.sh`
+- `tests/baseline/local-server-test-3000-integrated/test-azure-connections.sh`
+- `tests/baseline/run-all-tests.sh`
+- `tests/baseline/local-node-tests/azure-auth-test.js`
 - `monitor-deployment.sh`
 - `package.json`
 - `AGENTS.md`
@@ -121,6 +121,6 @@ export AZURE_SUBSCRIPTION_ID="your-subscription-id"  # Required for deployment m
 
 ## Files Created
 
-- `baseline-testing/monitor-deployment.js`
+- `tests/baseline/local-node-tests/monitor-deployment.js`
 
 The refactoring is complete and all authentication now uses only DefaultAzureCredential with Service Principal credentials.

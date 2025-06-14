@@ -59,7 +59,7 @@ export function loadPromptTemplate(templatePath: string): PromptTemplate {
 /**
  * Apply variables to the template
  */
-export function applyTemplate(template: PromptTemplate, variables: Record<string, any>): {
+export function applyTemplate(template: PromptTemplate, variables: Record<string, unknown>): {
   systemPrompt: string;
   userPrompt: string;
   temperature?: number;
@@ -77,10 +77,10 @@ export function applyTemplate(template: PromptTemplate, variables: Record<string
 /**
  * Validate response against expected schema
  */
-export function validateResponse(response: any, template: PromptTemplate): { 
-  isValid: boolean; 
+export function validateResponse(response: unknown, template: PromptTemplate): {
+  isValid: boolean;
   errors?: string[];
-  parsedResponse?: any;
+  parsedResponse?: unknown;
 } {
   if (!template.responseFormat) {
     return { isValid: true, parsedResponse: response };

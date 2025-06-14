@@ -1,6 +1,6 @@
 Baseline test for 3.2.3 design evaluation step.
 
-Ran `baseline-testing/test-azure-connections.sh` while the dev server was running.
+Ran `tests/baseline/local-server-test-3000-integrated/test-azure-connections.sh` while the dev server was running.
 Output:
 
 ```

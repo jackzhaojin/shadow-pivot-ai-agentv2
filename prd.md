@@ -379,6 +379,7 @@ npx create-next-app@latest
 * **Clean Interfaces:** Each module exposes a well-defined interface
 * **Testability:** Separation facilitates unit testing of each layer
 * **Maintainability:** Makes the codebase easier to understand, extend and refactor
+* **Organized Test Suites:** Tests are grouped under `tests/dao`, `tests/services`, `tests/endpoints`, `tests/ui`, and `tests/e2e` with runner scripts. Execute all with `npm run test:all`.
 
 #### **File Organization:**
 

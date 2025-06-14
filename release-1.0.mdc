@@ -396,12 +396,22 @@
 - [x] **Integration testing**: Verify evaluation works with concept generation
 - [x] **Validate by running the defined tests and confirming all pass**
 
-**✅ DESIGN EVALUATION SCORING LOGIC FIX COMPLETE** 
+**✅ DESIGN EVALUATION SCORING LOGIC FIX COMPLETE**
 - Implementation: Rewrote design evaluation using comprehensive scoring system
 - Tools: Enhanced response parsing with multiple fallback mechanisms
 - Testing: Created detailed tests verifying non-zero scores for all concepts
 - Architecture: Integrated with prompt template system for maintainability
 - Results: System now provides meaningful scores, rankings, and reasoning for all concepts
+
+#### 3.3.6 Test Suite Refactoring ✅ COMPLETED
+**Complexity**: Medium | **Effort**: Medium
+**Story**: As a developer, I need the tests organized by layer with simple runners so I can execute them quickly and reliably.
+
+ - [x] Categorized tests into dao, services, endpoints, ui, and e2e folders
+- [x] Created runner scripts for each category and a master `test:all` script
+- [x] Updated baseline scripts and documentation
+- [x] Validated by running `npm run lint` and `npm run build`
+- [x] Split service tests into `services` and `endpoints` groups
 
 ### 3.4 Interactive Step Results Review
 **Complexity**: Medium | **Effort**: Medium

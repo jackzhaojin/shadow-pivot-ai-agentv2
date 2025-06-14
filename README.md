@@ -144,8 +144,14 @@ For more detailed information, please refer to the following documents:
   - [Troubleshooting Guide](./docs/TROUBLESHOOTING.md): Solutions for common issues.
   - [App Router Overview](./docs/app-router-overview.md): Information about the Next.js App Router.
 - **Development & Testing Specifics**
-  - [Baseline Testing README](./baseline-testing/README.md): Information on baseline testing scripts.
-  - **AI Connection Test:** `npm run test:ai-connection` to verify Azure AI Foundry connectivity.
+  - **Test Structure:**
+    - `tests/baseline/`: Basic Azure authentication tests
+    - `tests/dao/`: DAO layer tests for Azure and AI client integration
+    - `tests/services/`: Service logic tests (user GUID, spec selection, execution)
+    - `tests/endpoints/`: External API and endpoint tests
+    - `tests/ui/`: UI component tests for the agent flow and interfaces
+    - `tests/e2e/`: End-to-end integration tests
+  - **Test Commands:** `npm run test:all` runs the full suite. Individual groups: `npm run test:dao`, `npm run test:services`, `npm run test:endpoints`, `npm run test:ui`, and `npm run test:e2e`.
 - **Development Logs & Notes** (primarily for historical context)
   - [Session Logs](./docs/ai-log/): Contains logs from various development sessions.
   - [SSR Integration Notes](./docs/session-1-4b-ssr-integration.md)

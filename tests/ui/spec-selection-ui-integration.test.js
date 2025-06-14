@@ -16,7 +16,7 @@ const mockEvaluationResults = [
 ];
 
 // Import the core logic function
-const { selectBestDesignConcept } = require('./specSelection');
+const { selectBestDesignConcept } = require('../services/specSelection');
 
 function testEvaluationDisplay() {
   console.log('✓ Testing evaluation display...');

@@ -158,7 +158,7 @@ async function testUIStateFlow() {
   console.log('🔄 Testing UI state management flow...');
   
   // This would ideally be done with a headless browser, but we'll simulate the logic
-  const { selectBestDesignConcept } = require('./specSelection');
+  const { selectBestDesignConcept } = require('../services/specSelection');
   
   try {
     // Simulate the flow from the UI

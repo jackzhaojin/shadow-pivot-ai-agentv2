@@ -2,10 +2,10 @@ const assert = require('assert');
 const React = require('react');
 const ReactDOMServer = require('react-dom/server');
 
-const AgentFlowTimeline = require('../features/ai/components/flow/AgentFlowTimeline').default;
-const ResultsDisplay = require('../features/ai/components/flow/ResultsDisplay').default;
-const ErrorHandler = require('../features/ai/components/flow/ErrorHandler').default;
-const ProgressIndicator = require('../features/ai/components/flow/ProgressIndicator').default;
+const AgentFlowTimeline = require('../../features/ai/components/flow/AgentFlowTimeline').default;
+const ResultsDisplay = require('../../features/ai/components/flow/ResultsDisplay').default;
+const ErrorHandler = require('../../features/ai/components/flow/ErrorHandler').default;
+const ProgressIndicator = require('../../features/ai/components/flow/ProgressIndicator').default;
 
 function testTimelineRendering() {
   const html = ReactDOMServer.renderToStaticMarkup(

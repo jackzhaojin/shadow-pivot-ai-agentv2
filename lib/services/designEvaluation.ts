@@ -1,6 +1,4 @@
 import { generateChatCompletion } from '../daos/aiClient';
-import { loadPromptTemplate, applyTemplate, validateResponse } from '../utils/promptUtils';
-import path from 'path';
 
 export interface DesignEvaluationResult {
   concept: string;
@@ -97,8 +95,14 @@ Return a JSON object with an "evaluations" array containing objects with:
       }));
     }
     
+    interface ParsedEvaluation {
+      conceptIndex?: number;
+      totalScore?: number;
+      reasoning?: string;
+    }
+
     // Convert to our result format
-    return evaluations.map((evaluation: any) => {
+    return evaluations.map((evaluation: ParsedEvaluation) => {
       const conceptIndex = typeof evaluation.conceptIndex === 'number' ? evaluation.conceptIndex : 0;
       const concept = concepts[conceptIndex] || concepts[0] || '';
       return {
@@ -121,7 +125,7 @@ Return a JSON object with an "evaluations" array containing objects with:
           return { concept, score, reason: 'Extracted from text response' };
         });
       }
-    } catch (secondError) {
+    } catch {
       // Ignore secondary parsing errors
     }
     
