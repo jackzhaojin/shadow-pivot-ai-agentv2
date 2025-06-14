@@ -56,7 +56,7 @@ curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
 2. **Verify Authentication**:
    ```bash
    # Test authentication using Node.js
-   node baseline-testing/azure-auth-test.js
+   node tests/baseline/local-node-tests/azure-auth-test.js
    ```
 
 3. **Verify Access**:
@@ -728,7 +728,7 @@ Use a service principal when managed identity or `az login` are not available.
    - `AZURE_TENANT_ID` = `tenant`
    - `AZURE_CLIENT_SECRET` = `password`
 3. `DefaultAzureCredential` will automatically use these values when present.
-4. Verify the credentials by running `./baseline-testing/quick-auth-test.sh`.
+4. Verify the credentials by running `./tests/baseline/local-node-tests/quick-auth-test.sh`.
 
 ### For GitHub Actions (Required for Automated Deployment - OIDC Authentication)
 

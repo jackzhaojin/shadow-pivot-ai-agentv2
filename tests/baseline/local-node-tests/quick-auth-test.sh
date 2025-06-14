@@ -23,12 +23,12 @@ echo ""
 echo "🚀 Running Azure authentication test..."
 echo ""
 
-cd "$PROJECT_ROOT" && node baseline-testing/local-node-tests/azure-auth-test.js
+cd "$PROJECT_ROOT" && node tests/baseline/local-node-tests/azure-auth-test.js
 
 if [ $? -eq 0 ]; then
     echo ""
     echo "🎉 Authentication test completed successfully!"
-    echo "💡 To run all tests including API tests, use: ./baseline-testing/run-all-tests.sh"
+    echo "💡 To run all tests including API tests, use: ./tests/baseline/run-all-tests.sh"
 else
     echo ""
     echo "❌ Authentication test failed"

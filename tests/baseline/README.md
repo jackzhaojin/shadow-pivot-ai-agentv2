@@ -21,12 +21,12 @@ Tests that require the development server running on localhost:3000.
 
 ### Run All Tests:
 ```bash
-./baseline-testing/run-all-tests.sh
+./tests/baseline/run-all-tests.sh
 ```
 
 ### Run Only Node.js Tests (No Server Required):
 ```bash
-./baseline-testing/local-node-tests/local-node-integrated-tests.sh
+./tests/baseline/local-node-integrated-tests.sh
 ```
 
 ### Run Only Server Tests (Requires `npm run dev`):
@@ -35,7 +35,7 @@ Tests that require the development server running on localhost:3000.
 npm run dev
 
 # Then run tests
-./baseline-testing/local-server-test-3000-integrated/local-3000-tests.sh
+./tests/baseline/local-3000-tests.sh
 ```
 
 ## Prerequisites
@@ -57,7 +57,7 @@ All tests use **DefaultAzureCredential** - no Azure CLI required. This works rel
 Runs all baseline tests in sequence and provides a comprehensive report.
 
 ```bash
-./baseline-testing/run-all-tests.sh
+./tests/baseline/run-all-tests.sh
 ```
 
 ### Individual Tests
@@ -69,7 +69,7 @@ Tests Azure authentication using DefaultAzureCredential. This verifies that:
 - Basic authentication flow works
 
 ```bash
-node baseline-testing/azure-auth-test.js
+node tests/baseline/local-node-tests/azure-auth-test.js
 ```
 
 #### `test-azure-connections.sh`
@@ -79,7 +79,7 @@ Tests Azure service connections through the application's API endpoints:
 - Development server accessibility
 
 ```bash
-./baseline-testing/test-azure-connections.sh
+./tests/baseline/local-server-test-3000-integrated/test-azure-connections.sh
 ```
 
 #### `test-ssr-integration.sh`
@@ -89,7 +89,7 @@ Tests server-side rendering integration:
 - HTTP status codes are correct
 
 ```bash
-./baseline-testing/test-ssr-integration.sh
+./tests/baseline/local-server-test-3000-integrated/test-ssr-integration.sh
 ```
 
 ## Configuration
@@ -119,26 +119,26 @@ az login
 npm run dev
 
 # Run all baseline tests
-./baseline-testing/run-all-tests.sh
+./tests/baseline/run-all-tests.sh
 ```
 
 ### Run only authentication test
 ```bash
 az login
-node baseline-testing/azure-auth-test.js
+node tests/baseline/local-node-tests/azure-auth-test.js
 ```
 
 ### Quick authentication check
 ```bash
 # Simple one-liner for authentication testing
 az login
-cd /c/code/shadow-pivot-ai-agentv2 && node baseline-testing/azure-auth-test.js
+cd /c/code/shadow-pivot-ai-agentv2 && node tests/baseline/local-node-tests/azure-auth-test.js
 ```
 
 ### Quick connection check
 ```bash
 # Requires dev server running
-./baseline-testing/test-azure-connections.sh
+./tests/baseline/local-server-test-3000-integrated/test-azure-connections.sh
 ```
 
 ## Continuous Integration

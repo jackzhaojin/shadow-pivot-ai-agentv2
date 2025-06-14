@@ -6,7 +6,7 @@ Successfully reorganized the baseline testing structure into two separate folder
 ## New Folder Structure
 
 ```
-baseline-testing/
+tests/baseline/
 ├── README.md                              # Updated main documentation
 ├── run-all-tests.sh                       # Updated main test runner
 ├── local-node-tests/                      # Node.js only tests (no server required)
@@ -65,23 +65,23 @@ baseline-testing/
 
 ### Quick Auth Check (Node.js only):
 ```bash
-./baseline-testing/local-node-tests/quick-auth-test.sh
+./tests/baseline/local-node-tests/quick-auth-test.sh
 ```
 
 ### All Node.js Tests (No server required):
 ```bash
-./baseline-testing/local-node-tests/local-node-integrated-tests.sh
+./tests/baseline/local-node-integrated-tests.sh
 ```
 
 ### All Server Tests (Requires `npm run dev`):
 ```bash
 npm run dev  # In another terminal
-./baseline-testing/local-server-test-3000-integrated/local-3000-tests.sh
+./tests/baseline/local-3000-tests.sh
 ```
 
 ### All Tests Combined:
 ```bash
-./baseline-testing/run-all-tests.sh
+./tests/baseline/run-all-tests.sh
 ```
 
 ## Files Updated

@@ -13,16 +13,16 @@ This folder contains tests that only require Node.js and Azure credentials to ru
 
 ### Run all Node.js tests:
 ```bash
-./baseline-testing/local-node-tests/local-node-integrated-tests.sh
+./tests/baseline/local-node-integrated-tests.sh
 ```
 
 ### Run individual tests:
 ```bash
 # Quick auth test
-./baseline-testing/local-node-tests/quick-auth-test.sh
+./tests/baseline/local-node-tests/quick-auth-test.sh
 
 # Authentication test directly
-node baseline-testing/local-node-tests/azure-auth-test.js
+node tests/baseline/local-node-tests/azure-auth-test.js
 
 # Deployment monitoring
 npm run monitor-deployment

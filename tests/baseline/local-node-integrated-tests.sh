@@ -135,5 +135,5 @@ if [ ${#FAILED_TESTS[@]} -gt 0 ]; then
 else
     echo ""
     echo -e "${GREEN}🎉 All Node.js integrated tests passed successfully!${NC}"
-    echo -e "${BLUE}💡 To run tests that require the dev server, use: ./baseline-testing/local-3000-tests.sh${NC}"
+    echo -e "${BLUE}💡 To run tests that require the dev server, use: ./tests/baseline/local-3000-tests.sh${NC}"
 fi

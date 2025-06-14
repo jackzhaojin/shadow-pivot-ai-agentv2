@@ -17,7 +17,7 @@ The baseline testing system has been restructured into 3 main runners that provi
 
 **Usage**:
 ```bash
-./baseline-testing/run-all-tests.sh
+./tests/baseline/run-all-tests.sh
 ```
 
 ### 2. `local-node-integrated-tests.sh` (Node.js Only Tests)
@@ -34,7 +34,7 @@ The baseline testing system has been restructured into 3 main runners that provi
 
 **Usage**:
 ```bash
-./baseline-testing/local-node-integrated-tests.sh
+./tests/baseline/local-node-integrated-tests.sh
 ```
 
 ### 3. `local-3000-tests.sh` (Server-Dependent Tests)
@@ -58,7 +58,7 @@ The baseline testing system has been restructured into 3 main runners that provi
 npm run dev
 
 # Then run the tests in another terminal
-./baseline-testing/local-3000-tests.sh
+./tests/baseline/local-3000-tests.sh
 ```
 
 ## Subfolder Organization

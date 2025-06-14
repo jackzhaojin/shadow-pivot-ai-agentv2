@@ -45,7 +45,7 @@ export async function generateDesignConcepts(brief: string): Promise<string[]> {
       return Array.isArray(data) ? data : [content];
     }
     
-    return validation.parsedResponse;
+    return validation.parsedResponse as string[];
   } catch (error) {
     console.error('Failed to parse response:', error);
     console.log('Attempting alternative parsing methods...');

@@ -45,7 +45,7 @@ Run `npm install` as soon as you open a new environment or after cloning the rep
 After dependencies are installed, validate your environment by running the baseline authentication script:
 
 ```bash
-./baseline-testing/local-node-tests/quick-auth-test.sh
+./tests/baseline/local-node-tests/quick-auth-test.sh
 ```
 
 Resolve any missing tools or login issues the script reports before continuing. Always install packages and run this baseline test before running lint, build, or other test commands. Emphasize a test-driven workflow by executing available test scripts whenever adding new code.
@@ -80,7 +80,7 @@ Feel free to create inside the docs/ai-log folder, follow existing naming with y
 If you encounter Azure authentication issues during development or testing, run the detailed authentication test:
 
 ```bash
-node baseline-testing/local-node-tests/azure-auth-test.js
+node tests/baseline/local-node-tests/azure-auth-test.js
 ```
 
 This will help identify if the issue is with Azure credentials, network connectivity, or service configuration. Azure CLI is not supported in Codex; use Service Principal credentials with environment variables (AZURE_CLIENT_ID, AZURE_CLIENT_SECRET, AZURE_TENANT_ID).

@@ -18,11 +18,11 @@ npm run dev
 ### Then run the tests:
 ```bash
 # Run all server tests
-./baseline-testing/local-server-test-3000-integrated/local-3000-tests.sh
+./tests/baseline/local-3000-tests.sh
 
 # Run individual tests
-./baseline-testing/local-server-test-3000-integrated/test-azure-connections.sh
-./baseline-testing/local-server-test-3000-integrated/test-ssr-integration.sh
+./tests/baseline/local-server-test-3000-integrated/test-azure-connections.sh
+./tests/baseline/local-server-test-3000-integrated/test-ssr-integration.sh
 ```
 
 ## Requirements:

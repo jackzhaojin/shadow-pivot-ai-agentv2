@@ -89,13 +89,13 @@ if [ ${#FAILED_SUITES[@]} -gt 0 ]; then
     echo ""
     echo -e "${RED}❌ Some test suites failed. Please check the output above for details.${NC}"
     echo -e "${YELLOW}💡 You can run individual test suites:${NC}"
-    echo "   - Node.js tests: ./baseline-testing/local-node-integrated-tests.sh"
-    echo "   - Server tests: ./baseline-testing/local-3000-tests.sh"
+    echo "   - Node.js tests: ./tests/baseline/local-node-integrated-tests.sh"
+    echo "   - Server tests: ./tests/baseline/local-3000-tests.sh"
     exit 1
 else
     echo ""
     echo -e "${GREEN}🎉 All test suites passed successfully!${NC}"
     echo -e "${BLUE}💡 Individual test suites available:${NC}"
-    echo "   - Node.js tests: ./baseline-testing/local-node-integrated-tests.sh"
-    echo "   - Server tests: ./baseline-testing/local-3000-tests.sh"
+    echo "   - Node.js tests: ./tests/baseline/local-node-integrated-tests.sh"
+    echo "   - Server tests: ./tests/baseline/local-3000-tests.sh"
 fi

@@ -20,7 +20,7 @@
     "test:ui": "node tests/run-ui-tests.js",
     "test:e2e": "node tests/run-e2e-tests.js",
     "test:all": "node tests/run-all-tests.js",
-    "monitor-deployment": "node baseline-testing/local-node-tests/monitor-deployment.js"
+    "monitor-deployment": "node tests/baseline/local-node-tests/monitor-deployment.js"
   },
   "dependencies": {
     "@azure/arm-appservice": "^14.1.0",
