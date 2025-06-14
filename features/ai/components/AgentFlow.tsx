@@ -7,6 +7,7 @@ import AgentFlowTimeline from './flow/AgentFlowTimeline';
 import ResultsDisplay from './flow/ResultsDisplay';
 import ErrorHandler from './flow/ErrorHandler';
 import ProgressIndicator from './flow/ProgressIndicator';
+import StepResultPanel from './flow/StepResultPanel';
 
 export default function AgentFlow() {
   const {
@@ -25,6 +26,15 @@ export default function AgentFlow() {
   const userGuid = useUserGuid();
   const [brief, setBrief] = useState('');
   const [showTimeline, setShowTimeline] = useState(false);
+  const [openSteps, setOpenSteps] = useState<Set<number>>(new Set());
+
+  const toggleStep = (i: number) => {
+    setOpenSteps(prev => {
+      const next = new Set(prev);
+      if (next.has(i)) next.delete(i); else next.add(i);
+      return next;
+    });
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-6">
@@ -58,7 +68,19 @@ export default function AgentFlow() {
             completed={completed}
             failedStep={failedStep}
             aborted={aborted}
+            onStepClick={toggleStep}
+            openSteps={openSteps}
           />
+          {Array.from(openSteps).sort().map(i => (
+            <StepResultPanel
+              key={i}
+              stepIndex={i}
+              brief={brief}
+              designConcepts={designConcepts}
+              evaluationResults={evaluationResults}
+              selectedConcept={selectedConcept}
+            />
+          ))}
         </div>
         <ErrorHandler errors={errors} />
         <ProgressIndicator aborted={aborted} currentStep={currentStep} stepsLength={steps.length} executionTrace={executionTrace} />
