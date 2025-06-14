@@ -1,0 +1,103 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> shadow-pivot-ai-agentv2@0.1.0 test:all
+> node tests/run-all-tests.js
+
+
+🔍 Running Baseline Tests...
+
+📋 Running Azure Authentication Test: /workspace/shadow-pivot-ai-agentv2/tests/baseline/azure-auth-test.js
+🧪 Azure Authentication Baseline Test
+=====================================
+🔐 Testing Azure authentication...
+✅ Azure credential obtained successfully
+   Token type: Valid
+   Expires on: 2025-06-14T20:32:42.000Z
+⚠️  Key Vault URL not configured - skipping Key Vault test
+   To test Key Vault access, update the 'url' variable with your Key Vault URL
+
+🎉 Authentication test completed successfully!
+✅ Baseline tests completed successfully.
+
+AI connection test executed
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> shadow-pivot-ai-agentv2@0.1.0 test:user-guid
+> tsc utils/userGuid.ts --target ES2017 --module commonjs --outDir tests/services && node tests/services/user-guid.test.js
+
+All tests passed
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> shadow-pivot-ai-agentv2@0.1.0 test:spec-selection
+> tsc lib/services/specSelection.ts --target ES2017 --module commonjs --outDir tests/services && node tests/services/spec-selection.test.js
+
+Spec selection logic executed
+Execution tracker tests passed
+Download placeholder tests passed
+⚠️  Skipping endpoint tests in Codex environment
+✅ Agent flow refactor component tests passed
+Agent flow UX test passed
+🚀 Running Spec Selection UI Integration Tests...
+
+✓ Testing evaluation display...
+✓ Evaluation display validation passed
+✓ Testing selection logic...
+✓ Selection logic validation passed
+✓ Testing state update logic...
+✓ State update validation passed
+✓ Testing visual indicator logic...
+✓ Visual indicator validation passed
+✓ Testing transition to next step logic...
+✓ Transition logic validation passed
+
+✅ All Spec Selection UI Integration Tests PASSED!
+📋 Task 3.2.4 validation complete
+ℹ️ Skipping StepResultPanel render test due to context dependencies
+✅ Step results review tests passed
+✅ Validation logic test passed
+Validation UI should:
+- Display "Step Validation" heading
+- Show validation question text
+- Include Valid and Invalid buttons
+- Have a textarea for feedback
+- Disable Invalid button if no feedback provided
+- Show appropriate status after validation action
+✅ Validation UI description completed
+✅ Validation tests completed
+✅ Validation state management test passed
+✅ Timeline indicator logic test passed
+Validation UI Requirements:
+1. Timeline should show green icons for validated steps
+2. Timeline should show red icons for invalidated steps
+3. StepResultPanel should include validation controls
+4. StepResultPanel should show validation status when validated/invalidated
+5. Invalid steps require feedback text before submission
+✅ UI requirements verification complete
+✅ All agent flow validation tests passed
+🚀 Running End-to-End Tests for Spec Selection UI...
+
+❌ Server not running on port 3000. Please start with: npm run dev
+node:child_process:930
+    throw err;
+    ^
+
+Error: Command failed: node /workspace/shadow-pivot-ai-agentv2/tests/e2e/spec-selection-e2e.test.js
+    at genericNodeError (node:internal/errors:984:15)
+    at wrappedFn (node:internal/errors:538:14)
+    at checkExecSyncError (node:child_process:891:11)
+    at execFileSync (node:child_process:927:15)
+    at /workspace/shadow-pivot-ai-agentv2/tests/run-e2e-tests.js:11:5
+    at Array.forEach (<anonymous>)
+    at runE2ETests (/workspace/shadow-pivot-ai-agentv2/tests/run-e2e-tests.js:9:9)
+    at runAllTests (/workspace/shadow-pivot-ai-agentv2/tests/run-all-tests.js:14:3)
+    at Object.<anonymous> (/workspace/shadow-pivot-ai-agentv2/tests/run-all-tests.js:18:3)
+    at Module._compile (node:internal/modules/cjs/loader:1529:14) {
+  status: 1,
+  signal: null,
+  output: [ null, null, null ],
+  pid: 6123,
+  stdout: null,
+  stderr: null
+}
+
+Node.js v20.19.2
