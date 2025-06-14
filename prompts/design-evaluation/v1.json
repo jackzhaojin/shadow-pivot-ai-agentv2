@@ -1,0 +1,74 @@
+{
+  "version": "1.0",
+  "name": "design-evaluation",
+  "systemPrompt": "You are a UX evaluation assistant. Your task is to evaluate multiple UI design concepts and provide weighted scores across different criteria. IMPORTANT: You MUST respond with a valid JSON object containing scores and weights for each concept.",
+  "responseFormat": {
+    "type": "object",
+    "properties": {
+      "evaluations": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "conceptIndex": {
+              "type": "number",
+              "description": "The index of the concept being evaluated (0-based)"
+            },
+            "scores": {
+              "type": "object",
+              "properties": {
+                "usability": {
+                  "type": "number",
+                  "description": "Score from 1-10 for usability"
+                },
+                "aesthetics": {
+                  "type": "number",
+                  "description": "Score from 1-10 for visual appeal"
+                },
+                "innovation": {
+                  "type": "number",
+                  "description": "Score from 1-10 for creative innovation"
+                },
+                "feasibility": {
+                  "type": "number",
+                  "description": "Score from 1-10 for technical feasibility"
+                }
+              }
+            },
+            "totalScore": {
+              "type": "number",
+              "description": "The weighted total score for this concept"
+            },
+            "reasoning": {
+              "type": "string",
+              "description": "Brief explanation for the scores"
+            }
+          }
+        }
+      },
+      "weights": {
+        "type": "object",
+        "properties": {
+          "usability": {
+            "type": "number",
+            "description": "Weight for usability (0.0-1.0)"
+          },
+          "aesthetics": {
+            "type": "number",
+            "description": "Weight for aesthetics (0.0-1.0)"
+          },
+          "innovation": {
+            "type": "number",
+            "description": "Weight for innovation (0.0-1.0)"
+          },
+          "feasibility": {
+            "type": "number",
+            "description": "Weight for feasibility (0.0-1.0)"
+          }
+        }
+      }
+    }
+  },
+  "temperature": 0.5,
+  "userPromptTemplate": "Design brief: {{brief}}\n\nConcepts to evaluate:\n{{#each concepts}}- Concept {{@index}}: {{this}}\n{{/each}}\n\nEvaluate each concept based on usability, aesthetics, innovation, and technical feasibility. For each concept, provide scores (1-10) and a brief reasoning. Also determine appropriate weights for each criterion based on the brief. The weights must sum to 1.0, and each individual weight must be between 0.1 and 0.7.\n\nRespond ONLY with a valid JSON object following the specified format."
+}

@@ -1,0 +1,27 @@
+{
+  "version": "1.0",
+  "name": "design-concepts-generation",
+  "systemPrompt": "You are a UI design assistant. Your task is to generate creative, diverse UI design concepts based on a brief. IMPORTANT: You MUST respond with a valid JSON array containing 3-5 distinct design concepts. Each concept should be a concise description of a unique approach.",
+  "responseFormat": {
+    "type": "array",
+    "items": {
+      "type": "string",
+      "description": "A concise UI design concept description"
+    },
+    "minItems": 3,
+    "maxItems": 5
+  },
+  "examples": [
+    {
+      "input": "Create a landing page for a fitness app",
+      "output": [
+        "Dynamic split-screen layout with workout videos on one side and personalized stats on the other",
+        "Minimalist design with large typography and subtle animations highlighting key fitness metrics",
+        "Gamified interface with progress bars, achievement badges, and community challenge leaderboards",
+        "Nature-inspired color scheme with rounded UI elements and progress arcs showing weekly activity"
+      ]
+    }
+  ],
+  "temperature": 0.8,
+  "userPromptTemplate": "Design brief: {{brief}}\n\nGenerate 3-5 distinct UI design concepts based on this brief. Each concept should offer a unique approach. Return ONLY a JSON array of strings with no additional text or explanation."
+}
