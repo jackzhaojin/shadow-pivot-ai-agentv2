@@ -15,6 +15,9 @@ Use the structure outlined in the PRD when adding new code:
 /features/<feature>/      - Feature folders (components, api, utils)
 /hooks                    - Shared hooks
 /lib                      - Core logic such as API clients
+/lib/dao                  - Data access objects and persistence logic
+/lib/services             - Business logic and service layer
+/lib/utils                - Utility helpers and shared functions
 /providers                - React context providers
 /types                    - Global types
 /utils                    - Utility helpers

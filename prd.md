@@ -158,10 +158,30 @@ An AI-powered design-to-code agent embedded within a Next.js app, capable of gen
     /api/
 
 /hooks                   ← Global shared custom hooks
+```markdown
+/lib                     ← Core logic and business layers
 
-/lib                     ← Core logic like API clients, Foundry wrapper
-  aiClient.ts
-  graphUtils.ts
+  /daos                  ← Data Access Objects for external services (Azure, Foundry, Storage)
+    - Example: `aiClient.ts` wraps Azure AI Foundry LLM calls and prompt orchestration.
+    - Example: `azureClient.ts` sets up Azure SDK clients using DefaultAzureCredential.
+    - Example: `storageClient.ts` handles Blob Storage upload/download with user-scoped paths.
+    - Example: `cosmosClient.ts` (future) manages Cosmos DB user/session metadata.
+
+  /services              ← Business logic and agent workflow orchestration
+    - Example: `designConcept.ts` generates multiple UI design concepts from a creative brief.
+    - Example: `designEvaluation.ts` scores and ranks design concepts for clarity and modifiability.
+    - Example: `figmaSpec.ts` runs parallel Figma spec generation and validates usability.
+    - Example: `specSelection.ts` selects the optimal Figma spec based on agent evaluation.
+    - Example: `codeGeneration.ts` generates and tests multiple code implementations in parallel.
+    - Example: `codeSelection.ts` evaluates, scores, and selects the best code implementation.
+    - Example: `executionTrace.ts` aggregates logs, scoring, and trace data for export.
+
+  /utils                 ← Shared utilities and helpers
+    - Example: `graphUtils.ts` provides chart/graph data shaping and library adapters.
+    - Example: `promptUtils.ts` manages AI prompt templates and formatting.
+    - Example: `scoringUtils.ts` implements aggregate scoring and metric weighting.
+    - Example: `fileUtils.ts` handles ZIP packaging, file formatting, and download helpers.
+```
 
 /providers               ← Context providers (e.g., theme, chat state)
 
