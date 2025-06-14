@@ -45,7 +45,7 @@ Run `npm install` as soon as you open a new environment or after cloning the rep
 After dependencies are installed, validate your environment by running the baseline authentication script:
 
 ```bash
-./tests/baseline/local-node-tests/quick-auth-test.sh
+node tests/baseline/azure-auth-test.js
 ```
 
 Resolve any missing tools or login issues the script reports before continuing. Always install packages and run this baseline test before running lint, build, or other test commands. Emphasize a test-driven workflow by executing available test scripts whenever adding new code.
@@ -63,11 +63,11 @@ npm run build
 Run `npm run test:all` to execute the full test suite. Individual groups can be run with:
 
 ```bash
-npm run test:dao      # DAO layer tests
-npm run test:services # Service logic tests
-npm run test:endpoints # External API/endpoint tests
-npm run test:ui       # UI component tests
-npm run test:e2e      # End-to-end tests (requires dev server)
+npm run test:dao      # DAO layer tests (AI client, Azure connections)
+npm run test:services # Service logic tests (user GUID, spec selection, execution)
+npm run test:endpoints # External API/endpoint tests (design concept, evaluation)
+npm run test:ui       # UI component tests (agent flow, spec selection UI)
+npm run test:e2e      # End-to-end tests (spec selection, integration workflows)
 ```
 
 If a command fails due to environment limitations, mention it in the PR body.
@@ -81,7 +81,7 @@ Feel free to create inside the docs/ai-log folder, follow existing naming with y
 If you encounter Azure authentication issues during development or testing, run the detailed authentication test:
 
 ```bash
-node tests/baseline/local-node-tests/azure-auth-test.js
+node tests/baseline/azure-auth-test.js
 ```
 
 This will help identify if the issue is with Azure credentials, network connectivity, or service configuration. Azure CLI is not supported in Codex; use Service Principal credentials with environment variables (AZURE_CLIENT_ID, AZURE_CLIENT_SECRET, AZURE_TENANT_ID).

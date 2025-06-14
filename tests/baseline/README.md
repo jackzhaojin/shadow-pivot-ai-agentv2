@@ -4,38 +4,78 @@ This directory contains comprehensive tests for the Shadow Pivot AI Agent applic
 
 ## Test Organization
 
-### 📁 local-node-tests/
 Tests that only require Node.js and Azure credentials. No development server needed.
-- `azure-auth-test.js` - Azure authentication testing
-- `quick-auth-test.sh` - Quick credential verification
-- `local-node-integrated-tests.sh` - Main Node.js test runner
-- `monitor-deployment.js` - Azure deployment monitoring
+- `azure-auth-test.js` - Azure authentication testing and credential verification
+- `quick-auth-test.sh` - Quick credential verification script
 
-### 📁 local-server-test-3000-integrated/
-Tests that require the development server running on localhost:3000.
-- `local-3000-tests.sh` - Main server test runner
-- `test-azure-connections.sh` - API endpoint testing
-- `test-ssr-integration.sh` - Server-side rendering tests
+## Full Test Suite Structure
+
+The complete test suite is organized in the parent `tests` directory:
+
+### 📁 tests/baseline/
+Basic environment and authentication verification tests.
+
+### 📁 tests/dao/ 
+Data Access Object layer tests:
+- `ai-connection.test.js` - Tests for AI client connections
+- `aiClient.js` - AI client testing utilities
+
+### 📁 tests/services/
+Service layer logic tests:
+- `user-guid.test.js` - User GUID generation and management
+- `spec-selection.test.js` - Spec selection service logic
+- `execution.test.js` - Execution tracking services
+- `download.test.js` - Artifact download functionality
+
+### 📁 tests/endpoints/
+API endpoint tests:
+- `designConcept.js` - Design concept generation endpoints
+- `designEvaluation.js` - Design evaluation endpoints
+
+### 📁 tests/ui/
+UI component tests:
+- `agent-flow-ux.test.js` - Agent flow UI/UX tests
+- `agent-flow-refactor.test.js` - Component refactoring tests
+- `spec-selection-ui-integration.test.js` - Spec selection UI tests
+
+### 📁 tests/e2e/
+End-to-end integration tests:
+- `spec-selection-e2e.test.js` - Full spec selection workflow
+- `end-to-end-bugfix.js` - Bug-fix verification tests
 
 ## Quick Start
 
+### Verify Azure Authentication:
+```bash
+node tests/baseline/azure-auth-test.js
+```
+
+### Run Baseline Tests Only:
+```bash
+npm run test:baseline
+```
+
 ### Run All Tests:
 ```bash
-./tests/baseline/run-all-tests.sh
+npm run test:all
 ```
 
-### Run Only Node.js Tests (No Server Required):
+### Run Specific Test Categories:
 ```bash
-./tests/baseline/local-node-integrated-tests.sh
-```
+# DAO layer tests
+npm run test:dao
 
-### Run Only Server Tests (Requires `npm run dev`):
-```bash
-# Start server first
-npm run dev
+# Service logic tests
+npm run test:services
 
-# Then run tests
-./tests/baseline/local-3000-tests.sh
+# API endpoint tests  
+npm run test:endpoints
+
+# UI component tests
+npm run test:ui
+
+# End-to-end tests (requires dev server)
+npm run test:e2e
 ```
 
 ## Prerequisites
