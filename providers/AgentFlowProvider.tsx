@@ -29,7 +29,7 @@ interface AgentFlowContextValue {
   selectedConcept: string | null;
   setSelectedConcept: (c: string | null) => void;
   setCurrentStep: (i: number) => void;
-  completeStep: (i: number) => void;
+  completeStep: (i: number, advance?: boolean) => void;
   startExecution: () => void;
   abort: () => void;
   aborted: boolean;
@@ -68,9 +68,11 @@ export function AgentFlowProvider({ children }: { children: React.ReactNode }) {
     logEvent(trace, 'Execution started');
   };
 
-  const completeStep = (i: number) => {
+  const completeStep = (i: number, advance: boolean = true) => {
     setCompleted(prev => new Set(prev).add(i));
-    setCurrentStep(i + 1);
+    if (advance) {
+      setCurrentStep(i + 1);
+    }
     if (executionTrace) {
       logEvent(executionTrace, `${agentSteps[i]} completed`);
     }

@@ -245,22 +245,106 @@
   - [x] **Abort control**: Maintain prominent abort button functionality ✅
   - [x] **Validate by running the defined tests and confirming all pass** ✅
 
-### 3.3 Agent Flow Component Refactoring (Critical Architecture)
+
+
+### 3.3 AI Logic Refactoring and Prompt Engineering (Critical Bug Fixes)
+**Complexity**: High | **Effort**: High
+**Story**: As a developer maintaining the AI agent pipeline, I need the prompting logic to be modular, maintainable, and reliable so that AI responses are consistent, multi-concept generation works properly, and evaluation scoring functions correctly across all pipeline steps.
+
+#### 3.3.1 Agent Flow Component Refactoring (Architecture) ✅ COMPLETED
 **Complexity**: High | **Effort**: High
 **Story**: As a developer maintaining the AI agent codebase, I need the agent flow component to be properly modularized according to PRD architecture so that the codebase remains maintainable as we add more complex features and parallel processing capabilities.
 
-- [ ] **Define integration/functional tests for refactored components** (e.g., test component separation, state management, prop passing)
-- [ ] **Component separation**: Break down large agent flow component into focused sub-components
+- [x] **Define integration/functional tests for refactored components** (e.g., test component separation, state management, prop passing)
+- [x] **Component separation**: Break down large agent flow component into focused sub-components
   - `AgentFlowTimeline` - Progress visualization and step management
   - `StepExecutor` - Individual step execution logic and state
   - `ResultsDisplay` - Step output formatting and display
   - `ErrorHandler` - Error state management and user feedback
   - `ProgressIndicator` - Real-time progress and loading states
-- [ ] **State management refactoring**: Implement proper state separation between components
-- [ ] **Props and interface design**: Define clear component interfaces and data flow
-- [ ] **Context providers**: Set up proper context for agent flow state sharing
-- [ ] **Testing infrastructure**: Ensure all refactored components maintain test coverage
-- [ ] **Performance optimization**: Implement proper memoization and re-render optimization
+- [x] **State management refactoring**: Implement proper state separation between components
+- [x] **Props and interface design**: Define clear component interfaces and data flow
+- [x] **Context providers**: Set up proper context for agent flow state sharing
+- [x] **Testing infrastructure**: Ensure all refactored components maintain test coverage
+- [x] **Performance optimization**: Implement proper memoization and re-render optimization
+- [x] **Validate by running the defined tests and confirming all pass**
+
+#### 3.3.2 Prompt Engineering System and Template Architecture
+**Complexity**: Medium | **Effort**: High
+**Story**: As a developer working with AI prompts, I need a centralized, maintainable prompt management system with versioning and templates so that prompts can be easily edited, tested, and optimized without touching business logic code.
+
+- [ ] **Define integration/functional tests for prompt system** (e.g., test template loading, variable substitution, prompt validation)
+- [ ] **Research best practices**: Investigate industry-standard prompt engineering patterns
+  - Study OpenAI best practices for prompt engineering and structure
+  - Research prompt template systems (LangChain, Prompt Templates, etc.)
+  - Analyze structured prompting techniques (Few-shot, Chain-of-thought, etc.)
+  - Review JSON schema enforcement patterns for reliable LLM outputs
+- [ ] **Create prompt template architecture**: Design maintainable prompt system
+  - Create `prompts/` folder structure for organized prompt management
+  - Implement template system with variable substitution (e.g., Handlebars, mustache)
+  - Add prompt versioning and fallback mechanisms
+  - Create prompt validation and testing framework
+- [ ] **Structured prompt templates**: Create templates for each agent step
+  - `prompts/design-concepts/` - Design concept generation templates
+  - `prompts/design-evaluation/` - Design evaluation and scoring templates
+  - `prompts/spec-selection/` - Specification selection logic templates
+  - `prompts/figma-generation/` - Future Figma spec generation templates
+  - `prompts/code-generation/` - Future code generation templates
+- [ ] **Prompt utility functions**: Create helper functions for prompt management
+  - Template loading and caching
+  - Variable substitution and validation
+  - Response format enforcement (JSON schema validation)
+  - Retry logic with prompt variations
+- [ ] **Validate by running the defined tests and confirming all pass**
+
+#### 3.3.3 Fix Multi-Concept Generation Bug (Critical Fix)
+**Complexity**: Medium | **Effort**: Medium
+**Story**: As a user expecting multiple design concepts from the AI agent, I need the design concept generation to reliably produce 3-5 distinct concepts instead of a single-element array so that I have meaningful options to evaluate and the agent pipeline works as intended.
+
+- [ ] **Define integration/functional tests for multi-concept generation** (e.g., test array length, concept diversity, prompt reliability)
+- [ ] **Debug current design concept generation**: Investigate why only 1 concept is returned despite prompt requesting multiple
+  - Analyze current `lib/designConcept.ts` implementation
+  - Test current prompt with various inputs to identify failure patterns
+  - Examine LLM response parsing and array handling logic
+- [ ] **Prompt engineering refinement**: Improve LLM prompts to ensure consistent multi-concept output
+  - Implement structured prompting with explicit JSON schema requirements
+  - Add few-shot examples showing expected multi-concept format
+  - Use chain-of-thought prompting to guide concept generation process
+  - Implement response format validation with automatic retry on malformed responses
+- [ ] **Response parsing robustness**: Enhance parsing logic to handle various LLM response formats
+  - Add JSON schema validation for concept arrays
+  - Implement fallback parsing for edge cases
+  - Add validation to ensure minimum concept count (3-5 concepts)
+  - Create retry mechanisms with prompt variations if initial attempt fails
+- [ ] **Integration with evaluation step**: Ensure generated concepts work properly with the evaluation pipeline
+- [ ] **End-to-end testing**: Verify the full concept generation → evaluation → selection pipeline
+- [ ] **Validate by running the defined tests and confirming all pass**
+
+#### 3.3.4 Fix Design Evaluation Scoring Logic (Critical Fix)
+**Complexity**: Medium | **Effort**: Medium  
+**Story**: As a user viewing design evaluation results, I need the evaluation scoring to return meaningful non-zero weights and scores when multiple concepts are provided so that I can understand the relative merits of each design concept and see proper selection logic.
+
+- [ ] **Define integration/functional tests for evaluation scoring** (e.g., test weight calculation, score distribution, edge cases)
+- [ ] **Debug current evaluation scoring**: Investigate why weights are zero when concepts > 1
+  - Analyze current `lib/designEvaluation.ts` implementation
+  - Test scoring logic with 3+ concepts to identify failure points
+  - Examine weight calculation and normalization logic
+- [ ] **Fix scoring algorithm**: Implement robust evaluation logic
+  - Ensure proper weight distribution across multiple concepts
+  - Implement meaningful scoring criteria (usability, feasibility, innovation, etc.)
+  - Add validation to prevent zero-weight results
+  - Create balanced scoring that properly differentiates between concepts
+- [ ] **Prompt engineering for evaluation**: Improve evaluation prompt structure
+  - Use structured prompting with explicit scoring criteria
+  - Add examples of proper evaluation with multiple concepts
+  - Implement scoring rubrics and guidelines in prompts
+  - Ensure consistent scoring format and JSON schema compliance
+- [ ] **Score normalization and validation**: Implement proper score processing
+  - Normalize scores to ensure meaningful weight distribution
+  - Add validation for score ranges and weight calculations
+  - Implement fallback scoring logic for edge cases
+  - Ensure total weights sum to meaningful values
+- [ ] **Integration testing**: Verify evaluation works with concept generation
 - [ ] **Validate by running the defined tests and confirming all pass**
 
 ### 3.4 Interactive Step Results Review
@@ -474,46 +558,3 @@
 - [ ] Performance optimizations for large file handling
 - [ ] Advanced error recovery suggestions
 - [ ] Execution history browsing UI
-
-## Progress Log
-
-### ✅ Completed Tasks
-- **Phase 1: Deployment Pipeline COMPLETE** - Full CI/CD, Azure infrastructure, and baseline Next.js app deployed and operational.
-- **Phase 2: Foundation Setup COMPLETE** - Project structure, SP setup, and Azure service preparation documentation finalized.
-- **3.1.1 Basic Agent Flow UI (Sequential) COMPLETE** - Basic sequential UI with abort control and context state.
-- **3.1.2 User Identity Management (Client-Side GUID) COMPLETE** - Client-side GUID generation, persistence, display, and API integration.
-- **3.1.3 Execution Tracking & Display (Client-Side MVP) COMPLETE** - Timeline UI and execution state tracking.
-- **3.1.4 Download Artifacts (Initial Setup) COMPLETE** - UI and placeholder functionality for artifact download.
-- **3.2.1 Azure AI Foundry Service Connection COMPLETE** - Backend can communicate with AI services.
-- **3.2.2 Step 1: Design Concept Generation (LLM) COMPLETE** - First AI step implemented.
-- **3.2.3 Step 2: Design Evaluation (LLM) COMPLETE** - Design evaluation logic and testing implemented.
-- **3.2.4 Step 3: Spec Selection UI and Logic COMPLETE** - Display evaluation results and selection.
-- **3.2.4b Agent Flow UX Improvements COMPLETE** ✅ - Automated flow progression, comprehensive error handling, enhanced visual states, multiple design concept generation, and modern UI polish all implemented successfully by Codex.
-
-### 🎯 Next Priorities (Active Development)
-1. **3.3 Agent Flow Component Refactoring** - Break down large component into focused modules (CRITICAL ARCHITECTURE)
-2. **3.4 Interactive Step Results Review** - Clickable steps to review previous results
-3. **3.5 Step 4: Parallel Figma Spec Generation Infrastructure** - 3-box parallel processing UI
-4. **3.6 Step 5: Figma Spec Generation and Validation** - Core Figma generation logic
-5. **3.7 Step 6: Figma Spec Testing and Quality Assurance** - Automated spec validation
-6. **3.8 Step 7: Best Figma Spec Selection** - Agent-based spec selection
-7. **3.9 Step 8: Parallel Code Generation Infrastructure** - 3-box code generation UI
-8. **3.10 Step 9: Full Feature Code Generation** - Complete code implementation
-9. **3.11 Step 10: Automated Code Testing and Quality Validation** - Code quality assurance
-10. **3.12 Step 11: Aggregate Scoring and Best Code Selection** - Best code selection
-11. **3.13 Step 12: Complete Artifact Download Package** - ZIP download with blob storage
-
-### 📝 Future Phases (release 1.1 Prep)
-- **Phase 4**: Execution Management & History (4.1 - Execution history and user-scoped storage)
-- **Phase 5**: Advanced Error Handling & Polish (5.1 - Comprehensive error handling and user feedback)
-
-### 📝 Work Session Notes
-- **Session 1**: Docker setup complete - everything working smoothly
-- **Session 2**: GitHub Actions workflow complete - ready for Azure deployment
-- **Session 3**: ✅ OIDC authentication configured - automated deployment pipeline fully operational
-- **Session 4**: ✅ Azure infrastructure setup (Storage Account, AI Foundry, Managed Identity)
-- **Session 5**: ✅ Azure integration testing - all services working locally
-- **Session 6**: ✅ Next.js SSR Azure integration - server-side calls working
-- **Session 7**: 🎉 **END-TO-END DEPLOYMENT COMPLETE** - Full pipeline operational!
-- **Session 8**: Basic agent flow UI and user identity management complete
-- **Session 9**: Azure AI integration and design concept generation complete
