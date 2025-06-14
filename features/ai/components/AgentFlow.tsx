@@ -20,7 +20,9 @@ export default function AgentFlow() {
     selectedConcept,
     errors,
     aborted,
-    failedStep
+    failedStep,
+    validatedSteps,
+    invalidatedSteps
   } = useAgentFlow();
 
   const userGuid = useUserGuid();
@@ -70,6 +72,8 @@ export default function AgentFlow() {
             aborted={aborted}
             onStepClick={toggleStep}
             openSteps={openSteps}
+            validatedSteps={validatedSteps}
+            invalidatedSteps={invalidatedSteps}
           />
           {Array.from(openSteps).sort().map(i => (
             <StepResultPanel

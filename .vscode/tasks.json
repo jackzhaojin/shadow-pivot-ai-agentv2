@@ -1,0 +1,14 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Run UI Tests for Validation Feature",
+			"type": "shell",
+			"command": "node tests/run-ui-tests.js",
+			"group": "test",
+			"problemMatcher": [
+				"$tsc"
+			]
+		}
+	]
+}

@@ -1,5 +1,5 @@
 'use client';
-import { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import type { DesignEvaluationResult } from '@/lib/services/designEvaluation';
 import {
   type ExecutionTrace,
@@ -36,6 +36,10 @@ interface AgentFlowContextValue {
   errors: string[];
   addError: (msg: string, step: number) => void;
   failedStep: number | null;
+  validatedSteps: Set<number>;
+  invalidatedSteps: Set<number>;
+  markStepValidated: (i: number) => void;
+  markStepInvalidated: (i: number, feedback: string) => void;
 }
 
 const AgentFlowContext = createContext<AgentFlowContextValue | undefined>(undefined);
@@ -53,6 +57,8 @@ export function AgentFlowProvider({ children }: { children: React.ReactNode }) {
   const [selectedConcept, setSelectedConcept] = useState<string | null>(null);
   const [errors, setErrors] = useState<string[]>([]);
   const [failedStep, setFailedStep] = useState<number | null>(null);
+  const [validatedSteps, setValidatedSteps] = useState<Set<number>>(new Set());
+  const [invalidatedSteps, setInvalidatedSteps] = useState<Set<number>>(new Set());
 
   const startExecution = () => {
     const trace = createExecutionTrace();
@@ -65,6 +71,8 @@ export function AgentFlowProvider({ children }: { children: React.ReactNode }) {
     setDesignConcepts([]);
     setEvaluationResults([]);
     setSelectedConcept(null);
+    setValidatedSteps(new Set());
+    setInvalidatedSteps(new Set());
     logEvent(trace, 'Execution started');
   };
 
@@ -93,6 +101,32 @@ export function AgentFlowProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const markStepValidated = (i: number) => {
+    setValidatedSteps(prev => new Set(prev).add(i));
+    // Remove from invalidated set if it was previously invalidated
+    setInvalidatedSteps(prev => {
+      const newSet = new Set(prev);
+      newSet.delete(i);
+      return newSet;
+    });
+    if (executionTrace) {
+      logEvent(executionTrace, `Step ${i} (${agentSteps[i]}) validated by user`);
+    }
+  };
+
+  const markStepInvalidated = (i: number, feedback: string) => {
+    setInvalidatedSteps(prev => new Set(prev).add(i));
+    // Remove from validated set if it was previously validated
+    setValidatedSteps(prev => {
+      const newSet = new Set(prev);
+      newSet.delete(i);
+      return newSet;
+    });
+    if (executionTrace) {
+      logEvent(executionTrace, `Step ${i} (${agentSteps[i]}) invalidated by user: ${feedback}`);
+    }
+  };
+
   return (
     <AgentFlowContext.Provider
       value={{
@@ -113,7 +147,11 @@ export function AgentFlowProvider({ children }: { children: React.ReactNode }) {
         aborted,
         errors,
         addError,
-        failedStep
+        failedStep,
+        validatedSteps,
+        invalidatedSteps,
+        markStepValidated,
+        markStepInvalidated
       }}
     >
       {children}
