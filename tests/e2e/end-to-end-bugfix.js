@@ -1,5 +1,5 @@
-const { generateDesignConcepts } = require('./designConcept');
-const { evaluateDesigns } = require('./designEvaluation');
+const { generateDesignConcepts } = require('../endpoints/services/designConcept');
+const { evaluateDesigns } = require('../endpoints/services/designEvaluation');
 
 async function runEndToEndTest() {
   console.log('🧪 Running end-to-end test for the multi-concept generation fix');

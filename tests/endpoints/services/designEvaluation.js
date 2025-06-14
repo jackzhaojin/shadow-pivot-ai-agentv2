@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.evaluateDesigns = evaluateDesigns;
-const aiClient_1 = require("./daos/aiClient");
+const aiClient_1 = require("../daos/aiClient");
 async function evaluateDesigns(concepts, brief) {
     var _a, _b;
     // If there's only one or no concepts, return basic result
@@ -88,7 +88,7 @@ Return a JSON object with an "evaluations" array containing objects with:
                 });
             }
         }
-        catch (secondError) {
+        catch (_c) {
             // Ignore secondary parsing errors
         }
         // Ultimate fallback with non-zero scores
