@@ -1,3 +1,5 @@
+'use client';
+import React from 'react';
 import AgentFlow from '@/features/ai/components/AgentFlow';
 import { AgentFlowProvider } from '@/providers/AgentFlowProvider';
 
