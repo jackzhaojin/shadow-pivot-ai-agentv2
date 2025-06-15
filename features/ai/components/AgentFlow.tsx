@@ -28,14 +28,10 @@ export default function AgentFlow() {
   const userGuid = useUserGuid();
   const [brief, setBrief] = useState('');
   const [showTimeline, setShowTimeline] = useState(false);
-  const [openSteps, setOpenSteps] = useState<Set<number>>(new Set());
+  const [openStep, setOpenStep] = useState<number | null>(null);
 
   const toggleStep = (i: number) => {
-    setOpenSteps(prev => {
-      const next = new Set(prev);
-      if (next.has(i)) next.delete(i); else next.add(i);
-      return next;
-    });
+    setOpenStep(prev => (prev === i ? null : i));
   };
 
   return (
@@ -71,22 +67,22 @@ export default function AgentFlow() {
             failedStep={failedStep}
             aborted={aborted}
             onStepClick={toggleStep}
-            openSteps={openSteps}
+            openStep={openStep}
             validatedSteps={validatedSteps}
             invalidatedSteps={invalidatedSteps}
           />
-          {Array.from(openSteps).sort().map(i => (
-            <div key={i} className="mt-4 animate-fadeIn">
+          {openStep !== null && (
+            <div className="mt-4 animate-fadeIn">
               <StepResultPanel
-                stepIndex={i}
+                stepIndex={openStep}
                 brief={brief}
                 designConcepts={designConcepts}
                 evaluationResults={evaluationResults}
                 selectedConcept={selectedConcept}
-                onClose={() => toggleStep(i)}
+                onClose={() => toggleStep(openStep)}
               />
             </div>
-          ))}
+          )}
         </div>
         <ErrorHandler errors={errors} />
         <ProgressIndicator aborted={aborted} currentStep={currentStep} stepsLength={steps.length} executionTrace={executionTrace} />

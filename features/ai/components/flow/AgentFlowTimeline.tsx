@@ -8,7 +8,7 @@ interface AgentFlowTimelineProps {
   failedStep: number | null;
   aborted: boolean;
   onStepClick?: (i: number) => void;
-  openSteps?: Set<number>;
+  openStep?: number | null;
   validatedSteps?: Set<number>;
   invalidatedSteps?: Set<number>;
 }
@@ -99,7 +99,7 @@ export default function AgentFlowTimeline({
   failedStep, 
   aborted, 
   onStepClick, 
-  openSteps, 
+  openStep,
   validatedSteps, 
   invalidatedSteps 
 }: AgentFlowTimelineProps) {
@@ -131,7 +131,7 @@ export default function AgentFlowTimeline({
                       ? 'bg-emerald-50 border-emerald-200 hover:shadow-md' 
                       : 'bg-gray-50 border-gray-200'
               } ${completed.has(index) ? 'cursor-pointer' : ''} ${
-                openSteps?.has(index) ? 'ring-2 ring-blue-300' : ''
+                openStep === index ? 'ring-2 ring-blue-300' : ''
               }`}
             >
               <div className="flex items-center justify-between">
@@ -150,7 +150,7 @@ export default function AgentFlowTimeline({
                 </h3>
                 {completed.has(index) && (
                   <span className="flex items-center text-sm text-blue-600">
-                    {openSteps?.has(index) ? (
+                    {openStep === index ? (
                       <>
                         <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
