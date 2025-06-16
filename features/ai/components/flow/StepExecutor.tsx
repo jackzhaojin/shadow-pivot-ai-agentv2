@@ -327,7 +327,8 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
                 return next;
               });
 
-              const specResult = data.specs?.[0] || {
+              // Extract the single spec from the response array
+              const specResult = (data.specs && data.specs.length > 0) ? data.specs[0] : {
                 name: `${selectedConcept} - Spec ${index + 1}`,
                 description: 'Generated Figma specification',
                 components: ['Component 1', 'Component 2']
@@ -479,7 +480,12 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
             return next;
           });
 
-          return data.specs || []; // data.specs is already FigmaSpec[]
+          // Extract the single spec from the response array and return it
+          return (data.specs && data.specs.length > 0) ? data.specs[0] : {
+            name: `${concept} - Spec ${index + 1}`,
+            description: 'Generated Figma specification',
+            components: ['Component 1', 'Component 2']
+          };
         } catch (error) {
           console.error(`❌ StepExecutor - Figma API call ${index + 1}/3 failed with error:`, {
             callIndex: index + 1,
@@ -532,10 +538,10 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
         }
       });
       
-      // Collect successful results
+      // Collect successful results - each promise now returns a single FigmaSpec
       const successfulResults = results
-        .filter((r): r is PromiseFulfilledResult<FigmaSpec[]> => r.status === 'fulfilled')
-        .flatMap(r => r.value);
+        .filter((r): r is PromiseFulfilledResult<FigmaSpec> => r.status === 'fulfilled')
+        .map(r => r.value);
       
       const hasErrors = results.some(r => r.status === 'rejected');
       

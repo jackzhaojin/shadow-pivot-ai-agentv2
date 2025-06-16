@@ -27,13 +27,49 @@ export async function generateChatCompletion(
   const client = getAIClient();
   const deploymentName = process.env.AZURE_OPENAI_DEPLOYMENT_NAME || 'gpt-4o-mini-deployment';
   
-  return await client.chat.completions.create({
-    model: deploymentName,
-    messages,
-    max_tokens: options.maxTokens || 1000,
-    temperature: options.temperature || 0.7,
-    top_p: options.topP || 1.0
+  console.log('🔗 generateChatCompletion - Making AI request:', {
+    endpoint: process.env.AZURE_OPENAI_ENDPOINT || 'https://story-generation-v1.openai.azure.com/',
+    deployment: deploymentName,
+    messageCount: messages.length,
+    systemPromptLength: messages.find(m => m.role === 'system')?.content?.length || 0,
+    userPromptLength: messages.find(m => m.role === 'user')?.content?.length || 0,
+    maxTokens: options.maxTokens || 1000,
+    temperature: options.temperature || 0.7
   });
+  
+  try {
+    const response = await client.chat.completions.create({
+      model: deploymentName,
+      messages,
+      max_tokens: options.maxTokens || 1000,
+      temperature: options.temperature || 0.7,
+      top_p: options.topP || 1.0
+    });
+    
+    console.log('✅ generateChatCompletion - AI response received:', {
+      hasResponse: !!response,
+      id: response.id,
+      object: response.object,
+      created: response.created,
+      model: response.model,
+      choicesCount: response.choices?.length || 0,
+      usagePromptTokens: response.usage?.prompt_tokens,
+      usageCompletionTokens: response.usage?.completion_tokens,
+      usageTotalTokens: response.usage?.total_tokens,
+      finishReason: response.choices?.[0]?.finish_reason
+    });
+    
+    return response;
+  } catch (error) {
+    console.error('💥 generateChatCompletion - AI request failed:', {
+      error,
+      errorMessage: error instanceof Error ? error.message : 'Unknown error',
+      errorStack: error instanceof Error ? error.stack : undefined,
+      deployment: deploymentName,
+      endpoint: process.env.AZURE_OPENAI_ENDPOINT
+    });
+    throw error;
+  }
 }
 
 export async function generateText(
