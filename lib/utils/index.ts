@@ -10,3 +10,4 @@
 export * from './graphUtils';
 export * from './promptUtils';
 export * from './stepResults';
+export * from './figmaGeneration';

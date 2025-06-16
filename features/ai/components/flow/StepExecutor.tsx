@@ -3,6 +3,7 @@ import React, { useEffect, useCallback } from 'react';
 import { useAgentFlow } from '@/providers/AgentFlowProvider';
 import { selectBestDesignConcept } from '@/lib/services/specSelection';
 import { useUserGuid } from '@/providers/UserGuidProvider';
+import FigmaGenerationGrid from './FigmaGenerationGrid';
 
 interface StepExecutorProps {
   brief: string;
@@ -24,7 +25,9 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
     selectedConcept,
     setSelectedConcept,
     addError,
-    failedStep
+    failedStep,
+    figmaSpecStates,
+    setFigmaSpecStates
   } = useAgentFlow();
 
   const userGuid = useUserGuid();
@@ -144,6 +147,40 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
   useEffect(() => {
     console.log('designConcepts changed:', designConcepts.length, designConcepts);
   }, [designConcepts]);
+
+  // Simulate parallel Figma spec generation progress
+  useEffect(() => {
+    if (currentStep === 3) {
+      setFigmaSpecStates(states =>
+        states.map(s =>
+          s.status === 'waiting'
+            ? { ...s, status: 'processing' as const, progress: 0 }
+            : s
+        )
+      );
+      const id = setInterval(() => {
+        setFigmaSpecStates(prev => {
+          let allDone = true;
+          const next = prev.map(s => {
+            if (s.status === 'processing') {
+              const p = Math.min(100, s.progress + Math.floor(Math.random() * 20 + 10));
+              const status: 'completed' | 'processing' = p >= 100 ? 'completed' : 'processing';
+              if (status !== 'completed') allDone = false;
+              return { ...s, progress: p, status } as const;
+            }
+            if (s.status !== 'completed') allDone = false;
+            return s;
+          });
+          if (allDone) {
+            clearInterval(id);
+            completeStep(3);
+          }
+          return next;
+        });
+      }, 500);
+      return () => clearInterval(id);
+    }
+  }, [currentStep, completeStep, setFigmaSpecStates]);
   
   useEffect(() => {
     console.log('Main useEffect triggered:', {
@@ -192,6 +229,12 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
         <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 mb-8">
           <h2 className="text-xl font-semibold text-gray-900 mb-2">Creative Brief</h2>
           <p className="whitespace-pre-line text-gray-700">{brief}</p>
+        </div>
+      )}
+      {currentStep === 3 && (
+        <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 mb-8">
+          <h2 className="text-xl font-semibold text-gray-900 mb-4">Generating Figma Specs</h2>
+          <FigmaGenerationGrid states={figmaSpecStates} />
         </div>
       )}
       {!aborted && currentStep >= 0 && currentStep < steps.length && (
