@@ -81,7 +81,7 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
       if (Array.isArray(data.evaluations)) {
         setEvaluationResults(data.evaluations);
         setSelectedConcept(selectBestDesignConcept(data.evaluations));
-        completeStep(1, false);
+        completeStep(1);
       } else {
         console.error('Step 1 API response is not an array:', data);
         addError('Failed to evaluate designs', 1);
@@ -117,7 +117,7 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
           if (Array.isArray(data.evaluations)) {
             setEvaluationResults(data.evaluations);
             setSelectedConcept(selectBestDesignConcept(data.evaluations));
-            completeStep(currentStep, false);
+            completeStep(currentStep);
           } else {
             console.error('API response is not an array:', data);
             addError('Failed to evaluate designs', currentStep);
@@ -149,6 +149,13 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
   useEffect(() => {
     console.log('designConcepts changed:', designConcepts.length, designConcepts);
   }, [designConcepts]);
+
+  // Auto-progress from spec selection to Figma generation once a concept is selected
+  useEffect(() => {
+    if (currentStep === 2 && selectedConcept && !aborted) {
+      completeStep(2);
+    }
+  }, [currentStep, selectedConcept, aborted]);
 
   // Real parallel Figma spec generation with proper API integration
   useEffect(() => {
