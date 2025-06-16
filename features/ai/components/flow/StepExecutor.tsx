@@ -116,6 +116,12 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
         
         console.log('🏁 StepExecutor - Calling completeStep(1)');
         completeStep(1);
+        
+        // Automatically advance through Step 2 since we have the selected concept
+        setTimeout(() => {
+          console.log('🚀 StepExecutor - Auto-advancing through Step 2 to Figma generation');
+          completeStep(2);
+        }, 100);
       } else {
         console.error('❌ StepExecutor - Step 1 API response is not an array:', data);
         addError('Failed to evaluate designs', 1);
@@ -152,6 +158,12 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
             setEvaluationResults(data.evaluations);
             setSelectedConcept(selectBestDesignConcept(data.evaluations));
             completeStep(currentStep);
+            
+            // Automatically advance through Step 2 since we have the selected concept
+            setTimeout(() => {
+              console.log('🚀 Auto-advancing through Step 2 to Figma generation');
+              completeStep(2);
+            }, 100);
           } else {
             console.error('API response is not an array:', data);
             addError('Failed to evaluate designs', currentStep);
