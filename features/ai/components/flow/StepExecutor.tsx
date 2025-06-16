@@ -3,6 +3,7 @@ import React, { useEffect, useCallback } from 'react';
 import { useAgentFlow } from '@/providers/AgentFlowProvider';
 import { selectBestDesignConcept } from '@/lib/services/specSelection';
 import { useUserGuid } from '@/providers/UserGuidProvider';
+import { FigmaSpec } from '@/lib/services/figmaSpec';
 import FigmaGenerationGrid from './FigmaGenerationGrid';
 
 interface StepExecutorProps {
@@ -120,7 +121,30 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
         // Automatically advance through Step 2 since we have the selected concept
         setTimeout(() => {
           console.log('🚀 StepExecutor - Auto-advancing through Step 2 to Figma generation');
+          console.log('📊 StepExecutor - Pre-Step-2-completion state:', {
+            currentStep,
+            selectedConcept: !!selectedConcept,
+            selectedConceptValue: selectedConcept,
+            aborted
+          });
           completeStep(2);
+          console.log('✅ StepExecutor - Step 2 completion called, should advance to Step 3');
+          
+          // Force trigger Step 3 directly since state synchronization is problematic
+          setTimeout(() => {
+            console.log('🔍 StepExecutor - Post-Step-2-completion verification:', {
+              currentStep,
+              selectedConcept: !!selectedConcept,
+              aborted,
+              shouldTriggerStep3: currentStep === 3 && selectedConcept && !aborted
+            });
+            
+            // Force trigger Figma generation with the bestConcept we know is valid
+            if (bestConcept) {
+              console.log('🚀 StepExecutor - Force triggering Figma generation with bestConcept:', bestConcept);
+              triggerFigmaGeneration(bestConcept);
+            }
+          }, 200);
         }, 100);
       } else {
         console.error('❌ StepExecutor - Step 1 API response is not an array:', data);
@@ -235,10 +259,18 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
       selectedConcept,
       aborted,
       condition: currentStep === 3 && selectedConcept && !aborted,
-      stepName: currentStep === 3 ? 'Figma Spec Generation' : `Step ${currentStep}`
+      stepName: currentStep === 3 ? 'Figma Spec Generation' : `Step ${currentStep}`,
+      debugging: {
+        currentStepIs3: currentStep === 3,
+        hasSelectedConcept: !!selectedConcept,
+        selectedConceptLength: selectedConcept?.length || 0,
+        notAborted: !aborted,
+        userGuid: userGuid
+      }
     });
     if (currentStep === 3 && selectedConcept && !aborted) {
       console.log('🚀 StepExecutor - Starting Figma spec generation process');
+      console.log('🎯 StepExecutor - Figma generation conditions met, starting generation...');
       const generateFigmaSpecsParallel = async () => {
         try {
           console.log('🎨 StepExecutor - Starting Figma spec generation for concept:', selectedConcept);
@@ -374,8 +406,190 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
         notAborted: !aborted
       });
     }
-  }, [currentStep, selectedConcept, aborted, userGuid, brief, setFigmaSpecStates, setFigmaSpecs, completeStep, addError]);
+  }, [currentStep, selectedConcept, aborted, userGuid, setFigmaSpecStates, setFigmaSpecs, completeStep, addError]);
   
+  // Function to trigger Figma generation directly with a given concept
+  const triggerFigmaGeneration = useCallback(async (concept: string) => {
+    console.log('🚀 StepExecutor - triggerFigmaGeneration called with concept:', concept);
+    console.log('🎯 StepExecutor - Force starting Figma generation...');
+    
+    try {
+      console.log('🎨 StepExecutor - Starting Figma spec generation for concept:', concept);
+      // Initialize all processes as starting
+      setFigmaSpecStates(states =>
+        states.map(s => ({ ...s, status: 'processing' as const, progress: 10 }))
+      );
+
+      // Create 3 parallel API calls with different progress tracking
+      const promises = Array.from({ length: 3 }, async (_, index) => {
+        console.log(`📡 StepExecutor - Starting Figma API call ${index + 1}/3`);
+        try {
+          // Simulate progress updates during generation
+          const progressInterval = setInterval(() => {
+            setFigmaSpecStates(prev => {
+              const next = [...prev];
+              if (next[index].status === 'processing' && next[index].progress < 90) {
+                next[index] = {
+                  ...next[index],
+                  progress: Math.min(90, next[index].progress + Math.random() * 15 + 10)
+                };
+              }
+              return next;
+            });
+          }, 200 + index * 100); // Stagger updates
+
+          const res = await fetch('/api/agent/generate-figma-specs', {
+            method: 'POST',
+            headers: { 
+              'Content-Type': 'application/json', 
+              'x-user-guid': userGuid 
+            },
+            body: JSON.stringify({ 
+              concept: concept, 
+              brief: brief 
+            })
+          });
+
+          clearInterval(progressInterval);
+          
+          if (!res.ok) {
+            throw new Error(`API call failed: ${res.status}`);
+          }
+
+          const data = await res.json();
+          console.log(`✅ StepExecutor - Figma API call ${index + 1}/3 completed successfully:`, {
+            callIndex: index + 1,
+            responseStatus: res.status,
+            hasSpecs: !!data.specs,
+            specsCount: Array.isArray(data.specs) ? data.specs.length : 0,
+            userGuid: data.userGuid,
+            dataKeys: Object.keys(data)
+          });
+          console.log(`📄 StepExecutor - Figma API call ${index + 1} response data:`, data);
+
+          // Mark this specific generation as complete
+          setFigmaSpecStates(prev => {
+            const next = [...prev];
+            next[index] = {
+              ...next[index],
+              status: 'completed' as const,
+              progress: 100
+            };
+            console.log(`📈 StepExecutor - Updated progress for call ${index + 1}: 100% completed`);
+            return next;
+          });
+
+          return data.specs || []; // data.specs is already FigmaSpec[]
+        } catch (error) {
+          console.error(`❌ StepExecutor - Figma API call ${index + 1}/3 failed with error:`, {
+            callIndex: index + 1,
+            errorMessage: error instanceof Error ? error.message : 'Unknown error',
+            errorType: typeof error,
+            error: error
+          });
+          
+          // Mark this specific generation as error
+          setFigmaSpecStates(prev => {
+            const next = [...prev];
+            next[index] = {
+              ...next[index],
+              status: 'error' as const,
+              progress: 0
+            };
+            console.log(`📉 StepExecutor - Updated progress for call ${index + 1}: 0% (error state)`);
+            return next;
+          });
+
+          throw error;
+        }
+      });
+
+      console.log('⏳ StepExecutor - Waiting for all Figma API calls to complete...');
+      const results = await Promise.allSettled(promises);
+      
+      console.log('🎯 StepExecutor - All Figma API calls completed! Results summary:', {
+        totalCalls: results.length,
+        fulfilledCount: results.filter(r => r.status === 'fulfilled').length,
+        rejectedCount: results.filter(r => r.status === 'rejected').length,
+        resultStatuses: results.map((r, i) => ({ callIndex: i + 1, status: r.status }))
+      });
+      
+      // Log detailed results for each call
+      results.forEach((result, index) => {
+        if (result.status === 'fulfilled') {
+          console.log(`✅ StepExecutor - Call ${index + 1} result:`, {
+            callIndex: index + 1,
+            status: 'fulfilled',
+            specsReceived: result.value?.length || 0,
+            specs: result.value
+          });
+        } else {
+          console.log(`❌ StepExecutor - Call ${index + 1} result:`, {
+            callIndex: index + 1,
+            status: 'rejected',
+            reason: result.reason
+          });
+        }
+      });
+      
+      // Collect successful results
+      const successfulResults = results
+        .filter((r): r is PromiseFulfilledResult<FigmaSpec[]> => r.status === 'fulfilled')
+        .flatMap(r => r.value);
+      
+      const hasErrors = results.some(r => r.status === 'rejected');
+      
+      console.log('📊 StepExecutor - Figma generation final summary:', {
+        totalResults: results.length,
+        successfulSpecs: successfulResults.length,
+        completedResults: results.filter(r => r.status === 'fulfilled').length,
+        rejectedResults: results.filter(r => r.status === 'rejected').length,
+        hasErrors: hasErrors,
+        willCompleteStep3: !hasErrors,
+        allSpecsReceived: successfulResults
+      });
+      
+      if (successfulResults.length > 0) {
+        console.log('💾 StepExecutor - Setting Figma specs in state:', {
+          specsToSet: successfulResults.length,
+          firstSpecPreview: successfulResults[0] ? { 
+            name: successfulResults[0].name, 
+            description: successfulResults[0].description?.substring(0, 100) + '...',
+            componentCount: successfulResults[0].components?.length || 0
+          } : null
+        });
+        setFigmaSpecs(successfulResults);
+      } else {
+        console.log('⚠️ StepExecutor - No successful Figma specs to set in state');
+      }
+      
+      if (!hasErrors) {
+        console.log('🏁 StepExecutor - All Figma calls successful! Completing step 3 - Figma Spec Generation');
+        completeStep(3);
+        console.log('🎉 StepExecutor - Step 3 completion called, should advance to Step 4');
+      } else {
+        console.log('❌ StepExecutor - Some Figma calls failed, not completing step 3:', {
+          errorCount: results.filter(r => r.status === 'rejected').length,
+          successCount: results.filter(r => r.status === 'fulfilled').length
+        });
+        addError('Some Figma specs failed to generate', 3);
+      }
+    } catch (error) {
+      console.error('💥 StepExecutor - Critical error in triggerFigmaGeneration:', {
+        errorMessage: error instanceof Error ? error.message : 'Unknown error',
+        errorStack: error instanceof Error ? error.stack : undefined,
+        concept: concept?.substring(0, 100) + '...',
+        userGuid: userGuid
+      });
+      addError(error instanceof Error ? error.message : 'Unknown error in Figma generation', 3);
+      
+      // Mark all as error
+      setFigmaSpecStates(states =>
+        states.map(s => ({ ...s, status: 'error' as const, progress: 0 }))
+      );
+    }
+  }, [userGuid, brief, setFigmaSpecStates, setFigmaSpecs, completeStep, addError]);
+
   useEffect(() => {
     console.log('Main useEffect triggered:', {
       currentStep,
