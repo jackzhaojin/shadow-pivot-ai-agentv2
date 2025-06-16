@@ -81,7 +81,7 @@ If `npm run lint` or `npm run build` fail with "next: not found", run `npm insta
 Feel free to create inside the docs/ai-log folder, follow existing naming with yyyy-mm-dd-codex-topic
 
 ## Technical Documentation
-For detailed technical implementation guides, debugging resources, and architectural decisions, see the **[Technical Documentation Index](docs/technical/README.md)**. This includes:
+For detailed technical implementation guides, debugging resources, and architectural decisions, see the **[Technical Documentation Index](docs/technical/README.md)**. For a summary of core architecture patterns, see the **[Technical Blueprint](docs/technical/blueprint/README.md)** and its **[Core Capabilities](docs/technical/blueprint/core-capabilities.md)** document. This documentation includes:
 
 - **Implementation Patterns**: React state management, API integration patterns, error handling strategies
 - **Debugging Guides**: Common issues, troubleshooting steps, and resolution examples

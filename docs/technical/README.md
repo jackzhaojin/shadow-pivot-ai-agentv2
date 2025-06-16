@@ -5,10 +5,11 @@ This directory contains detailed technical documentation for the AI Agent Flow p
 ## 📋 Documentation Categories
 
 ### 🔧 Implementation Guides
-- [`react-state-synchronization-fix.md`](./react-state-synchronization-fix.md) - React context state batching issues and direct API triggering patterns
+- [`react-state-synchronization-fix.md`](./key-issue-resolution/react-state-synchronization-fix.md) - React context state batching issues and direct API triggering patterns
 
 ### 🏗️ Architecture & Design
-*Coming soon - architectural decision records, design patterns, and system design documents*
+- [Technical Blueprint](./blueprint/README.md) - High-level architecture overview and key patterns
+- [Core Capabilities](./blueprint/core-capabilities.md) - Detailed summary of system layers and workflow
 
 ### 🐛 Debugging & Troubleshooting
 *Coming soon - common issues, debugging techniques, and resolution guides*
@@ -82,5 +83,5 @@ This documentation index is maintained alongside the codebase. When adding new t
 
 ---
 
-*Last Updated: June 15, 2025*
+*Last Updated: June 16, 2025*
 *Maintained by: Development Team*
