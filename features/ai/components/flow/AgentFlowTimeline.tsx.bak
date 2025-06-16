@@ -3,7 +3,18 @@ import React from 'react';
 import StepResultPanel from './StepResultPanel';
 import type { DesignEvaluationResult } from '../../../../lib/services/designEvaluation';
 
-interface AgentFlowTimelineProps {
+interface AgentFlow              <div className={`ml-12 mt-4 mb-6 animate-fadeIn`}>
+                <div className={`rounded-xl border ${bgColor} p-4 shadow-md`}>
+                  <StepResultPanel
+                    stepIndex={index}
+                    brief={brief}
+                    designConcepts={designConcepts}
+                    evaluationResults={evaluationResults}
+                    selectedConcept={selectedConcept}
+                    onClose={() => onStepClick?.(index)}
+                  />
+                </div>
+              </div>s {
   steps: string[];
   currentStep: number;
   completed: Set<number>;

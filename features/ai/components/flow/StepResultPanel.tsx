@@ -91,11 +91,7 @@ export default function StepResultPanel({
   if (!content) return null;
 
   return (
-    <div className={`p-4 mb-4 bg-white border rounded-xl shadow transition-all duration-300 ${
-      isValidated ? 'border-green-300' : 
-      isInvalidated ? 'border-red-300' : 
-      'border-gray-200'
-    }`}>
+    <div className={isValidated ? 'border-green-300' : isInvalidated ? 'border-red-300' : ''}>
       <div className="flex justify-between items-center mb-3">
         <h3 className="font-semibold text-lg text-gray-800">
           Step {stepIndex + 1} Results

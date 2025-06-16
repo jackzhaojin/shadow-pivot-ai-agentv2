@@ -6,7 +6,6 @@ import StepExecutor from './flow/StepExecutor';
 import AgentFlowTimeline from './flow/AgentFlowTimeline';
 import ErrorHandler from './flow/ErrorHandler';
 import ProgressIndicator from './flow/ProgressIndicator';
-import StepResultPanel from './flow/StepResultPanel';
 
 export default function AgentFlow() {
   const {
@@ -67,19 +66,11 @@ export default function AgentFlow() {
               openSteps={openSteps}
               validatedSteps={validatedSteps}
               invalidatedSteps={invalidatedSteps}
+              brief={brief}
+              designConcepts={designConcepts}
+              evaluationResults={evaluationResults}
+              selectedConcept={selectedConcept}
             />
-            {Array.from(openSteps).sort().map(i => (
-              <div key={i} className="mt-4 animate-fadeIn">
-                <StepResultPanel
-                  stepIndex={i}
-                  brief={brief}
-                  designConcepts={designConcepts}
-                  evaluationResults={evaluationResults}
-                  selectedConcept={selectedConcept}
-                  onClose={() => toggleStep(i)}
-                />
-              </div>
-            ))}
           </div>
         )}
         
