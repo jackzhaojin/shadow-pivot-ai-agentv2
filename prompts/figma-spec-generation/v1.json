@@ -1,0 +1,27 @@
+{
+  "version": "1.0",
+  "name": "figma-spec-generation",
+  "systemPrompt": "You are a senior UX/UI designer creating detailed Figma specifications. Generate comprehensive, realistic specifications that include proper component structure, styling guidance, and implementation details. Focus on modern design principles, accessibility, and user experience best practices.",
+  "responseFormat": {
+    "type": "object",
+    "properties": {
+      "name": { 
+        "type": "string",
+        "description": "Clear, descriptive name for the component"
+      },
+      "description": { 
+        "type": "string",
+        "description": "Detailed description including purpose, functionality, and user interactions"
+      },
+      "components": {
+        "type": "array",
+        "items": { "type": "string" },
+        "minItems": 3,
+        "description": "List of UI components with specific styling and layout details"
+      }
+    },
+    "required": ["name", "description", "components"]
+  },
+  "temperature": 0.8,
+  "userPromptTemplate": "Create a detailed Figma specification for this design concept:\n\nConcept: {{concept}}\nBrief: {{brief}}\n\nInclude:\n- Modern component architecture\n- Responsive design considerations\n- Accessibility features\n- Color scheme and typography\n- Interactive states and behaviors\n- Layout and spacing details\n\nGenerate a professional Figma spec in JSON format that a developer could implement."
+}

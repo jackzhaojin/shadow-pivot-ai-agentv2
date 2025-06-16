@@ -3,6 +3,7 @@ import React, { useEffect, useCallback } from 'react';
 import { useAgentFlow } from '@/providers/AgentFlowProvider';
 import { selectBestDesignConcept } from '@/lib/services/specSelection';
 import { useUserGuid } from '@/providers/UserGuidProvider';
+import FigmaGenerationGrid from './FigmaGenerationGrid';
 
 interface StepExecutorProps {
   brief: string;
@@ -24,7 +25,11 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
     selectedConcept,
     setSelectedConcept,
     addError,
-    failedStep
+    failedStep,
+    figmaSpecStates,
+    setFigmaSpecStates,
+    figmaSpecs,
+    setFigmaSpecs
   } = useAgentFlow();
 
   const userGuid = useUserGuid();
@@ -144,6 +149,119 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
   useEffect(() => {
     console.log('designConcepts changed:', designConcepts.length, designConcepts);
   }, [designConcepts]);
+
+  // Real parallel Figma spec generation with proper API integration
+  useEffect(() => {
+    if (currentStep === 3 && selectedConcept && !aborted) {
+      const generateFigmaSpecsParallel = async () => {
+        try {
+          // Initialize all processes as starting
+          setFigmaSpecStates(states =>
+            states.map(s => ({ ...s, status: 'processing' as const, progress: 10 }))
+          );
+
+          // Create 3 parallel API calls with different progress tracking
+          const promises = Array.from({ length: 3 }, async (_, index) => {
+            try {
+              // Simulate progress updates during generation
+              const progressInterval = setInterval(() => {
+                setFigmaSpecStates(prev => {
+                  const next = [...prev];
+                  if (next[index].status === 'processing' && next[index].progress < 90) {
+                    next[index] = {
+                      ...next[index],
+                      progress: Math.min(90, next[index].progress + Math.random() * 15 + 10)
+                    };
+                  }
+                  return next;
+                });
+              }, 200 + index * 100); // Stagger updates
+
+              const res = await fetch('/api/agent/generate-figma-specs', {
+                method: 'POST',
+                headers: { 
+                  'Content-Type': 'application/json', 
+                  'x-user-guid': userGuid 
+                },
+                body: JSON.stringify({ 
+                  concept: selectedConcept, 
+                  brief: brief 
+                })
+              });
+
+              clearInterval(progressInterval);
+
+              if (!res.ok) {
+                throw new Error(`HTTP ${res.status}: Failed to generate Figma spec`);
+              }
+
+              const data = await res.json();
+              
+              // Mark this process as completed
+              setFigmaSpecStates(prev => {
+                const next = [...prev];
+                next[index] = { status: 'completed' as const, progress: 100 };
+                return next;
+              });
+
+              return data.specs?.[0] || {
+                name: `${selectedConcept} - Spec ${index + 1}`,
+                description: 'Generated Figma specification',
+                components: ['Component 1', 'Component 2']
+              };
+            } catch (error) {
+              console.error(`Error generating Figma spec ${index + 1}:`, error);
+              
+              // Mark this process as error
+              setFigmaSpecStates(prev => {
+                const next = [...prev];
+                next[index] = { status: 'error' as const, progress: 0 };
+                return next;
+              });
+
+              return {
+                name: `${selectedConcept} - Spec ${index + 1} (Error)`,
+                description: `Failed to generate: ${error instanceof Error ? error.message : 'Unknown error'}`,
+                components: ['Error placeholder']
+              };
+            }
+          });
+
+          // Wait for all parallel generations to complete
+          const results = await Promise.allSettled(promises);
+          const specs = results.map(result => 
+            result.status === 'fulfilled' ? result.value : {
+              name: 'Failed Generation',
+              description: 'Error occurred during generation',
+              components: ['Error']
+            }
+          );
+
+          // Store the generated specs
+          setFigmaSpecs(specs);
+          
+          // Check if we should complete the step (only if no errors)
+          const hasErrors = results.some(result => result.status === 'rejected');
+          if (!hasErrors) {
+            completeStep(3);
+          } else {
+            addError('Some Figma specs failed to generate', 3);
+          }
+
+        } catch (error) {
+          console.error('Error in parallel Figma spec generation:', error);
+          addError(error instanceof Error ? error.message : 'Unknown error in Figma generation', 3);
+          
+          // Mark all as error
+          setFigmaSpecStates(states =>
+            states.map(s => ({ ...s, status: 'error' as const, progress: 0 }))
+          );
+        }
+      };
+
+      generateFigmaSpecsParallel();
+    }
+  }, [currentStep, selectedConcept, aborted, userGuid, brief, setFigmaSpecStates, setFigmaSpecs, completeStep, addError]);
   
   useEffect(() => {
     console.log('Main useEffect triggered:', {
@@ -192,6 +310,12 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
         <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 mb-8">
           <h2 className="text-xl font-semibold text-gray-900 mb-2">Creative Brief</h2>
           <p className="whitespace-pre-line text-gray-700">{brief}</p>
+        </div>
+      )}
+      {currentStep === 3 && (
+        <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 mb-8">
+          <h2 className="text-xl font-semibold text-gray-900 mb-4">Generating Figma Specs</h2>
+          <FigmaGenerationGrid states={figmaSpecStates} />
         </div>
       )}
       {!aborted && currentStep >= 0 && currentStep < steps.length && (

@@ -8,6 +8,7 @@ function runEndpointTests() {
   if (!process.env.CODEX_ENV_NODE_VERSION) {
     run('npm run test:design-concepts');
     run('npm run test:design-evaluation');
+    run('npm run test:figma-spec');
   } else {
     console.log('⚠️  Skipping endpoint tests in Codex environment');
   }

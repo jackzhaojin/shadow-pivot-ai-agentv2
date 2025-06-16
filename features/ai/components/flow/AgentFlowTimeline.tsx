@@ -2,6 +2,7 @@
 import React from 'react';
 import StepResultPanel from './StepResultPanel';
 import type { DesignEvaluationResult } from '../../../../lib/services/designEvaluation';
+import type { FigmaSpec } from '../../../../lib/services/figmaSpec';
 
 interface AgentFlowTimelineProps {
   steps: string[];
@@ -17,6 +18,7 @@ interface AgentFlowTimelineProps {
   designConcepts?: string[];
   evaluationResults?: DesignEvaluationResult[];
   selectedConcept?: string | null;
+  figmaSpecs?: FigmaSpec[];
 }
 
 function StepIcon({ 
@@ -111,7 +113,8 @@ export default function AgentFlowTimeline({
   brief = '',
   designConcepts = [],
   evaluationResults = [],
-  selectedConcept = null
+  selectedConcept = null,
+  figmaSpecs = []
 }: AgentFlowTimelineProps) {
   return (
     <div className="space-y-6">
@@ -205,6 +208,7 @@ export default function AgentFlowTimeline({
                     designConcepts={designConcepts}
                     evaluationResults={evaluationResults}
                     selectedConcept={selectedConcept}
+                    figmaSpecs={figmaSpecs}
                     onClose={() => onStepClick?.(index)}
                   />
                 </div>

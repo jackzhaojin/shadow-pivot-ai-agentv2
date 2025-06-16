@@ -4,8 +4,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.generateDesignConcepts = generateDesignConcepts;
-const aiClient_1 = require("./daos/aiClient");
-const promptUtils_1 = require("./utils/promptUtils");
+const aiClient_1 = require("../daos/aiClient");
+const promptUtils_1 = require("../utils/promptUtils");
 const path_1 = __importDefault(require("path"));
 /**
  * Generates multiple design concepts based on the provided brief
