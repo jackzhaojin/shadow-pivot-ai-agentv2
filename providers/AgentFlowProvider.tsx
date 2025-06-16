@@ -1,6 +1,7 @@
 'use client';
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import type { DesignEvaluationResult } from '@/lib/services/designEvaluation';
+import type { FigmaSpec } from '@/lib/services/figmaSpec';
 import {
   type ExecutionTrace,
   createExecutionTrace,
@@ -43,6 +44,8 @@ interface AgentFlowContextValue {
   markStepInvalidated: (i: number, feedback: string) => void;
   figmaSpecStates: FigmaGenState[];
   setFigmaSpecStates: React.Dispatch<React.SetStateAction<FigmaGenState[]>>;
+  figmaSpecs: FigmaSpec[];
+  setFigmaSpecs: (specs: FigmaSpec[]) => void;
 }
 
 const AgentFlowContext = createContext<AgentFlowContextValue | undefined>(undefined);
@@ -73,6 +76,7 @@ export function AgentFlowProvider({ children }: { children: React.ReactNode }) {
   const [invalidatedSteps, setInvalidatedSteps] = useState<Set<number>>(new Set());
   const initialFigmaStates = () => createFigmaGenStateArray(3);
   const [figmaSpecStates, setFigmaSpecStates] = useState(initialFigmaStates());
+  const [figmaSpecs, setFigmaSpecs] = useState<FigmaSpec[]>([]);
 
   const startExecution = () => {
     const trace = createExecutionTrace();
@@ -88,6 +92,7 @@ export function AgentFlowProvider({ children }: { children: React.ReactNode }) {
     setValidatedSteps(new Set());
     setInvalidatedSteps(new Set());
     setFigmaSpecStates(initialFigmaStates());
+    setFigmaSpecs([]);
     logEvent(trace, 'Execution started');
   };
 
@@ -174,7 +179,9 @@ export function AgentFlowProvider({ children }: { children: React.ReactNode }) {
         markStepValidated,
         markStepInvalidated,
         figmaSpecStates,
-        setFigmaSpecStates
+        setFigmaSpecStates,
+        figmaSpecs,
+        setFigmaSpecs
       }}
     >
       {children}
