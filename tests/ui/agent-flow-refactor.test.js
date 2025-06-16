@@ -3,7 +3,6 @@ const React = require('react');
 const ReactDOMServer = require('react-dom/server');
 
 const AgentFlowTimeline = require('../../features/ai/components/flow/AgentFlowTimeline').default;
-const ResultsDisplay = require('../../features/ai/components/flow/ResultsDisplay').default;
 const ErrorHandler = require('../../features/ai/components/flow/ErrorHandler').default;
 const ProgressIndicator = require('../../features/ai/components/flow/ProgressIndicator').default;
 
@@ -20,20 +19,7 @@ function testTimelineRendering() {
   assert.ok(html.includes('A') && html.includes('B'), 'Timeline should render steps');
 }
 
-function testResultsDisplay() {
-  const html = ReactDOMServer.renderToStaticMarkup(
-    React.createElement(ResultsDisplay, {
-      brief: 'hello',
-      designConcepts: ['One'],
-      evaluationResults: [{ concept: 'One', score: 1 }],
-      selectedConcept: 'One',
-      executionTrace: null,
-      showTimeline: false,
-      setShowTimeline: () => {}
-    })
-  );
-  assert.ok(html.includes('Design Concepts') && html.includes('Design Evaluation'), 'Results display should render sections');
-}
+// ResultsDisplay component removed - no longer used
 
 function testErrorHandler() {
   const html = ReactDOMServer.renderToStaticMarkup(
@@ -51,7 +37,7 @@ function testProgressIndicator() {
 
 function runAll() {
   testTimelineRendering();
-  testResultsDisplay();
+  // testResultsDisplay(); - removed
   testErrorHandler();
   testProgressIndicator();
   console.log('✅ Agent flow refactor component tests passed');

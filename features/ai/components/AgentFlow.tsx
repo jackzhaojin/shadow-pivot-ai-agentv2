@@ -4,7 +4,6 @@ import { useAgentFlow } from '@/providers/AgentFlowProvider';
 import { useUserGuid } from '@/providers/UserGuidProvider';
 import StepExecutor from './flow/StepExecutor';
 import AgentFlowTimeline from './flow/AgentFlowTimeline';
-import ResultsDisplay from './flow/ResultsDisplay';
 import ErrorHandler from './flow/ErrorHandler';
 import ProgressIndicator from './flow/ProgressIndicator';
 import StepResultPanel from './flow/StepResultPanel';
@@ -27,7 +26,6 @@ export default function AgentFlow() {
 
   const userGuid = useUserGuid();
   const [brief, setBrief] = useState('');
-  const [showTimeline, setShowTimeline] = useState(false);
   const [openSteps, setOpenSteps] = useState<Set<number>>(new Set());
 
   const toggleStep = (i: number) => {
@@ -52,42 +50,39 @@ export default function AgentFlow() {
           <div className="mt-2 text-sm text-gray-500">User ID: {userGuid}</div>
         </div>
 
-        <StepExecutor brief={brief} setBrief={setBrief} />
-        <ResultsDisplay
-          brief={brief}
-          designConcepts={designConcepts}
-          evaluationResults={evaluationResults}
-          selectedConcept={selectedConcept}
-          executionTrace={executionTrace}
-          showTimeline={showTimeline}
-          setShowTimeline={setShowTimeline}
-        />
-        <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 mb-6">Progress Timeline</h2>
-          <AgentFlowTimeline
-            steps={steps}
-            currentStep={currentStep}
-            completed={completed}
-            failedStep={failedStep}
-            aborted={aborted}
-            onStepClick={toggleStep}
-            openSteps={openSteps}
-            validatedSteps={validatedSteps}
-            invalidatedSteps={invalidatedSteps}
-          />
-          {Array.from(openSteps).sort().map(i => (
-            <div key={i} className="mt-4 animate-fadeIn">
-              <StepResultPanel
-                stepIndex={i}
-                brief={brief}
-                designConcepts={designConcepts}
-                evaluationResults={evaluationResults}
-                selectedConcept={selectedConcept}
-                onClose={() => toggleStep(i)}
-              />
-            </div>
-          ))}
-        </div>
+        {currentStep <= 0 && (
+          <StepExecutor brief={brief} setBrief={setBrief} />
+        )}
+        
+        {currentStep > 0 && (
+          <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 mb-8">
+            <h2 className="text-xl font-semibold text-gray-900 mb-6">Progress Timeline</h2>
+            <AgentFlowTimeline
+              steps={steps}
+              currentStep={currentStep}
+              completed={completed}
+              failedStep={failedStep}
+              aborted={aborted}
+              onStepClick={toggleStep}
+              openSteps={openSteps}
+              validatedSteps={validatedSteps}
+              invalidatedSteps={invalidatedSteps}
+            />
+            {Array.from(openSteps).sort().map(i => (
+              <div key={i} className="mt-4 animate-fadeIn">
+                <StepResultPanel
+                  stepIndex={i}
+                  brief={brief}
+                  designConcepts={designConcepts}
+                  evaluationResults={evaluationResults}
+                  selectedConcept={selectedConcept}
+                  onClose={() => toggleStep(i)}
+                />
+              </div>
+            ))}
+          </div>
+        )}
+        
         <ErrorHandler errors={errors} />
         <ProgressIndicator aborted={aborted} currentStep={currentStep} stepsLength={steps.length} executionTrace={executionTrace} />
       </div>
