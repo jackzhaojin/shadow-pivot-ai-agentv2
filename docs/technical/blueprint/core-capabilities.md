@@ -425,5 +425,6 @@ Based on Step 3.5 implementation analysis, follow these patterns for sophisticat
 
 For detailed implementation examples, see:
 - [Step 3.5 Implementation Analysis](./step-3.5-implementation-analysis.md) for complex parallel processing patterns
+- [Step 3.5 Git History Summary](./step-3.5-git-history-summary.md) for commit-level rationale
 - Individual documents in this `blueprint` directory for specific architectural decisions
 - The PRD for feature specifications and requirements
