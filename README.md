@@ -143,6 +143,9 @@ For more detailed information, please refer to the following documents:
   - [Deployment Guide](./docs/DEPLOYMENT.md): Information on Docker and GitHub Actions CI/CD.
   - [Troubleshooting Guide](./docs/TROUBLESHOOTING.md): Solutions for common issues.
   - [App Router Overview](./docs/app-router-overview.md): Information about the Next.js App Router.
+  - [Technical Documentation Index](./docs/technical/README.md): Implementation guides and key issue resolutions.
+  - [Technical Blueprint](./docs/technical/blueprint/README.md): Overview of architecture and core patterns.
+  - [Core Capabilities](./docs/technical/blueprint/core-capabilities.md): Summary of design decisions and system layers.
 - **Development & Testing Specifics**
   - **Test Structure:**
     - `tests/baseline/`: Basic Azure authentication tests

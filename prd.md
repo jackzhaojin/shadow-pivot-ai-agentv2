@@ -23,7 +23,8 @@ An AI-powered design-to-code agent embedded within a Next.js app, capable of gen
 
 This PRD focuses on **product requirements and high-level technical design**. For detailed technical implementation:
 
-- **[Technical Documentation](docs/technical/README.md)** - Comprehensive technical guides, debugging resources, and architectural decisions
+- **[Technical Documentation](docs/technical/README.md)** - Index of implementation guides and key issue resolutions
+- **[Technical Blueprint](docs/technical/blueprint/README.md)** - Core capabilities and architecture patterns
 - **[AGENTS.md](AGENTS.md)** - Development guidelines, folder structure, and contribution standards  
 - **[AI Development Logs](docs/ai-log/)** - Session-by-session development history and decision tracking
 
@@ -263,8 +264,8 @@ npx create-next-app@latest
 
 > 📋 **Note**: For detailed technical implementation guides and debugging resources, see **[Technical Documentation](docs/technical/README.md)**
 
-* ✅ **React State Synchronization Fix** (June 15, 2025): Resolved critical issue where Step 2 (Design Evaluation) API calls weren't triggering after Step 1 completion. Implemented direct API triggering pattern to bypass React context batching issues. 
-  - **Details**: [`react-state-synchronization-fix.md`](docs/technical/react-state-synchronization-fix.md)
+* ✅ **React State Synchronization Fix** (June 15, 2025): Resolved critical issue where Step 2 (Design Evaluation) API calls weren't triggering after Step 1 completion. Implemented direct API triggering pattern to bypass React context batching issues.
+  - **Details**: [`react-state-synchronization-fix.md`](docs/technical/key-issue-resolution/react-state-synchronization-fix.md)
   - **Impact**: Ensures reliable automated flow progression without user intervention
 
 * ✅ **Step Validation Feature**: Added ability for users to validate/invalidate completed steps with feedback mechanisms and visual indicators in timeline.
