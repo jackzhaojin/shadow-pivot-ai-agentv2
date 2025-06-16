@@ -54,16 +54,20 @@ export async function evaluateDesigns(concepts: string[], brief = 'Design a user
     const data = JSON.parse(jsonContent);
     const validation = validateResponse(data, template);
     if (validation.isValid) {
-      const parsed = validation.parsedResponse as EvaluationResponse;
-      return parsed.evaluations
-        .map(ev => ({
-          concept: concepts[ev.conceptIndex] ?? concepts[0],
-          score: ev.totalScore,
-          reason: ev.reasoning
-        }))
-        .sort((a, b) => b.score - a.score);
+      const parsed = validation.parsedResponse as Partial<EvaluationResponse>;
+      if (parsed && Array.isArray(parsed.evaluations)) {
+        return parsed.evaluations
+          .map(ev => ({
+            concept: concepts[ev.conceptIndex] ?? concepts[0],
+            score: ev.totalScore,
+            reason: ev.reasoning
+          }))
+          .sort((a, b) => b.score - a.score);
+      }
+      console.error('Parsed evaluation missing evaluations array:', parsed);
+    } else {
+      console.error('Invalid evaluation format:', validation.errors);
     }
-    console.error('Invalid evaluation format:', validation.errors);
   } catch (err) {
     console.error('Failed to generate design evaluations:', err);
   }
