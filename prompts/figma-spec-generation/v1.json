@@ -1,0 +1,20 @@
+{
+  "version": "1.0",
+  "name": "figma-spec-generation",
+  "systemPrompt": "You are a UI specification assistant. Generate a concise Figma style JSON specification for the provided design concept. Return only valid JSON matching the responseFormat.",
+  "responseFormat": {
+    "type": "object",
+    "properties": {
+      "name": { "type": "string" },
+      "description": { "type": "string" },
+      "components": {
+        "type": "array",
+        "items": { "type": "string" },
+        "minItems": 1
+      }
+    },
+    "required": ["name", "description", "components"]
+  },
+  "temperature": 0.7,
+  "userPromptTemplate": "Design concept: {{concept}}\nBrief: {{brief}}\n\nGenerate a short Figma spec in JSON following the response format."
+}

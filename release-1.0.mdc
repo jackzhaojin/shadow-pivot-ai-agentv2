@@ -456,11 +456,11 @@
 **Complexity**: High | **Effort**: Very High
 **Story**: As a designer needing implementation specs, I can receive AI-generated Figma specifications that are tested for usability and design quality so that I have validated, implementable design specifications for my UI features.
 
-- [ ] **Review previous AI integration patterns**: Study existing aiClient.ts and prompt engineering systems for generating structured outputs
-- [ ] API route: `/api/agent/generate-figma-specs` (parallel generation)
+- [x] **Review previous AI integration patterns**: Study existing aiClient.ts and prompt engineering systems for generating structured outputs
+- [x] API route: `/api/agent/generate-figma-specs` (parallel generation)
   - Input: Selected design concept, User GUID
   - Generate 3 different Figma specs in parallel
-- [ ] Backend: Use `aiClient.ts` to call LLM for parallel spec generation
+- [x] Backend: Use `aiClient.ts` to call LLM for parallel spec generation
 - [ ] Validate each spec for design quality and technical feasibility
 - [ ] Store specifications in structured format for selection
 - [ ] Display generated specs in the 3-box UI

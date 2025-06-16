@@ -10,3 +10,4 @@
 export * from './designConcept';
 export * from './designEvaluation';
 export * from './specSelection';
+export * from './figmaSpec';

@@ -10,5 +10,6 @@ Initial infrastructure for parallel Figma spec generation has been implemented. 
 - Created `FigmaGenerationBox` and `FigmaGenerationGrid` components to render progress bars.
 - Step executor simulates parallel progress and auto completes the step when all boxes finish.
 - Added utility helpers in `lib/utils/figmaGeneration.ts` with accompanying tests.
+- Implemented minimal `figmaSpec` service and `/api/agent/generate-figma-specs` endpoint for generating specs.
 
 This lays the groundwork for full spec generation and validation in future tasks.
