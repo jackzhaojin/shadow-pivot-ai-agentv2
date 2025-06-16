@@ -13,6 +13,7 @@
     "test:design-evaluation": "tsc lib/services/designEvaluation.ts --target ES2017 --module commonjs --esModuleInterop --outDir tests/endpoints && node tests/endpoints/design-evaluation.test.js",
     "test:figma-spec": "tsc lib/services/figmaSpec.ts --target ES2017 --module commonjs --esModuleInterop --outDir tests/endpoints && node tests/endpoints/figma-spec.test.js",
     "test:spec-selection": "tsc lib/services/specSelection.ts --target ES2017 --module commonjs --outDir tests/services && node tests/services/spec-selection.test.js",
+    "test:figma-spec-quality": "node tests/services/figma-spec-quality.test.js",
     "test:spec-selection-ui": "node tests/ui/spec-selection-ui-integration.test.js",
     "test:spec-selection-e2e": "node tests/e2e/spec-selection-e2e.test.js",
     "test:agent-flow-refactor": "TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\",\"jsx\":\"react\"}' node -r ts-node/register -r tsconfig-paths/register tests/ui/agent-flow-refactor.test.js",

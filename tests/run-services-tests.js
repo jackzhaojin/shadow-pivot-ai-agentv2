@@ -7,6 +7,7 @@ function run(cmd) {
 function runServiceTests() {
   run('npm run test:user-guid');
   run('npm run test:spec-selection');
+  run('npm run test:figma-spec-quality');
   // Execution and download tests are simple logic checks
   run('node tests/services/execution.test.js');
   run('node tests/services/download.test.js');

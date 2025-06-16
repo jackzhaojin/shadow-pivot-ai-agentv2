@@ -2,6 +2,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import type { DesignEvaluationResult } from '@/lib/services/designEvaluation';
 import type { FigmaSpec } from '@/lib/services/figmaSpec';
+import type { FigmaSpecQuality } from '@/lib/services/figmaSpecQuality';
 import {
   type ExecutionTrace,
   createExecutionTrace,
@@ -46,6 +47,8 @@ interface AgentFlowContextValue {
   setFigmaSpecStates: React.Dispatch<React.SetStateAction<FigmaGenState[]>>;
   figmaSpecs: FigmaSpec[];
   setFigmaSpecs: (specs: FigmaSpec[]) => void;
+  figmaSpecQualities: FigmaSpecQuality[];
+  setFigmaSpecQualities: (q: FigmaSpecQuality[]) => void;
 }
 
 const AgentFlowContext = createContext<AgentFlowContextValue | undefined>(undefined);
@@ -77,6 +80,7 @@ export function AgentFlowProvider({ children }: { children: React.ReactNode }) {
   const initialFigmaStates = () => createFigmaGenStateArray(3);
   const [figmaSpecStates, setFigmaSpecStates] = useState(initialFigmaStates());
   const [figmaSpecs, setFigmaSpecs] = useState<FigmaSpec[]>([]);
+  const [figmaSpecQualities, setFigmaSpecQualities] = useState<FigmaSpecQuality[]>([]);
 
   // Add logging for key state setters
   const setDesignConceptsWithLogging = (concepts: string[]) => {
@@ -115,6 +119,14 @@ export function AgentFlowProvider({ children }: { children: React.ReactNode }) {
     setFigmaSpecs(specs);
   };
 
+  const setFigmaSpecQualitiesWithLogging = (qualities: FigmaSpecQuality[]) => {
+    console.log('📊 AgentFlowProvider - setFigmaSpecQualities called:', {
+      qualityCount: qualities.length,
+      currentStep
+    });
+    setFigmaSpecQualities(qualities);
+  };
+
   const startExecution = () => {
     console.log('🚀 AgentFlowProvider - startExecution called');
     const trace = createExecutionTrace();
@@ -131,6 +143,7 @@ export function AgentFlowProvider({ children }: { children: React.ReactNode }) {
     setInvalidatedSteps(new Set());
     setFigmaSpecStates(initialFigmaStates());
     setFigmaSpecs([]);
+    setFigmaSpecQualities([]);
     logEvent(trace, 'Execution started');
   };
 
@@ -227,7 +240,9 @@ export function AgentFlowProvider({ children }: { children: React.ReactNode }) {
         figmaSpecStates,
         setFigmaSpecStates,
         figmaSpecs,
-        setFigmaSpecs: setFigmaSpecsWithLogging
+        setFigmaSpecs: setFigmaSpecsWithLogging,
+        figmaSpecQualities,
+        setFigmaSpecQualities: setFigmaSpecQualitiesWithLogging
       }}
     >
       {children}

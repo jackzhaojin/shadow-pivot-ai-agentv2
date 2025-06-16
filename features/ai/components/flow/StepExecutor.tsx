@@ -4,6 +4,7 @@ import { useAgentFlow } from '@/providers/AgentFlowProvider';
 import { selectBestDesignConcept } from '@/lib/services/specSelection';
 import { useUserGuid } from '@/providers/UserGuidProvider';
 import { FigmaSpec } from '@/lib/services/figmaSpec';
+import type { FigmaSpecQuality } from '@/lib/services/figmaSpecQuality';
 import FigmaGenerationGrid from './FigmaGenerationGrid';
 
 interface StepExecutorProps {
@@ -30,7 +31,9 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
     figmaSpecStates,
     setFigmaSpecStates,
     figmaSpecs,
-    setFigmaSpecs
+    setFigmaSpecs,
+    figmaSpecQualities,
+    setFigmaSpecQualities
   } = useAgentFlow();
 
   const userGuid = useUserGuid();
@@ -368,6 +371,26 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
           console.log('📋 StepExecutor - All Figma specs generated:', specs);
           // Store the generated specs
           setFigmaSpecs(specs);
+
+          // Run quality tests for each spec
+          try {
+            const qaPromises = specs.map(spec =>
+              fetch('/api/agent/test-figma-specs', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'x-user-guid': userGuid
+                },
+                body: JSON.stringify({ spec })
+              }).then(res => res.json())
+                .then(data => data.result as FigmaSpecQuality)
+                .catch(() => ({ clarity: 5, structure: 5, feasibility: 5, score: 5, notes: 'Error' }))
+            );
+            const qaResults = await Promise.all(qaPromises);
+            setFigmaSpecQualities(qaResults);
+          } catch (qaError) {
+            console.error('Error testing figma specs:', qaError);
+          }
           
           // Check if we should complete the step (only if no errors)
           const hasErrors = results.some(result => result.status === 'rejected');
@@ -407,7 +430,7 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
         notAborted: !aborted
       });
     }
-  }, [currentStep, selectedConcept, aborted, userGuid, setFigmaSpecStates, setFigmaSpecs, completeStep, addError]);
+  }, [currentStep, selectedConcept, aborted, userGuid, setFigmaSpecStates, setFigmaSpecs, setFigmaSpecQualities, completeStep, addError]);
   
   // Function to trigger Figma generation directly with a given concept
   const triggerFigmaGeneration = useCallback(async (concept: string) => {

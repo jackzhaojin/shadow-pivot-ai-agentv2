@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import type { DesignEvaluationResult } from '../../../../lib/services/designEvaluation';
 import type { FigmaSpec } from '../../../../lib/services/figmaSpec';
+import type { FigmaSpecQuality } from '../../../../lib/services/figmaSpecQuality';
 import { useAgentFlow as originalUseAgentFlow } from '../../../../providers/AgentFlowProvider';
 import ValidationPanel from './ValidationPanel';
 
@@ -23,6 +24,7 @@ interface StepResultPanelProps {
   evaluationResults: DesignEvaluationResult[];
   selectedConcept: string | null;
   figmaSpecs?: FigmaSpec[];
+  figmaSpecQualities?: FigmaSpecQuality[];
   onClose?: () => void;
 }
 
@@ -33,6 +35,7 @@ export default function StepResultPanel({
   evaluationResults,
   selectedConcept,
   figmaSpecs = [],
+  figmaSpecQualities = [],
   onClose
 }: StepResultPanelProps) {
   const { validatedSteps, invalidatedSteps, markStepValidated, markStepInvalidated } = useAgentFlow();
@@ -107,6 +110,16 @@ export default function StepResultPanel({
                     ))}
                   </ul>
                 </div>
+                {figmaSpecQualities[i] && (
+                  <div className="text-xs mt-2">
+                    <span className="font-medium">Quality Score:</span> {figmaSpecQualities[i].score.toFixed(1)}
+                    <ul className="list-disc list-inside">
+                      <li>Clarity: {figmaSpecQualities[i].clarity}</li>
+                      <li>Structure: {figmaSpecQualities[i].structure}</li>
+                      <li>Feasibility: {figmaSpecQualities[i].feasibility}</li>
+                    </ul>
+                  </div>
+                )}
               </div>
             ))}
           </div>

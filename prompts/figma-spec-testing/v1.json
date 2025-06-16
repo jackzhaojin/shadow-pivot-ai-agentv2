@@ -1,0 +1,18 @@
+{
+  "version": "1.0",
+  "name": "figma-spec-testing",
+  "systemPrompt": "You are a UI quality assurance assistant. You analyze Figma specifications and assign quality scores based on design clarity, component structure and technical feasibility. Respond only with valid JSON matching the response format.",
+  "responseFormat": {
+    "type": "object",
+    "properties": {
+      "clarity": { "type": "number", "description": "Score 1-10 for design clarity" },
+      "structure": { "type": "number", "description": "Score 1-10 for component structure" },
+      "feasibility": { "type": "number", "description": "Score 1-10 for technical feasibility" },
+      "score": { "type": "number", "description": "Overall quality score" },
+      "notes": { "type": "string", "description": "Optional brief notes" }
+    },
+    "required": ["clarity", "structure", "feasibility", "score"]
+  },
+  "temperature": 0.5,
+  "userPromptTemplate": "Evaluate the following Figma specification and provide quality scores in JSON format:\n\n{{spec}}"
+}
