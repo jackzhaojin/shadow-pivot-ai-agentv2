@@ -19,7 +19,267 @@ This document provides a comprehensive analysis of the implementation of Step 3.
 
 ## Architectural Design Patterns
 
+### Architecture Diagrams
+
+#### Sequence Diagram: Complete Figma Spec Generation Flow
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant AgentFlow as AgentFlow.tsx
+    participant Timeline as AgentFlowTimeline.tsx
+    participant StepExecutor as StepExecutor.tsx
+    participant Provider as AgentFlowProvider.tsx
+    participant FigmaGrid as FigmaGenerationGrid.tsx
+    participant FigmaBox as FigmaGenerationBox.tsx
+    participant API as /api/agent/generate-figma-specs
+    participant Service as figmaSpec.ts
+    participant PromptUtils as promptUtils.ts
+    participant Template as v1.json
+    participant AIClient as aiClient.ts
+    participant Azure as Azure OpenAI
+
+    User->>AgentFlow: Navigate to /agent
+    AgentFlow->>Provider: Initialize state
+    Provider->>Timeline: Render timeline
+    Timeline->>StepExecutor: Mount executor
+
+    Note over StepExecutor: Step 3 conditions met
+    StepExecutor->>Provider: setFigmaSpecStates([waiting, waiting, waiting])
+    Provider->>FigmaGrid: Update states
+    FigmaGrid->>FigmaBox: Render 3 boxes (waiting)
+
+    Note over StepExecutor: Start parallel generation
+    StepExecutor->>Provider: setFigmaSpecStates([processing, processing, processing])
+    
+    par Parallel Process 1
+        StepExecutor->>API: POST /generate-figma-specs (index 0)
+        API->>Service: generateFigmaSpecs(concept, 1, brief)
+        Service->>PromptUtils: loadPromptTemplate('v1.json')
+        PromptUtils->>Template: Read template file
+        Template-->>PromptUtils: Return template object
+        PromptUtils->>Service: Apply template with concept/brief
+        Service->>AIClient: generateChatCompletion(messages, options)
+        AIClient->>Azure: Chat completion request
+        Azure-->>AIClient: AI response
+        AIClient-->>Service: Response object
+        Service->>Service: Parse JSON with multiple strategies
+        Service-->>API: FigmaSpec object
+        API-->>StepExecutor: { specs: [spec] }
+        StepExecutor->>Provider: Update index 0 progress to 100%
+    and Parallel Process 2
+        StepExecutor->>API: POST /generate-figma-specs (index 1)
+        Note over API,Azure: Same flow as Process 1
+        API-->>StepExecutor: { specs: [spec] }
+        StepExecutor->>Provider: Update index 1 progress to 100%
+    and Parallel Process 3
+        StepExecutor->>API: POST /generate-figma-specs (index 2)
+        Note over API,Azure: Same flow as Process 1
+        API-->>StepExecutor: { specs: [spec] }
+        StepExecutor->>Provider: Update index 2 progress to 100%
+    end
+
+    Note over StepExecutor: All processes complete
+    StepExecutor->>Provider: setFigmaSpecs([spec1, spec2, spec3])
+    StepExecutor->>Provider: completeStep(3)
+    Provider->>Timeline: Update step 3 as completed
+    Provider->>FigmaGrid: Show completed states
+    FigmaGrid->>FigmaBox: Render completed (green)
+
+    User->>Timeline: Click Step 3 to view results
+    Timeline->>StepResultPanel: Show figma specs
+    StepResultPanel->>User: Display generated specs
+```
+
+#### Class Diagram: Component Architecture and Relationships
+
+```mermaid
+classDiagram
+    class AgentFlowProvider {
+        +figmaSpecs: FigmaSpec[]
+        +figmaSpecStates: FigmaGenState[]
+        +setFigmaSpecs(specs: FigmaSpec[]): void
+        +setFigmaSpecStates(states: FigmaGenState[]): void
+        +completeStep(stepNumber: number): void
+        +currentStep: number
+        +selectedConcept: string
+    }
+
+    class AgentFlow {
+        +render(): JSX.Element
+        -useContext(AgentFlowProvider)
+    }
+
+    class AgentFlowTimeline {
+        +steps: StepInfo[]
+        +render(): JSX.Element
+        -handleStepClick(stepNumber: number): void
+    }
+
+    class StepExecutor {
+        -useEffect(): void
+        -generateFigmaSpecsParallel(): Promise<void>
+        -triggerFigmaGeneration(concept: string): Promise<void>
+    }
+
+    class FigmaGenerationGrid {
+        +states: FigmaGenState[]
+        +render(): JSX.Element
+    }
+
+    class FigmaGenerationBox {
+        +index: number
+        +state: FigmaGenState
+        +render(): JSX.Element
+    }
+
+    class StepResultPanel {
+        +stepNumber: number
+        +render(): JSX.Element
+        -renderFigmaSpecs(): JSX.Element
+    }
+
+    class APIRoute {
+        +POST(req: Request): Promise<Response>
+        -extractConcept(body: any): string
+        -extractBrief(body: any): string
+    }
+
+    class FigmaSpecService {
+        +generateFigmaSpec(concept: string, brief: string): Promise<FigmaSpec>
+        +generateFigmaSpecs(concept: string, count: number, brief: string): Promise<FigmaSpec[]>
+        -parseAIResponse(content: string): FigmaSpec
+        -createFallbackSpec(concept: string): FigmaSpec
+    }
+
+    class PromptUtils {
+        +loadPromptTemplate(path: string): PromptTemplate
+        +applyTemplate(template: PromptTemplate, variables: object): AppliedTemplate
+        +validateResponse(data: any, template: PromptTemplate): ValidationResult
+    }
+
+    class AIClient {
+        +generateChatCompletion(messages: Message[], options: CompletionOptions): Promise<ChatCompletion>
+        -client: OpenAIClient
+    }
+
+    class FigmaGenState {
+        +progress: number
+        +status: 'waiting' | 'processing' | 'completed' | 'error'
+    }
+
+    class FigmaSpec {
+        +name: string
+        +description: string
+        +components: string[]
+    }
+
+    class PromptTemplate {
+        +version: string
+        +name: string
+        +systemPrompt: string
+        +userPromptTemplate: string
+        +responseFormat: object
+        +temperature: number
+    }
+
+    class FigmaGenerationUtils {
+        +createFigmaGenStateArray(count: number): FigmaGenState[]
+        +updateFigmaGenProgress(states: FigmaGenState[], index: number, progress: number, error?: string): FigmaGenState[]
+    }
+
+    %% Provider Relationships
+    AgentFlowProvider --o AgentFlow
+    AgentFlowProvider --o AgentFlowTimeline
+    AgentFlowProvider --o StepExecutor
+    AgentFlowProvider --o StepResultPanel
+
+    %% Component Composition
+    AgentFlow --* AgentFlowTimeline
+    AgentFlow --* StepExecutor
+    AgentFlowTimeline --* StepResultPanel
+
+    %% UI Component Hierarchy
+    StepExecutor --* FigmaGenerationGrid
+    FigmaGenerationGrid --o FigmaGenerationBox
+
+    %% Service Dependencies
+    StepExecutor --> APIRoute
+    APIRoute --> FigmaSpecService
+    FigmaSpecService --> PromptUtils
+    FigmaSpecService --> AIClient
+    PromptUtils --> PromptTemplate
+
+    %% Data Associations
+    AgentFlowProvider *-- FigmaSpec
+    AgentFlowProvider *-- FigmaGenState
+    FigmaGenerationBox --> FigmaGenState
+    FigmaSpecService --> FigmaSpec
+    StepExecutor --> FigmaGenerationUtils
+
+    %% Async Data Flow
+    StepExecutor ..> AgentFlowProvider
+    APIRoute ..> FigmaSpecService
+    FigmaSpecService ..> AIClient
+```
+
 ### 1. Real Parallel Processing Architecture
+
+#### Data Flow Diagram: Prompt Template to AI Response Processing
+
+```mermaid
+flowchart TD
+    A[StepExecutor triggers generation] --> B[API Route /api/agent/generate-figma-specs]
+    B --> C[figmaSpec.ts service]
+    
+    C --> D[loadPromptTemplate v1.json]
+    D --> E[Read prompts/figma-spec-generation/v1.json]
+    E --> F[PromptTemplate Object]
+    
+    F --> G[applyTemplate with concept and brief]
+    G --> H[Handlebars template substitution]
+    H --> I[Applied System and User Prompts]
+    
+    I --> J[generateChatCompletion call]
+    J --> K[Azure OpenAI API]
+    K --> L[Raw AI Response]
+    
+    L --> M{Parse JSON Response}
+    M -->|Success| N[Valid FigmaSpec]
+    M -->|Parse Error| O[Try Code Block Extraction]
+    O -->|Success| N
+    O -->|Still Failed| P[Try JSON Object Extraction]
+    P -->|Success| N
+    P -->|Still Failed| Q[Create Fallback Spec]
+    Q --> R[Fallback FigmaSpec]
+    
+    N --> S[validateResponse against schema]
+    R --> S
+    S --> T[Return FigmaSpec to API]
+    T --> U[API returns to StepExecutor]
+    U --> V[Update Provider State]
+    V --> W[UI reflects completion]
+
+    %% Template Structure
+    subgraph Template [v1.json Structure]
+        T1[systemPrompt: UX/UI Designer expertise]
+        T2[userPromptTemplate with concept and brief variables]
+        T3[responseFormat: JSON schema]
+        T4[temperature: 0.8]
+    end
+    
+    E -.-> Template
+    
+    %% Error Handling
+    subgraph ErrorHandling [Error Resilience]
+        E1[Individual Process Errors]
+        E2[Promise.allSettled handling]
+        E3[Meaningful Fallback Content]
+        E4[UI Error State Indicators]
+    end
+    
+    Q -.-> ErrorHandling
+```
 
 The implementation follows a true parallel processing pattern using `Promise.all()` and `Promise.allSettled()`:
 

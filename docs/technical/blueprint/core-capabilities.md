@@ -136,6 +136,270 @@ Advanced state management patterns for complex features:
 - **Error Recovery**: Clear error messaging with actionable information
 - **Progressive Enhancement**: Features work with reduced functionality during failures
 
+## 9. Agent Step Timeline Architecture
+
+Visual representation of how complex agent steps are implemented in the timeline workflow.
+
+### Architecture Diagrams
+
+#### Sequence Diagram: Complex Agent Step Execution Flow
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant AgentFlow as AgentFlow.tsx
+    participant Timeline as AgentFlowTimeline.tsx
+    participant StepExecutor as StepExecutor.tsx
+    participant Provider as AgentFlowProvider.tsx
+    participant ProcessGrid as ProcessGrid.tsx
+    participant ProcessBox as ProcessBox.tsx
+    participant API as /api/agent/step-endpoint
+    participant Service as stepService.ts
+    participant PromptUtils as promptUtils.ts
+    participant Template as template.json
+    participant AIClient as aiClient.ts
+    participant Azure as Azure OpenAI
+
+    User->>AgentFlow: Navigate to /agent
+    AgentFlow->>Provider: Initialize state
+    Provider->>Timeline: Render timeline
+    Timeline->>StepExecutor: Mount executor
+
+    Note over StepExecutor: Step N conditions met
+    StepExecutor->>Provider: setProcessStates([waiting, waiting, waiting])
+    Provider->>ProcessGrid: Update states
+    ProcessGrid->>ProcessBox: Render 3 boxes (waiting)
+
+    Note over StepExecutor: Start parallel processing
+    StepExecutor->>Provider: setProcessStates([processing, processing, processing])
+    
+    par Parallel Process 1
+        StepExecutor->>API: POST /step-endpoint (index 0)
+        API->>Service: generateResults(input, 1, context)
+        Service->>PromptUtils: loadPromptTemplate('template.json')
+        PromptUtils->>Template: Read template file
+        Template-->>PromptUtils: Return template object
+        PromptUtils->>Service: Apply template with variables
+        Service->>AIClient: generateChatCompletion(messages, options)
+        AIClient->>Azure: Chat completion request
+        Azure-->>AIClient: AI response
+        AIClient-->>Service: Response object
+        Service->>Service: Parse JSON with multiple strategies
+        Service-->>API: Result object
+        API-->>StepExecutor: { results: [result] }
+        StepExecutor->>Provider: Update index 0 progress to 100%
+    and Parallel Process 2
+        StepExecutor->>API: POST /step-endpoint (index 1)
+        Note over API,Azure: Same flow as Process 1
+        API-->>StepExecutor: { results: [result] }
+        StepExecutor->>Provider: Update index 1 progress to 100%
+    and Parallel Process 3
+        StepExecutor->>API: POST /step-endpoint (index 2)
+        Note over API,Azure: Same flow as Process 1
+        API-->>StepExecutor: { results: [result] }
+        StepExecutor->>Provider: Update index 2 progress to 100%
+    end
+
+    Note over StepExecutor: All processes complete
+    StepExecutor->>Provider: setStepResults([result1, result2, result3])
+    StepExecutor->>Provider: completeStep(N)
+    Provider->>Timeline: Update step N as completed
+    Provider->>ProcessGrid: Show completed states
+    ProcessGrid->>ProcessBox: Render completed (green)
+
+    User->>Timeline: Click Step N to view results
+    Timeline->>StepResultPanel: Show step results
+    StepResultPanel->>User: Display generated results
+```
+
+#### Class Diagram: Agent Step Component Architecture
+
+```mermaid
+classDiagram
+    class AgentFlowProvider {
+        +stepResults: StepResult[]
+        +processStates: ProcessState[]
+        +setStepResults(results: StepResult[]): void
+        +setProcessStates(states: ProcessState[]): void
+        +completeStep(stepNumber: number): void
+        +currentStep: number
+        +selectedInput: string
+    }
+
+    class AgentFlow {
+        +render(): JSX.Element
+        -useContext(AgentFlowProvider)
+    }
+
+    class AgentFlowTimeline {
+        +steps: StepInfo[]
+        +render(): JSX.Element
+        -handleStepClick(stepNumber: number): void
+    }
+
+    class StepExecutor {
+        -useEffect(): void
+        -executeStepParallel(): Promise<void>
+        -triggerStepExecution(input: string): Promise<void>
+    }
+
+    class ProcessGrid {
+        +states: ProcessState[]
+        +render(): JSX.Element
+    }
+
+    class ProcessBox {
+        +index: number
+        +state: ProcessState
+        +render(): JSX.Element
+    }
+
+    class StepResultPanel {
+        +stepNumber: number
+        +render(): JSX.Element
+        -renderStepResults(): JSX.Element
+    }
+
+    class APIRoute {
+        +POST(req: Request): Promise<Response>
+        -extractInput(body: any): string
+        -extractContext(body: any): string
+    }
+
+    class StepService {
+        +generateResult(input: string, context: string): Promise<StepResult>
+        +generateResults(input: string, count: number, context: string): Promise<StepResult[]>
+        -parseAIResponse(content: string): StepResult
+        -createFallbackResult(input: string): StepResult
+    }
+
+    class PromptUtils {
+        +loadPromptTemplate(path: string): PromptTemplate
+        +applyTemplate(template: PromptTemplate, variables: object): AppliedTemplate
+        +validateResponse(data: any, template: PromptTemplate): ValidationResult
+    }
+
+    class AIClient {
+        +generateChatCompletion(messages: Message[], options: CompletionOptions): Promise<ChatCompletion>
+        -client: OpenAIClient
+    }
+
+    class ProcessState {
+        +progress: number
+        +status: 'waiting' | 'processing' | 'completed' | 'error'
+    }
+
+    class StepResult {
+        +id: string
+        +content: string
+        +metadata: object
+    }
+
+    class PromptTemplate {
+        +version: string
+        +name: string
+        +systemPrompt: string
+        +userPromptTemplate: string
+        +responseFormat: object
+        +temperature: number
+    }
+
+    class ProcessUtils {
+        +createProcessStateArray(count: number): ProcessState[]
+        +updateProcessProgress(states: ProcessState[], index: number, progress: number, error?: string): ProcessState[]
+    }
+
+    %% Provider Relationships
+    AgentFlowProvider --o AgentFlow
+    AgentFlowProvider --o AgentFlowTimeline
+    AgentFlowProvider --o StepExecutor
+    AgentFlowProvider --o StepResultPanel
+
+    %% Component Composition
+    AgentFlow --* AgentFlowTimeline
+    AgentFlow --* StepExecutor
+    AgentFlowTimeline --* StepResultPanel
+
+    %% UI Component Hierarchy
+    StepExecutor --* ProcessGrid
+    ProcessGrid --o ProcessBox
+
+    %% Service Dependencies
+    StepExecutor --> APIRoute
+    APIRoute --> StepService
+    StepService --> PromptUtils
+    StepService --> AIClient
+    PromptUtils --> PromptTemplate
+
+    %% Data Associations
+    AgentFlowProvider *-- StepResult
+    AgentFlowProvider *-- ProcessState
+    ProcessBox --> ProcessState
+    StepService --> StepResult
+    StepExecutor --> ProcessUtils
+
+    %% Async Data Flow
+    StepExecutor ..> AgentFlowProvider
+    APIRoute ..> StepService
+    StepService ..> AIClient
+```
+
+#### Data Flow Diagram: Template to AI Response Processing
+
+```mermaid
+flowchart TD
+    A[StepExecutor triggers processing] --> B[API Route /api/agent/step-endpoint]
+    B --> C[stepService.ts service]
+    
+    C --> D[loadPromptTemplate template.json]
+    D --> E[Read prompts/step-templates/template.json]
+    E --> F[PromptTemplate Object]
+    
+    F --> G[applyTemplate with input and context]
+    G --> H[Handlebars template substitution]
+    H --> I[Applied System and User Prompts]
+    
+    I --> J[generateChatCompletion call]
+    J --> K[Azure OpenAI API]
+    K --> L[Raw AI Response]
+    
+    L --> M{Parse JSON Response}
+    M -->|Success| N[Valid StepResult]
+    M -->|Parse Error| O[Try Code Block Extraction]
+    O -->|Success| N
+    O -->|Still Failed| P[Try JSON Object Extraction]
+    P -->|Success| N
+    P -->|Still Failed| Q[Create Fallback Result]
+    Q --> R[Fallback StepResult]
+    
+    N --> S[validateResponse against schema]
+    R --> S
+    S --> T[Return StepResult to API]
+    T --> U[API returns to StepExecutor]
+    U --> V[Update Provider State]
+    V --> W[UI reflects completion]
+
+    %% Template Structure
+    subgraph Template [template.json Structure]
+        T1[systemPrompt: Domain expertise]
+        T2[userPromptTemplate with variables]
+        T3[responseFormat: JSON schema]
+        T4[temperature: optimization value]
+    end
+    
+    E -.-> Template
+    
+    %% Error Handling
+    subgraph ErrorHandling [Error Resilience]
+        E1[Individual Process Errors]
+        E2[Promise.allSettled handling]
+        E3[Meaningful Fallback Content]
+        E4[UI Error State Indicators]
+    end
+    
+    Q -.-> ErrorHandling
+```
+
 ---
 
 ## Development Guidelines
