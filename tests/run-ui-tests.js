@@ -8,7 +8,8 @@ function runUiTests() {
     'spec-selection-ui-integration.test.js',
     'step-results-review.test.js',
     'validation-panel.test.js',
-    'agent-flow-validation.test.js'
+    'agent-flow-validation.test.js',
+    'figma-generation-infrastructure.test.js'
   ];
   files.forEach(f => {
     const testPath = path.join(__dirname, 'ui', f);

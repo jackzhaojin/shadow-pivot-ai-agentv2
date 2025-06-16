@@ -11,6 +11,7 @@
     "test:ai-connection": "tsc lib/daos/aiClient.ts --target ES2017 --module commonjs --esModuleInterop --outDir tests/dao && node tests/dao/ai-connection.test.js",
     "test:design-concepts": "tsc lib/services/designConcept.ts --target ES2017 --module commonjs --esModuleInterop --outDir tests/endpoints && node tests/endpoints/design-concept.test.js",
     "test:design-evaluation": "tsc lib/services/designEvaluation.ts --target ES2017 --module commonjs --esModuleInterop --outDir tests/endpoints && node tests/endpoints/design-evaluation.test.js",
+    "test:figma-spec": "tsc lib/services/figmaSpec.ts --target ES2017 --module commonjs --esModuleInterop --outDir tests/endpoints && node tests/endpoints/figma-spec.test.js",
     "test:spec-selection": "tsc lib/services/specSelection.ts --target ES2017 --module commonjs --outDir tests/services && node tests/services/spec-selection.test.js",
     "test:spec-selection-ui": "node tests/ui/spec-selection-ui-integration.test.js",
     "test:spec-selection-e2e": "node tests/e2e/spec-selection-e2e.test.js",

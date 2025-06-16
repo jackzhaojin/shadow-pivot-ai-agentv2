@@ -6,6 +6,7 @@ import {
   createExecutionTrace,
   logEvent
 } from '@/utils/execution';
+import { createFigmaGenStateArray, type FigmaGenState } from '@/lib/utils/figmaGeneration';
 
 export const agentSteps = [
   'Design Concept Generation',
@@ -40,6 +41,8 @@ interface AgentFlowContextValue {
   invalidatedSteps: Set<number>;
   markStepValidated: (i: number) => void;
   markStepInvalidated: (i: number, feedback: string) => void;
+  figmaSpecStates: FigmaGenState[];
+  setFigmaSpecStates: React.Dispatch<React.SetStateAction<FigmaGenState[]>>;
 }
 
 const AgentFlowContext = createContext<AgentFlowContextValue | undefined>(undefined);
@@ -68,6 +71,8 @@ export function AgentFlowProvider({ children }: { children: React.ReactNode }) {
   const [failedStep, setFailedStep] = useState<number | null>(null);
   const [validatedSteps, setValidatedSteps] = useState<Set<number>>(new Set());
   const [invalidatedSteps, setInvalidatedSteps] = useState<Set<number>>(new Set());
+  const initialFigmaStates = () => createFigmaGenStateArray(3);
+  const [figmaSpecStates, setFigmaSpecStates] = useState(initialFigmaStates());
 
   const startExecution = () => {
     const trace = createExecutionTrace();
@@ -82,6 +87,7 @@ export function AgentFlowProvider({ children }: { children: React.ReactNode }) {
     setSelectedConcept(null);
     setValidatedSteps(new Set());
     setInvalidatedSteps(new Set());
+    setFigmaSpecStates(initialFigmaStates());
     logEvent(trace, 'Execution started');
   };
 
@@ -166,7 +172,9 @@ export function AgentFlowProvider({ children }: { children: React.ReactNode }) {
         validatedSteps,
         invalidatedSteps,
         markStepValidated,
-        markStepInvalidated
+        markStepInvalidated,
+        figmaSpecStates,
+        setFigmaSpecStates
       }}
     >
       {children}
