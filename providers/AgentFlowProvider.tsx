@@ -78,7 +78,45 @@ export function AgentFlowProvider({ children }: { children: React.ReactNode }) {
   const [figmaSpecStates, setFigmaSpecStates] = useState(initialFigmaStates());
   const [figmaSpecs, setFigmaSpecs] = useState<FigmaSpec[]>([]);
 
+  // Add logging for key state setters
+  const setDesignConceptsWithLogging = (concepts: string[]) => {
+    console.log('🎨 AgentFlowProvider - setDesignConcepts called:', {
+      conceptCount: concepts.length,
+      concepts,
+      currentStep
+    });
+    setDesignConcepts(concepts);
+  };
+
+  const setEvaluationResultsWithLogging = (results: DesignEvaluationResult[]) => {
+    console.log('📊 AgentFlowProvider - setEvaluationResults called:', {
+      resultCount: results.length,
+      results,
+      currentStep
+    });
+    setEvaluationResults(results);
+  };
+
+  const setSelectedConceptWithLogging = (concept: string | null) => {
+    console.log('✅ AgentFlowProvider - setSelectedConcept called:', {
+      previousConcept: selectedConcept,
+      newConcept: concept,
+      currentStep
+    });
+    setSelectedConcept(concept);
+  };
+
+  const setFigmaSpecsWithLogging = (specs: FigmaSpec[]) => {
+    console.log('🎨 AgentFlowProvider - setFigmaSpecs called:', {
+      specCount: specs.length,
+      specs,
+      currentStep
+    });
+    setFigmaSpecs(specs);
+  };
+
   const startExecution = () => {
+    console.log('🚀 AgentFlowProvider - startExecution called');
     const trace = createExecutionTrace();
     setExecutionTrace(trace);
     setAborted(false);
@@ -97,15 +135,23 @@ export function AgentFlowProvider({ children }: { children: React.ReactNode }) {
   };
 
   const completeStep = (i: number, advance: boolean = true) => {
-    console.log('AgentFlowProvider.completeStep called:', { i, advance, currentStepBefore: currentStep });
+    console.log('🏁 AgentFlowProvider.completeStep called:', { 
+      stepIndex: i, 
+      stepName: agentSteps[i],
+      advance, 
+      currentStepBefore: currentStep,
+      willAdvanceTo: advance ? i + 1 : currentStep,
+      completedBefore: Array.from(completed)
+    });
     setCompleted(prev => {
       const newCompleted = new Set(prev).add(i);
-      console.log('Setting completed:', newCompleted);
+      console.log('📝 AgentFlowProvider - Setting completed steps:', Array.from(newCompleted));
       return newCompleted;
     });
     if (advance) {
-      console.log('Setting currentStep to:', i + 1);
-      setCurrentStep(i + 1);
+      const newStep = i + 1;
+      console.log('⏭️ AgentFlowProvider - Advancing currentStep from', currentStep, 'to', newStep, `(${agentSteps[newStep] || 'COMPLETE'})`);
+      setCurrentStep(newStep);
     }
     if (executionTrace) {
       logEvent(executionTrace, `${agentSteps[i]} completed`);
@@ -161,11 +207,11 @@ export function AgentFlowProvider({ children }: { children: React.ReactNode }) {
         completed,
         executionTrace,
         designConcepts,
-        setDesignConcepts,
+        setDesignConcepts: setDesignConceptsWithLogging,
         evaluationResults,
-        setEvaluationResults,
+        setEvaluationResults: setEvaluationResultsWithLogging,
         selectedConcept,
-        setSelectedConcept,
+        setSelectedConcept: setSelectedConceptWithLogging,
         setCurrentStep,
         completeStep,
         startExecution,
@@ -181,7 +227,7 @@ export function AgentFlowProvider({ children }: { children: React.ReactNode }) {
         figmaSpecStates,
         setFigmaSpecStates,
         figmaSpecs,
-        setFigmaSpecs
+        setFigmaSpecs: setFigmaSpecsWithLogging
       }}
     >
       {children}

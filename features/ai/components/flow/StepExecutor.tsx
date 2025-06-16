@@ -35,60 +35,94 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
   const userGuid = useUserGuid();
 
   const startFlow = async () => {
+    console.log('🚀 StepExecutor - startFlow called:', {
+      currentStep,
+      briefLength: brief.length,
+      userGuid
+    });
+    
     if (currentStep <= 0) {
+      console.log('🎬 StepExecutor - Starting execution for step 0');
       startExecution();
+      
       try {
+        console.log('📡 StepExecutor - Making API call to /api/agent/generate-design-concepts');
         const res = await fetch('/api/agent/generate-design-concepts', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'x-user-guid': userGuid },
           body: JSON.stringify({ brief })
         });
+        
+        console.log('📨 StepExecutor - API response status:', res.status, res.statusText);
+        
         const data = await res.json();
+        console.log('📊 StepExecutor - Step 0 API response data:', data);
+        
         if (Array.isArray(data.concepts)) {
-          console.log('Step 0 API success - setting design concepts:', data.concepts);
+          console.log('✅ StepExecutor - Step 0 API success - setting design concepts:', data.concepts);
           setDesignConcepts(data.concepts);
-          console.log('Step 0 - calling completeStep(0)');
+          console.log('🏁 StepExecutor - Step 0 - calling completeStep(0)');
           completeStep(0);
-          console.log('Step 0 - completeStep(0) called');
+          console.log('✨ StepExecutor - Step 0 - completeStep(0) called');
           
           // Immediately trigger step 1 with the fresh data
-          console.log('Immediately calling nextStep for step 1 with fresh data');
+          console.log('⏭️ StepExecutor - Immediately calling nextStep for step 1 with fresh data');
           setTimeout(() => {
-            console.log('Timeout triggered - checking state for step 1');
+            console.log('⏰ StepExecutor - Timeout triggered - triggering step 1');
             // Use the fresh data directly instead of relying on state
             triggerStep1WithConcepts(data.concepts);
           }, 100);
         } else {
+          console.error('❌ StepExecutor - Step 0 API failed to return concepts array:', data);
           addError('Failed to generate design concepts', 0);
         }
       } catch (err) {
         const message = err instanceof Error ? err.message : 'Unknown error';
+        console.error('💥 StepExecutor - Step 0 API call error:', err);
         addError(message, 0);
       }
+    } else {
+      console.log('⏭️ StepExecutor - startFlow called but currentStep > 0, skipping');
     }
   };
 
   const triggerStep1WithConcepts = useCallback(async (concepts: string[]) => {
-    console.log('triggerStep1WithConcepts called with concepts:', concepts);
+    console.log('🎯 StepExecutor - triggerStep1WithConcepts called with concepts:', {
+      conceptCount: concepts.length,
+      concepts,
+      currentStep,
+      userGuid
+    });
     try {
+      console.log('📡 StepExecutor - Making API call to /api/agent/evaluate-designs');
       const res = await fetch('/api/agent/evaluate-designs', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'x-user-guid': userGuid },
         body: JSON.stringify({ concepts })
       });
+      
+      console.log('📨 StepExecutor - API response status:', res.status, res.statusText);
+      
       const data = await res.json();
-      console.log('Step 1 API response data:', data);
+      console.log('📊 StepExecutor - Step 1 API response data:', data);
+      
       if (Array.isArray(data.evaluations)) {
+        console.log('✅ StepExecutor - Valid evaluations received, setting results');
         setEvaluationResults(data.evaluations);
-        setSelectedConcept(selectBestDesignConcept(data.evaluations));
+        
+        const bestConcept = selectBestDesignConcept(data.evaluations);
+        console.log('🏆 StepExecutor - Selected best concept:', bestConcept);
+        setSelectedConcept(bestConcept);
+        
+        console.log('🏁 StepExecutor - Calling completeStep(1)');
         completeStep(1);
       } else {
-        console.error('Step 1 API response is not an array:', data);
+        console.error('❌ StepExecutor - Step 1 API response is not an array:', data);
         addError('Failed to evaluate designs', 1);
       }
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Unknown error';
-      console.error('Step 1 API call error:', err);
+      console.error('💥 StepExecutor - Step 1 API call error:', err);
       addError(message, 1);
     }
   }, [userGuid, setEvaluationResults, setSelectedConcept, completeStep, addError]);
@@ -150,18 +184,52 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
     console.log('designConcepts changed:', designConcepts.length, designConcepts);
   }, [designConcepts]);
 
+  useEffect(() => {
+    console.log('selectedConcept changed:', selectedConcept);
+    console.log('Current state when selectedConcept changed:', {
+      currentStep,
+      selectedConcept,
+      aborted,
+      evaluationResultsLength: evaluationResults.length
+    });
+  }, [selectedConcept, currentStep, aborted, evaluationResults]);
+
+  useEffect(() => {
+    console.log('evaluationResults changed:', evaluationResults.length, evaluationResults);
+  }, [evaluationResults]);
+
   // Auto-progress from spec selection to Figma generation once a concept is selected
   useEffect(() => {
+    console.log('🎯 StepExecutor - Step 2 useEffect triggered:', {
+      currentStep,
+      selectedConcept,
+      aborted,
+      condition: currentStep === 2 && selectedConcept && !aborted,
+      stepName: currentStep === 2 ? 'Spec Selection / Confirmation' : `Step ${currentStep}`
+    });
     if (currentStep === 2 && selectedConcept && !aborted) {
+      console.log('✅ StepExecutor - Auto-completing step 2 to progress to Figma generation');
       completeStep(2);
+      console.log('🏁 StepExecutor - Step 2 completed, should now advance to step 3');
+    } else {
+      console.log('⏸️ StepExecutor - Step 2 conditions not met for auto-completion');
     }
-  }, [currentStep, selectedConcept, aborted]);
+  }, [currentStep, selectedConcept, aborted, completeStep]);
 
   // Real parallel Figma spec generation with proper API integration
   useEffect(() => {
+    console.log('🎨 StepExecutor - Step 3 useEffect triggered:', {
+      currentStep,
+      selectedConcept,
+      aborted,
+      condition: currentStep === 3 && selectedConcept && !aborted,
+      stepName: currentStep === 3 ? 'Figma Spec Generation' : `Step ${currentStep}`
+    });
     if (currentStep === 3 && selectedConcept && !aborted) {
+      console.log('🚀 StepExecutor - Starting Figma spec generation process');
       const generateFigmaSpecsParallel = async () => {
         try {
+          console.log('🎨 StepExecutor - Starting Figma spec generation for concept:', selectedConcept);
           // Initialize all processes as starting
           setFigmaSpecStates(states =>
             states.map(s => ({ ...s, status: 'processing' as const, progress: 10 }))
@@ -169,6 +237,7 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
 
           // Create 3 parallel API calls with different progress tracking
           const promises = Array.from({ length: 3 }, async (_, index) => {
+            console.log(`📡 StepExecutor - Starting Figma API call ${index + 1}/3`);
             try {
               // Simulate progress updates during generation
               const progressInterval = setInterval(() => {
@@ -197,12 +266,15 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
               });
 
               clearInterval(progressInterval);
+              
+              console.log(`📨 StepExecutor - Figma API call ${index + 1} response:`, res.status, res.statusText);
 
               if (!res.ok) {
                 throw new Error(`HTTP ${res.status}: Failed to generate Figma spec`);
               }
 
               const data = await res.json();
+              console.log(`📊 StepExecutor - Figma API call ${index + 1} data:`, data);
               
               // Mark this process as completed
               setFigmaSpecStates(prev => {
@@ -211,13 +283,16 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
                 return next;
               });
 
-              return data.specs?.[0] || {
+              const specResult = data.specs?.[0] || {
                 name: `${selectedConcept} - Spec ${index + 1}`,
                 description: 'Generated Figma specification',
                 components: ['Component 1', 'Component 2']
               };
+              
+              console.log(`✅ StepExecutor - Figma spec ${index + 1} generated:`, specResult);
+              return specResult;
             } catch (error) {
-              console.error(`Error generating Figma spec ${index + 1}:`, error);
+              console.error(`💥 StepExecutor - Error generating Figma spec ${index + 1}:`, error);
               
               // Mark this process as error
               setFigmaSpecStates(prev => {
@@ -234,6 +309,7 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
             }
           });
 
+          console.log('🔄 StepExecutor - Waiting for all Figma spec generations to complete...');
           // Wait for all parallel generations to complete
           const results = await Promise.allSettled(promises);
           const specs = results.map(result => 
@@ -244,19 +320,30 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
             }
           );
 
+          console.log('📋 StepExecutor - All Figma specs generated:', specs);
           // Store the generated specs
           setFigmaSpecs(specs);
           
           // Check if we should complete the step (only if no errors)
           const hasErrors = results.some(result => result.status === 'rejected');
+          console.log('🎯 StepExecutor - Figma spec generation completed:', {
+            hasErrors,
+            resultsCount: results.length,
+            specs: specs.length,
+            completedResults: results.filter(r => r.status === 'fulfilled').length,
+            rejectedResults: results.filter(r => r.status === 'rejected').length
+          });
+          
           if (!hasErrors) {
+            console.log('🏁 StepExecutor - Completing step 3 - Figma Spec Generation');
             completeStep(3);
           } else {
+            console.log('❌ StepExecutor - Not completing step 3 due to errors');
             addError('Some Figma specs failed to generate', 3);
           }
 
         } catch (error) {
-          console.error('Error in parallel Figma spec generation:', error);
+          console.error('💥 StepExecutor - Error in parallel Figma spec generation:', error);
           addError(error instanceof Error ? error.message : 'Unknown error in Figma generation', 3);
           
           // Mark all as error
@@ -266,7 +353,14 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
         }
       };
 
+      console.log('🎬 StepExecutor - Calling generateFigmaSpecsParallel function');
       generateFigmaSpecsParallel();
+    } else {
+      console.log('⏸️ StepExecutor - Step 3 conditions not met:', {
+        currentStepIs3: currentStep === 3,
+        hasSelectedConcept: !!selectedConcept,
+        notAborted: !aborted
+      });
     }
   }, [currentStep, selectedConcept, aborted, userGuid, brief, setFigmaSpecStates, setFigmaSpecs, completeStep, addError]);
   
@@ -275,14 +369,15 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
       currentStep,
       aborted,
       failedStep,
-      designConceptsLength: designConcepts.length
+      designConceptsLength: designConcepts.length,
+      shouldTriggerStep1: currentStep === 1 && !aborted && failedStep === null && designConcepts.length > 0
     });
     
     if (currentStep === 1 && !aborted && failedStep === null && designConcepts.length > 0) {
       console.log('Calling nextStep() for step 1 - currentStep:', currentStep);
       nextStep();
     }
-  }, [currentStep, aborted, failedStep, designConcepts]);
+  }, [currentStep, aborted, failedStep, designConcepts, nextStep]);
 
   return (
     <>
