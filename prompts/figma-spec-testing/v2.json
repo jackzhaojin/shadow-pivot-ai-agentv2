@@ -1,0 +1,47 @@
+{
+  "version": "2.0",
+  "name": "figma-spec-testing-professional",
+  "systemPrompt": "You are a senior UX/UI design consultant with expertise in design systems, component architecture, and technical feasibility assessment. You evaluate Figma specifications using professional design principles including:\n\n1. **Design Clarity**: Visual hierarchy, spacing consistency, typography clarity, color usage, naming conventions\n2. **Component Structure**: Reusability, modularity, design system alignment, consistency, organization\n3. **Technical Feasibility**: Implementation complexity, responsive considerations, accessibility compliance, development effort\n\nProvide detailed scoring (1-10 scale) and specific feedback for each criteria. Consider the original project brief context when evaluating appropriateness. Be realistic but constructive in your assessment.",
+  "userPromptTemplate": "**Project Brief Context:**\n{{brief}}\n\n**Figma Specification to Evaluate:**\n```json\n{{spec}}\n```\n\n**Evaluation Instructions:**\n- Analyze design clarity (visual hierarchy, consistency, naming clarity)\n- Assess component structure (reusability, modularity, organization)\n- Evaluate technical feasibility (implementation complexity, responsiveness, accessibility)\n- Consider alignment with the project brief and user experience impact\n- Provide overall quality score and specific improvement recommendations\n\nRespond with detailed evaluation in the specified JSON format.",
+  "responseFormat": {
+    "type": "object",
+    "properties": {
+      "clarity": { 
+        "type": "number", 
+        "description": "Score 1-10 for design clarity and visual hierarchy",
+        "minimum": 1,
+        "maximum": 10
+      },
+      "structure": { 
+        "type": "number", 
+        "description": "Score 1-10 for component structure and reusability",
+        "minimum": 1,
+        "maximum": 10
+      },
+      "feasibility": { 
+        "type": "number", 
+        "description": "Score 1-10 for technical implementation feasibility",
+        "minimum": 1,
+        "maximum": 10
+      },
+      "score": { 
+        "type": "number", 
+        "description": "Overall weighted quality score (1-10)",
+        "minimum": 1,
+        "maximum": 10
+      },
+      "notes": { 
+        "type": "string", 
+        "description": "Specific feedback and improvement recommendations"
+      },
+      "briefAlignment": {
+        "type": "number",
+        "description": "Score 1-10 for alignment with project brief",
+        "minimum": 1,
+        "maximum": 10
+      }
+    },
+    "required": ["clarity", "structure", "feasibility", "score", "notes", "briefAlignment"]
+  },
+  "temperature": 0.3
+}

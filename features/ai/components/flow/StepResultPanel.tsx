@@ -5,6 +5,7 @@ import type { FigmaSpec } from '../../../../lib/services/figmaSpec';
 import type { FigmaSpecQuality } from '../../../../lib/services/figmaSpecQuality';
 import { useAgentFlow as originalUseAgentFlow } from '../../../../providers/AgentFlowProvider';
 import ValidationPanel from './ValidationPanel';
+import QualityAssessmentGrid from './QualityAssessmentGrid';
 
 // Special handling for test environment
 let useAgentFlow = originalUseAgentFlow;
@@ -110,21 +111,25 @@ export default function StepResultPanel({
                     ))}
                   </ul>
                 </div>
-                {figmaSpecQualities[i] && (
-                  <div className="text-xs mt-2">
-                    <span className="font-medium">Quality Score:</span> {figmaSpecQualities[i].score.toFixed(1)}
-                    <ul className="list-disc list-inside">
-                      <li>Clarity: {figmaSpecQualities[i].clarity}</li>
-                      <li>Structure: {figmaSpecQualities[i].structure}</li>
-                      <li>Feasibility: {figmaSpecQualities[i].feasibility}</li>
-                    </ul>
-                  </div>
-                )}
               </div>
             ))}
           </div>
         ) : (
           <div className="text-sm text-gray-500">No Figma specs generated yet</div>
+        )}
+      </div>
+    );
+  } else if (stepIndex === 4) {
+    content = (
+      <div>
+        <h4 className="font-semibold mb-2">Quality Assessment</h4>
+        {figmaSpecQualities.length > 0 && figmaSpecs.length > 0 ? (
+          <QualityAssessmentGrid 
+            qualities={figmaSpecQualities} 
+            figmaSpecs={figmaSpecs}
+          />
+        ) : (
+          <div className="text-sm text-gray-500">Quality assessment not completed yet</div>
         )}
       </div>
     );
