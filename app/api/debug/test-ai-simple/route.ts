@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { generateChatCompletion } from '@/lib/daos/aiClient';
 
-export async function POST(req: Request) {
+export async function POST() {
   try {
     console.log('🧪 Debug AI Test - Starting simple AI test');
     

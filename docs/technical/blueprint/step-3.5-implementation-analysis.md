@@ -8,8 +8,11 @@ This document provides a comprehensive analysis of the implementation of Step 3.
 
 ### Primary Implementation Period
 - **Merge Commit**: `bca7ec35b08c047d5ab04a9441a461b829013b1f` (June 16, 2025)
-- **Main Feature Commit**: `833cfed1cf5ed039a0a6f3c619b140439e0f50f8` 
+- **Main Feature Commit**: `833cfed1cf5ed039a0a6f3c619b140439e0f50f8`
 - **Follow-up Fixes**: `17f1584`, `cff62ed`, `e8e341e`, `7cbb176`
+- **Documentation Updates**: `87ddbe2`, `abd44ad`, `95ad5d3`
+
+See [Step 3.5 Git History Summary](./step-3.5-git-history-summary.md) for a commit-by-commit breakdown including new files and modifications.
 
 ### Key Statistics
 - **Files Changed**: 25 files
