@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { useAgentFlow } from '@/providers/AgentFlowProvider';
 import { selectBestDesignConcept } from '@/lib/services/specSelection';
 import { useUserGuid } from '@/providers/UserGuidProvider';
@@ -40,8 +40,19 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
         });
         const data = await res.json();
         if (Array.isArray(data.concepts)) {
+          console.log('Step 0 API success - setting design concepts:', data.concepts);
           setDesignConcepts(data.concepts);
+          console.log('Step 0 - calling completeStep(0)');
           completeStep(0);
+          console.log('Step 0 - completeStep(0) called');
+          
+          // Immediately trigger step 1 with the fresh data
+          console.log('Immediately calling nextStep for step 1 with fresh data');
+          setTimeout(() => {
+            console.log('Timeout triggered - checking state for step 1');
+            // Use the fresh data directly instead of relying on state
+            triggerStep1WithConcepts(data.concepts);
+          }, 100);
         } else {
           addError('Failed to generate design concepts', 0);
         }
@@ -52,9 +63,44 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
     }
   };
 
-  const nextStep = async () => {
+  const triggerStep1WithConcepts = useCallback(async (concepts: string[]) => {
+    console.log('triggerStep1WithConcepts called with concepts:', concepts);
+    try {
+      const res = await fetch('/api/agent/evaluate-designs', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-user-guid': userGuid },
+        body: JSON.stringify({ concepts })
+      });
+      const data = await res.json();
+      console.log('Step 1 API response data:', data);
+      if (Array.isArray(data.evaluations)) {
+        setEvaluationResults(data.evaluations);
+        setSelectedConcept(selectBestDesignConcept(data.evaluations));
+        completeStep(1, false);
+      } else {
+        console.error('Step 1 API response is not an array:', data);
+        addError('Failed to evaluate designs', 1);
+      }
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Unknown error';
+      console.error('Step 1 API call error:', err);
+      addError(message, 1);
+    }
+  }, [userGuid, setEvaluationResults, setSelectedConcept, completeStep, addError]);
+
+  const nextStep = useCallback(async () => {
+    console.log('nextStep called:', {
+      currentStep,
+      stepsLength: steps.length,
+      designConceptsLength: designConcepts.length,
+      condition1: currentStep < steps.length,
+      condition2: currentStep === 1,
+      condition3: designConcepts.length > 0
+    });
+    
     if (currentStep < steps.length) {
       if (currentStep === 1 && designConcepts.length > 0) {
+        console.log('Making API call to evaluate-designs with concepts:', designConcepts);
         try {
           const res = await fetch('/api/agent/evaluate-designs', {
             method: 'POST',
@@ -62,28 +108,56 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
             body: JSON.stringify({ concepts: designConcepts })
           });
           const data = await res.json();
+          console.log('API response data:', data);
           if (Array.isArray(data.evaluations)) {
             setEvaluationResults(data.evaluations);
             setSelectedConcept(selectBestDesignConcept(data.evaluations));
             completeStep(currentStep, false);
           } else {
+            console.error('API response is not an array:', data);
             addError('Failed to evaluate designs', currentStep);
           }
         } catch (err) {
           const message = err instanceof Error ? err.message : 'Unknown error';
+          console.error('API call error:', err);
           addError(message, currentStep);
         }
         return;
+      } else {
+        console.log('Skipping API call - conditions not met:', {
+          currentStep,
+          designConceptsLength: designConcepts.length
+        });
       }
+      console.log('Completing step without API call:', currentStep);
       completeStep(currentStep);
+    } else {
+      console.log('Not calling nextStep - currentStep >= steps.length');
     }
-  };
+  }, [currentStep, steps.length, designConcepts, userGuid, setEvaluationResults, setSelectedConcept, completeStep, addError]);
 
+  // Add individual useEffects to track each dependency separately
   useEffect(() => {
-    if (currentStep > 0 && currentStep < 2 && !aborted && failedStep === null) {
+    console.log('currentStep changed:', currentStep);
+  }, [currentStep]);
+  
+  useEffect(() => {
+    console.log('designConcepts changed:', designConcepts.length, designConcepts);
+  }, [designConcepts]);
+  
+  useEffect(() => {
+    console.log('Main useEffect triggered:', {
+      currentStep,
+      aborted,
+      failedStep,
+      designConceptsLength: designConcepts.length
+    });
+    
+    if (currentStep === 1 && !aborted && failedStep === null && designConcepts.length > 0) {
+      console.log('Calling nextStep() for step 1 - currentStep:', currentStep);
       nextStep();
     }
-  }, [currentStep, aborted, failedStep]);
+  }, [currentStep, aborted, failedStep, designConcepts]);
 
   return (
     <>

@@ -80,6 +80,16 @@ If `npm run lint` or `npm run build` fail with "next: not found", run `npm insta
 ## Error logging and maintaining a dev AI log
 Feel free to create inside the docs/ai-log folder, follow existing naming with yyyy-mm-dd-codex-topic
 
+## Technical Documentation
+For detailed technical implementation guides, debugging resources, and architectural decisions, see the **[Technical Documentation Index](docs/technical/README.md)**. This includes:
+
+- **Implementation Patterns**: React state management, API integration patterns, error handling strategies
+- **Debugging Guides**: Common issues, troubleshooting steps, and resolution examples
+- **Architectural Decisions**: Design choices, trade-offs, and technical rationale
+- **Performance & Optimization**: Best practices and monitoring approaches
+
+When encountering complex technical issues or implementing significant features, document the solution in `docs/technical/` following the established patterns.
+
 ## Azure Authentication Troubleshooting
 If you encounter Azure authentication issues during development or testing, run the detailed authentication test:
 

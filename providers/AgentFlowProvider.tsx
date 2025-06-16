@@ -1,5 +1,5 @@
 'use client';
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import type { DesignEvaluationResult } from '@/lib/services/designEvaluation';
 import {
   type ExecutionTrace,
@@ -53,6 +53,15 @@ export function AgentFlowProvider({ children }: { children: React.ReactNode }) {
     null
   );
   const [designConcepts, setDesignConcepts] = useState<string[]>([]);
+  
+  // Add logging for designConcepts changes
+  useEffect(() => {
+    console.log('AgentFlowProvider: designConcepts changed:', designConcepts.length, designConcepts);
+  }, [designConcepts]);
+  
+  useEffect(() => {
+    console.log('AgentFlowProvider: currentStep changed:', currentStep);
+  }, [currentStep]);
   const [evaluationResults, setEvaluationResults] = useState<DesignEvaluationResult[]>([]);
   const [selectedConcept, setSelectedConcept] = useState<string | null>(null);
   const [errors, setErrors] = useState<string[]>([]);
@@ -77,8 +86,14 @@ export function AgentFlowProvider({ children }: { children: React.ReactNode }) {
   };
 
   const completeStep = (i: number, advance: boolean = true) => {
-    setCompleted(prev => new Set(prev).add(i));
+    console.log('AgentFlowProvider.completeStep called:', { i, advance, currentStepBefore: currentStep });
+    setCompleted(prev => {
+      const newCompleted = new Set(prev).add(i);
+      console.log('Setting completed:', newCompleted);
+      return newCompleted;
+    });
     if (advance) {
+      console.log('Setting currentStep to:', i + 1);
       setCurrentStep(i + 1);
     }
     if (executionTrace) {
