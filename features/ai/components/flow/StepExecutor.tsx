@@ -408,6 +408,228 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
       });
     }
   }, [currentStep, selectedConcept, aborted, userGuid, setFigmaSpecStates, setFigmaSpecs, completeStep, addError]);
+
+  // Step 4: Figma Spec Selection & Evaluation
+  useEffect(() => {
+    console.log('🎯 StepExecutor - Step 4 useEffect triggered:', {
+      currentStep,
+      figmaSpecsLength: figmaSpecs.length,
+      aborted,
+      condition: currentStep === 4 && figmaSpecs.length > 0 && !aborted,
+      stepName: currentStep === 4 ? 'Figma Spec Selection & Evaluation' : `Step ${currentStep}`
+    });
+    if (currentStep === 4 && figmaSpecs.length > 0 && !aborted) {
+      console.log('🚀 StepExecutor - Starting Figma spec selection process');
+      const selectBestFigmaSpec = async () => {
+        try {
+          console.log('📡 StepExecutor - Making API call to /api/agent/select-figma-spec');
+          const res = await fetch('/api/agent/select-figma-spec', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'x-user-guid': userGuid },
+            body: JSON.stringify({ figmaSpecs })
+          });
+          
+          console.log('📨 StepExecutor - Figma selection API response status:', res.status);
+          const data = await res.json();
+          console.log('📊 StepExecutor - Step 4 API response data:', data);
+          
+          if (data.selectedSpec) {
+            // TODO: Store selected Figma spec in state
+            console.log('✅ StepExecutor - Selected Figma spec:', data.selectedSpec);
+            completeStep(4);
+          } else {
+            console.error('❌ StepExecutor - No selected spec returned');
+            addError('Failed to select Figma spec', 4);
+          }
+        } catch (err) {
+          const message = err instanceof Error ? err.message : 'Unknown error';
+          console.error('💥 StepExecutor - Step 4 API call error:', err);
+          addError(message, 4);
+        }
+      };
+      
+      selectBestFigmaSpec();
+    }
+  }, [currentStep, figmaSpecs, aborted, userGuid, completeStep, addError]);
+
+  // Step 5: Actual Figma Generation
+  useEffect(() => {
+    console.log('🎨 StepExecutor - Step 5 useEffect triggered:', {
+      currentStep,
+      aborted,
+      condition: currentStep === 5 && !aborted,
+      stepName: currentStep === 5 ? 'Actual Figma Generation' : `Step ${currentStep}`
+    });
+    if (currentStep === 5 && !aborted) {
+      console.log('🚀 StepExecutor - Starting actual Figma generation process');
+      const generateActualFigma = async () => {
+        try {
+          console.log('📡 StepExecutor - Making API call to /api/agent/generate-actual-figma');
+          const res = await fetch('/api/agent/generate-actual-figma', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'x-user-guid': userGuid },
+            body: JSON.stringify({ selectedSpec: 'TODO: Pass selected spec from state' })
+          });
+          
+          console.log('📨 StepExecutor - Actual Figma API response status:', res.status);
+          const data = await res.json();
+          console.log('📊 StepExecutor - Step 5 API response data:', data);
+          
+          if (data.figmaFile) {
+            // TODO: Store actual Figma file in state
+            console.log('✅ StepExecutor - Generated actual Figma file:', data.figmaFile);
+            completeStep(5);
+          } else {
+            console.error('❌ StepExecutor - No Figma file returned');
+            addError('Failed to generate actual Figma file', 5);
+          }
+        } catch (err) {
+          const message = err instanceof Error ? err.message : 'Unknown error';
+          console.error('💥 StepExecutor - Step 5 API call error:', err);
+          addError(message, 5);
+        }
+      };
+      
+      generateActualFigma();
+    }
+  }, [currentStep, aborted, userGuid, completeStep, addError]);
+
+  // Step 6: Code Generation (3 Parallel Paths)
+  useEffect(() => {
+    console.log('💻 StepExecutor - Step 6 useEffect triggered:', {
+      currentStep,
+      aborted,
+      condition: currentStep === 6 && !aborted,
+      stepName: currentStep === 6 ? 'Code Generation (3 Parallel)' : `Step ${currentStep}`
+    });
+    if (currentStep === 6 && !aborted) {
+      console.log('🚀 StepExecutor - Starting parallel code generation process');
+      const generateCodeParallel = async () => {
+        try {
+          console.log('💻 StepExecutor - Starting 3 parallel code generation calls');
+          
+          // Create 3 parallel API calls for code generation
+          const promises = Array.from({ length: 3 }, async (_, index) => {
+            console.log(`📡 StepExecutor - Starting Code API call ${index + 1}/3`);
+            try {
+              const res = await fetch('/api/agent/generate-code', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'x-user-guid': userGuid },
+                body: JSON.stringify({ 
+                  figmaFile: 'TODO: Pass actual Figma file from state',
+                  variation: index + 1
+                })
+              });
+              
+              if (!res.ok) {
+                throw new Error(`Code generation API call ${index + 1} failed: ${res.status}`);
+              }
+              
+              const data = await res.json();
+              console.log(`✅ StepExecutor - Code API call ${index + 1} completed:`, data);
+              return data;
+            } catch (error) {
+              console.error(`💥 StepExecutor - Code API call ${index + 1} failed:`, error);
+              throw error;
+            }
+          });
+
+          console.log('⏳ StepExecutor - Waiting for all Code API calls to complete...');
+          const results = await Promise.allSettled(promises);
+          
+          console.log('🎯 StepExecutor - All Code API calls completed!', {
+            totalCalls: results.length,
+            successful: results.filter(r => r.status === 'fulfilled').length,
+            failed: results.filter(r => r.status === 'rejected').length
+          });
+          
+          const successfulResults = results
+            .filter((r): r is PromiseFulfilledResult<any> => r.status === 'fulfilled')
+            .map(r => r.value);
+          
+          const hasErrors = results.some(r => r.status === 'rejected');
+          
+          if (successfulResults.length > 0) {
+            // TODO: Store generated code implementations in state
+            console.log('💾 StepExecutor - Setting code implementations in state:', successfulResults.length);
+          }
+          
+          if (!hasErrors) {
+            console.log('🏁 StepExecutor - All code generation successful! Completing step 6');
+            completeStep(6);
+          } else {
+            console.log('❌ StepExecutor - Some code generation failed');
+            addError('Some code implementations failed to generate', 6);
+          }
+        } catch (error) {
+          console.error('💥 StepExecutor - Critical error in code generation:', error);
+          addError(error instanceof Error ? error.message : 'Unknown error in code generation', 6);
+        }
+      };
+      
+      generateCodeParallel();
+    }
+  }, [currentStep, aborted, userGuid, completeStep, addError]);
+
+  // Step 7: Code Evaluation & Selection
+  useEffect(() => {
+    console.log('🎯 StepExecutor - Step 7 useEffect triggered:', {
+      currentStep,
+      aborted,
+      condition: currentStep === 7 && !aborted,
+      stepName: currentStep === 7 ? 'Code Evaluation & Selection' : `Step ${currentStep}`
+    });
+    if (currentStep === 7 && !aborted) {
+      console.log('🚀 StepExecutor - Starting code evaluation process');
+      const selectBestCode = async () => {
+        try {
+          console.log('📡 StepExecutor - Making API call to /api/agent/select-code');
+          const res = await fetch('/api/agent/select-code', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'x-user-guid': userGuid },
+            body: JSON.stringify({ codeImplementations: 'TODO: Pass code implementations from state' })
+          });
+          
+          console.log('📨 StepExecutor - Code selection API response status:', res.status);
+          const data = await res.json();
+          console.log('📊 StepExecutor - Step 7 API response data:', data);
+          
+          if (data.selectedCode) {
+            // TODO: Store selected code implementation in state
+            console.log('✅ StepExecutor - Selected code implementation:', data.selectedCode);
+            completeStep(7);
+          } else {
+            console.error('❌ StepExecutor - No selected code returned');
+            addError('Failed to select code implementation', 7);
+          }
+        } catch (err) {
+          const message = err instanceof Error ? err.message : 'Unknown error';
+          console.error('💥 StepExecutor - Step 7 API call error:', err);
+          addError(message, 7);
+        }
+      };
+      
+      selectBestCode();
+    }
+  }, [currentStep, aborted, userGuid, completeStep, addError]);
+
+  // Step 8: Download Artifacts (Auto-complete since download is user-initiated)
+  useEffect(() => {
+    console.log('📦 StepExecutor - Step 8 useEffect triggered:', {
+      currentStep,
+      aborted,
+      condition: currentStep === 8 && !aborted,
+      stepName: currentStep === 8 ? 'Download Artifacts' : `Step ${currentStep}`
+    });
+    if (currentStep === 8 && !aborted) {
+      console.log('🚀 StepExecutor - Reached download artifacts step');
+      // Auto-complete this step since download is user-initiated
+      setTimeout(() => {
+        console.log('✅ StepExecutor - Auto-completing download artifacts step');
+        completeStep(8);
+      }, 1000);
+    }
+  }, [currentStep, aborted, completeStep]);
   
   // Function to trigger Figma generation directly with a given concept
   const triggerFigmaGeneration = useCallback(async (concept: string) => {
@@ -648,8 +870,63 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
       )}
       {currentStep === 3 && (
         <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">Generating Figma Specs</h2>
+          <h2 className="text-xl font-semibold text-gray-900 mb-4">Generating Figma Specs (3 Parallel)</h2>
           <FigmaGenerationGrid states={figmaSpecStates} />
+        </div>
+      )}
+      {currentStep === 4 && (
+        <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 mb-8">
+          <h2 className="text-xl font-semibold text-gray-900 mb-4">Evaluating & Selecting Figma Spec</h2>
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
+            <p className="text-gray-600">AI is evaluating generated specs to select the best one...</p>
+          </div>
+        </div>
+      )}
+      {currentStep === 5 && (
+        <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 mb-8">
+          <h2 className="text-xl font-semibold text-gray-900 mb-4">Generating Actual Figma File</h2>
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600 mx-auto mb-4"></div>
+            <p className="text-gray-600">Creating production-ready Figma design file...</p>
+          </div>
+        </div>
+      )}
+      {currentStep === 6 && (
+        <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 mb-8">
+          <h2 className="text-xl font-semibold text-gray-900 mb-4">Generating Code (3 Parallel)</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {[1, 2, 3].map((num) => (
+              <div key={num} className="bg-gray-50 rounded-xl p-4 text-center">
+                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-green-600 mx-auto mb-2"></div>
+                <p className="text-sm text-gray-600">Implementation {num}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+      {currentStep === 7 && (
+        <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 mb-8">
+          <h2 className="text-xl font-semibold text-gray-900 mb-4">Evaluating & Selecting Code</h2>
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-600 mx-auto mb-4"></div>
+            <p className="text-gray-600">AI is evaluating code implementations to select the best one...</p>
+          </div>
+        </div>
+      )}
+      {currentStep === 8 && (
+        <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 mb-8">
+          <h2 className="text-xl font-semibold text-gray-900 mb-4">Ready for Download</h2>
+          <div className="text-center">
+            <div className="bg-green-50 rounded-xl p-6 mb-4">
+              <div className="text-green-600 text-4xl mb-2">🎉</div>
+              <h3 className="text-lg font-semibold text-green-800 mb-2">Artifacts Generated Successfully!</h3>
+              <p className="text-green-600">Your Figma design and code implementation are ready for download.</p>
+            </div>
+            <button className="bg-gradient-to-r from-green-500 to-blue-500 text-white py-3 px-8 rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200">
+              📦 Download Complete Package
+            </button>
+          </div>
         </div>
       )}
       {!aborted && currentStep >= 0 && currentStep < steps.length && (

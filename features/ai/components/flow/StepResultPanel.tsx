@@ -92,7 +92,7 @@ export default function StepResultPanel({
   } else if (stepIndex === 3) {
     content = (
       <div>
-        <h4 className="font-semibold mb-2">Figma Specifications</h4>
+        <h4 className="font-semibold mb-2">Figma Specifications (3 Parallel)</h4>
         {figmaSpecs.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {figmaSpecs.map((spec, i) => (
@@ -113,6 +113,96 @@ export default function StepResultPanel({
         ) : (
           <div className="text-sm text-gray-500">No Figma specs generated yet</div>
         )}
+      </div>
+    );
+  } else if (stepIndex === 4) {
+    content = (
+      <div>
+        <h4 className="font-semibold mb-2">Figma Spec Selection & Evaluation</h4>
+        <div className="text-sm text-gray-700">
+          <p className="mb-2">AI evaluated {figmaSpecs.length} Figma specifications and selected the best one based on:</p>
+          <ul className="list-disc list-inside space-y-1 text-gray-600">
+            <li>Design clarity and visual hierarchy</li>
+            <li>Component structure and reusability</li>
+            <li>Technical feasibility for code generation</li>
+            <li>Alignment with modern UI/UX principles</li>
+          </ul>
+          {/* TODO: Display selected Figma spec details */}
+          <div className="mt-3 p-3 bg-green-50 border border-green-200 rounded-lg">
+            <p className="text-green-800 font-medium">Selected: Best scoring specification</p>
+          </div>
+        </div>
+      </div>
+    );
+  } else if (stepIndex === 5) {
+    content = (
+      <div>
+        <h4 className="font-semibold mb-2">Actual Figma Generation</h4>
+        <div className="text-sm text-gray-700">
+          <p className="mb-2">Generated production-ready Figma design file from selected specification.</p>
+          {/* TODO: Display actual Figma file details */}
+          <div className="p-3 bg-purple-50 border border-purple-200 rounded-lg">
+            <p className="text-purple-800 font-medium">✅ Figma file generated successfully</p>
+            <p className="text-purple-600 text-xs mt-1">Ready for code generation</p>
+          </div>
+        </div>
+      </div>
+    );
+  } else if (stepIndex === 6) {
+    content = (
+      <div>
+        <h4 className="font-semibold mb-2">Code Generation (3 Parallel)</h4>
+        <div className="text-sm text-gray-700">
+          <p className="mb-2">Generated 3 different code implementations from the Figma design:</p>
+          {/* TODO: Display code implementation details */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+            {[1, 2, 3].map((num) => (
+              <div key={num} className="p-2 bg-green-50 border border-green-200 rounded">
+                <p className="font-medium text-green-800">Implementation {num}</p>
+                <p className="text-xs text-green-600">React + TypeScript</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  } else if (stepIndex === 7) {
+    content = (
+      <div>
+        <h4 className="font-semibold mb-2">Code Evaluation & Selection</h4>
+        <div className="text-sm text-gray-700">
+          <p className="mb-2">AI evaluated code implementations based on:</p>
+          <ul className="list-disc list-inside space-y-1 text-gray-600 mb-3">
+            <li>Code quality and maintainability</li>
+            <li>Performance and bundle size</li>
+            <li>Accessibility compliance</li>
+            <li>Component structure and reusability</li>
+          </ul>
+          {/* TODO: Display selected code implementation details */}
+          <div className="p-3 bg-orange-50 border border-orange-200 rounded-lg">
+            <p className="text-orange-800 font-medium">Selected: Highest scoring implementation</p>
+            <p className="text-orange-600 text-xs mt-1">Ready for download</p>
+          </div>
+        </div>
+      </div>
+    );
+  } else if (stepIndex === 8) {
+    content = (
+      <div>
+        <h4 className="font-semibold mb-2">Download Artifacts</h4>
+        <div className="text-sm text-gray-700">
+          <p className="mb-2">Complete package ready for download including:</p>
+          <ul className="list-disc list-inside space-y-1 text-gray-600 mb-3">
+            <li>Production Figma design file</li>
+            <li>Selected code implementation</li>
+            <li>Execution trace and metadata</li>
+            <li>Component documentation</li>
+          </ul>
+          <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+            <p className="text-blue-800 font-medium">📦 Artifacts packaged and ready</p>
+            <p className="text-blue-600 text-xs mt-1">ZIP file with complete deliverables</p>
+          </div>
+        </div>
       </div>
     );
   }

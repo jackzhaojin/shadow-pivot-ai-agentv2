@@ -13,9 +13,11 @@ export const agentSteps = [
   'Design Concept Generation',
   'Design Evaluation',
   'Spec Selection / Confirmation',
-  'Figma Spec Generation',
-  'Code Generation',
-  'Code Selection / Confirmation',
+  'Figma Spec Generation (3 Parallel)',
+  'Figma Spec Selection & Evaluation',
+  'Actual Figma Generation',
+  'Code Generation (3 Parallel)',
+  'Code Evaluation & Selection',
   'Download Artifacts'
 ];
 
