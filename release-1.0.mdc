@@ -1,25 +1,758 @@
-# TSLA AI UI Agent - Release 1.0 Plan (MVP)
+# TSLA AI UI Agent - Release 1.0 (MVP) Task Management
 
-This release delivers the smallest usable version of the agent. Refer to [prd-1.0.md](./prd-1.0.md) for detailed requirements.
+## Project Overview
 
-## Goals
-- Minimal design-to-Figma workflow running locally.
-- No code generation or cloud storage.
+**Reference the PRD, always at prd.md for general context and release 1.0 **
 
-## Tasks
+- **Project Name**: TSLA AI UI Agent
+- **Framework**: Next.js 15.1.8 with App Router
+- **Release**: 1.0 (MVP)
+- **Status**: ✅ Infrastructure complete, Feature development active
 
-### 1. Setup
-- [ ] Basic Next.js skeleton with App Router.
-- [ ] Dockerfile and GitHub Actions workflow.
+## Release 1.0 Goals
+- **Primary Goal**: Deploy functional AI agent pipeline with core features
+- **Target Users**: Developers and designers needing AI-powered UI generation
+- **Key Deliverables**: Working agent flow, Azure integration, artifact download
 
-### 2. Agent Pipeline
-- [ ] User enters creative brief.
-- [ ] Generate multiple design concepts.
-- [ ] Evaluate and choose best design.
-- [ ] Produce Figma spec for the chosen design.
-- [ ] Allow user to download Figma spec as a ZIP.
+---
 
-### 3. UI & State
-- [ ] Show progress states and allow abort.
-- [ ] Simple error display.
+## Phase 1: IMMEDIATE PRIORITY - Deployment Pipeline ✅ COMPLETED
+**Status**: ✅ COMPLETE | **Target**: Get baseline app running on Azure - **ACHIEVED**
 
+### 1.1 Docker Containerization ✅ COMPLETED
+**Priority**: CRITICAL - Must complete first
+
+- [x] Create Dockerfile based on reference example
+- [x] Create .dockerignore file
+- [x] Local Docker testing
+
+**✅ DOCKER CONTAINERIZATION COMPLETE** 
+- Image: `shadow-pivot-ai-agentv2:latest` (SHA: f1061ac3019b)
+- Build time: ~44 seconds
+- Startup time: ~521ms
+- Status: Ready for GitHub Actions deployment
+
+### 1.2 GitHub Actions Workflow ✅ COMPLETED
+**Priority**: CRITICAL - Second step
+
+- [x] Create GitHub Actions workflow
+
+**✅ GITHUB ACTIONS WORKFLOW COMPLETE**
+- File: `.github/workflows/main_shadow-pivot-ai-agentv2.yml`
+- Features: Docker layer caching, GHCR push, Azure restart
+- Image target: `ghcr.io/[owner]/shadow-pivot-ai-agentv2:latest`
+- Azure OIDC: Configured and working
+- Status: ✅ FULLY COMPLETE - Automated deployment pipeline operational
+
+- [x] Configure Azure deployment
+
+### 1.3 Azure Infrastructure (Manual Setup) ✅ COMPLETED
+**Priority**: HIGH - Parallel with GitHub Actions
+
+#### 1.3a Azure Storage Account Setup ✅ COMPLETED
+- [x] Azure Storage Account setup
+
+✅ **AZURE STORAGE ACCOUNT COMPLETE** 
+- Storage Account Name: `shadowpivotaiagentstrg`
+- Region: East US
+- Container: `executions` (private access)
+- CLI Testing: ✅ Upload/download operations verified with az login
+- Authentication: Storage Blob Data Contributor role assigned
+- Status: Ready for application integration
+
+#### 1.3b Azure AI Foundry Setup ✅ COMPLETED
+- [x] Azure AI Foundry setup
+
+✅ **AZURE AI FOUNDRY COMPLETE** 
+- AI Foundry workspace configured with OpenAI integration
+- Model: GPT-4o-mini deployed (cost-effective option)
+- Authentication: Managed identity-based (no API keys stored)
+- Access: Configured via IAM roles and DefaultAzureCredential
+- Status: Ready for application integration via managed services
+- AI Testing: ✅ Chat completion API verified with managed identity auth
+
+#### 1.3c Managed Identity Configuration ✅ COMPLETED
+- [x] Managed Identity configuration
+
+✅ **MANAGED IDENTITY COMPLETE** 
+- User-assigned managed identity created and configured
+- Storage Account permissions: Storage Blob Data Contributor role assigned
+- AI Foundry permissions: Cognitive Services User role assigned
+- DefaultAzureCredential: Configured for seamless authentication
+- Status: Ready for production deployment
+
+#### 1.3d Azure App Service Setup ✅ COMPLETED
+- [x] Azure App Service setup
+
+✅ **AZURE APP SERVICE COMPLETE** 
+- App Service: `shadow-pivot-ai-agentv2` created with container support
+- Container deployment: Configured for GitHub Container Registry
+- Managed identity: Attached and configured for Azure service access
+- Environment variables: Configured for Storage Account and AI Foundry
+- Custom domain: Not needed for MVP deployment
+- Status: Ready for automated deployments via GitHub Actions
+
+#### 1.3e GitHub Integration ✅ COMPLETED
+- [x] GitHub integration
+
+✅ **GITHUB INTEGRATION COMPLETE** 
+- OIDC authentication configured and working
+- Automated deployment pipeline operational
+- Web App auto-restarts on GitHub image updates
+- Status: Fully functional automated deployment
+
+### 1.4 Azure Integration Testing ✅ COMPLETED
+**Priority**: HIGH - Validation step before deployment
+
+#### 1.4a Basic Azure Connection Tests ✅ COMPLETED
+- [x] Basic Azure connection tests ✅ COMPLETED
+
+✅ **BASIC AZURE CONNECTION TESTS COMPLETE** 
+- API Route `/api/test-storage`: ✅ Working - Storage operations successful
+- API Route `/api/test-ai`: ✅ Working - AI Foundry chat completion successful
+- DefaultAzureCredential: ✅ Working - `az login` authentication verified
+- Environment Variables: ✅ Configured in `.env.local` for development
+- Blob Storage Operations: ✅ Tested - Upload, download, delete all working
+- Test Page: Available at `/test-azure` for interactive testing
+- Testing Script: `test-azure-connections.sh` for automated verification
+- Documentation: README.md updated with comprehensive setup guide
+- Status: All Azure services accessible and functional locally
+- **Commit**: 9d043c7 - Azure integration testing infrastructure complete
+
+#### 1.4b Next.js SSR Azure Integration ✅ COMPLETED
+- [x] Add Azure SDK dependencies to package.json
+- [x] Create lib/azureClient.ts for storage operations
+- [x] Create lib/aiClient.ts for AI Foundry operations
+- [x] Test server-side Azure calls in page.tsx
+- [x] Verify no client-side Azure SDK usage
+
+✅ **NEXT.JS SSR AZURE INTEGRATION COMPLETE** 
+- Azure SDK Dependencies: ✅ Added (@azure/identity, @azure/storage-blob, @azure/openai)
+- Consolidated Azure Client: ✅ Created lib/azureClient.ts with unified API
+- Storage Client: ✅ Enhanced lib/storageClient.ts with utility functions
+- AI Client: ✅ Enhanced lib/aiClient.ts with utility functions
+- Server-Side Integration: ✅ Main page.tsx demonstrates SSR Azure calls
+- Client-Side Demo: ✅ ClientSideDemo component shows proper API route usage
+- API Route Testing: ✅ Both storage and AI routes working (HTTP 200)
+- No Client-Side SDK: ✅ Verified Azure SDKs only used server-side
+- Development Server: ✅ Running on port 3002 with working Azure integration
+- Status: Ready for deployment testing
+- **Commit**: Ready for commit - SSR Azure integration complete
+
+#### 1.4c End-to-End Deployment Testing ✅ COMPLETED
+- [x] End-to-end deployment testing
+
+✅ **END-TO-END DEPLOYMENT TESTING COMPLETE** 
+- GitHub Actions: ✅ Build and push workflow completed successfully
+- Container Deployment: ✅ Azure pulls latest image from ghcr.io/jackzhaojin/shadow-pivot-ai-agentv2:latest
+- App Accessibility: ✅ Public URL responding with HTTP 200
+- Azure Storage: ✅ Blob operations working (create, read, delete test blobs)
+- Azure AI Foundry: ✅ GPT-4o-mini chat completions working with managed identity
+- Next.js Functionality: ✅ SSR and API routes working correctly
+- Managed Identity: ✅ DefaultAzureCredential working in production environment
+- Public URL: https://shadow-pivot-ai-agentv2-fpfzhqgyeqdpdwce.eastus2-01.azurewebsites.net
+- Status: 🎉 **FULL DEPLOYMENT PIPELINE OPERATIONAL**
+
+---
+
+## Phase 2: SECONDARY - Foundation Setup ✅ COMPLETED
+**Status**: ✅ COMPLETE | **Target**: Prepare for feature development
+
+### 2.1 Service Principal Setup (Online Compiler) ✅ COMPLETED
+- [x] Create service principal with `az ad sp create-for-rbac`
+- [x] Add `AZURE_CLIENT_ID` and `AZURE_TENANT_ID` variables to Codex
+- [x] **Configure `AZURE_CLIENT_SECRET` in Codex**
+
+### 2.2 Project Structure Enhancement ✅ COMPLETED
+- [x] Implement folder structure from PRD
+- [x] Set up TypeScript configurations
+- [x] Add essential dependencies for future features
+- [x] Create placeholder components and layouts
+
+### 2.3 Azure Services Preparation ✅ COMPLETED
+- [x] Document Azure Storage Account setup
+  - ✅ Verified blob container configuration and access policies
+- [x] Prepare Azure AI Foundry configuration
+  - ✅ AI Foundry workspace and endpoints fully operational
+- [x] Plan Managed Identity integration
+  - ✅ Verified seamless authentication with DefaultAzureCredential
+- [x] Create infrastructure.md guide
+
+**✅ AZURE SERVICES PREPARATION COMPLETE**
+- All Azure services are fully configured and integrated.
+- Documentation is up-to-date and verified.
+- Status: Ready for feature development and production use.
+
+---
+
+## Phase 3: Release 1.0 MVP - AI Agent Core Functionality
+**Status**: ACTIVE | **Target**: Implement core AI agent pipeline and UI for MVP
+
+### 3.1 Agent Pipeline UI & Foundation (MVP) ✅ COMPLETED
+**Complexity**: Medium | **Effort**: High
+
+- **3.1.1 Basic Agent Flow UI (Sequential)** ✅ COMPLETED
+
+- **3.1.2 User Identity Management (Client-Side GUID)** ✅ COMPLETED
+
+- **3.1.3 Execution Tracking & Display (Client-Side MVP)** ✅ COMPLETED
+
+- **3.1.4 Download Artifacts (Initial Setup)** ✅ COMPLETED
+
+### 3.2 AI Integration & Core Logic (MVP)
+**Complexity**: High | **Effort**: Very High
+
+- **3.2.1 Azure AI Foundry Service Connection** ✅ COMPLETED
+
+- **3.2.2 Step 1: Design Concept Generation (LLM)** ✅ COMPLETED
+
+- **3.2.3 Step 2: Design Evaluation (LLM)** ✅ COMPLETED
+
+- **3.2.4 Step 3: Spec Selection UI and Logic**
+
+- **3.2.4b Agent Flow UX Improvements (Critical Fix)** ✅ COMPLETED
+  **Story**: As a user interacting with the AI agent, I can experience a fully automated flow with proper visual feedback, error handling, and the ability to start new flows at any time, so that I have a professional and intuitive AI agent experience as described in the PRD.
+
+  - [x] **Define integration/functional tests for agent flow UX** (e.g., test initial state, auto-progression, loading states)
+  - [x] **Creative Brief Input**: Ensure users can always enter a prompt to start a new flow
+  - [x] **Fix initial state**: Don't show "currently processing" until user actually starts the flow
+  - [x] **Remove manual "Continue" buttons**: Implement automatic progression through all steps
+  - [x] Add proper loading states showing what the AI is actively doing
+  - [x] Implement seamless flow from design concepts → evaluation → selection without user intervention
+  - [x] Update progress indicators to reflect actual processing state (not premature states)
+  - [x] Ensure design concepts display is clear and well-formatted for user understanding
+  - [x] Restore creative brief input so users can start the flow with a prompt
+  - [x] Fix concept list formatting and auto-advance to step 2
+  - [x] **Fix multiple design concept generation**: ✅ FIXED - Updated prompt in `lib/designConcept.ts` to explicitly request "three to five short design concepts"
+  - [x] **Visual state management**: ✅ COMPLETED - Comprehensive progress indicators implemented
+    - Waiting state (gray) before processing begins ✅
+    - Active processing state (blue/animated) during AI computation ✅ 
+    - Completed state (green) for successful steps ✅
+    - Error state (red) for failed steps ✅
+  - [x] **Error handling**: ✅ COMPLETED
+    - Display error details below the flow timeline in dedicated error section ✅
+    - Make failed step blocks turn red within the theme ✅
+    - Show clear, actionable error messages ✅
+    - Stop flow on errors but preserve access to successful steps ✅
+  - [x] **Abort control**: Maintain prominent abort button functionality ✅
+  - [x] **Validate by running the defined tests and confirming all pass** ✅
+
+
+
+### 3.3 AI Logic Refactoring and Prompt Engineering (Critical Bug Fixes)
+**Complexity**: High | **Effort**: High
+**Story**: As a developer maintaining the AI agent pipeline, I need the prompting logic to be modular, maintainable, and reliable so that AI responses are consistent, multi-concept generation works properly, and evaluation scoring functions correctly across all pipeline steps.
+
+#### 3.3.1 Agent Flow Component Refactoring (Architecture) ✅ COMPLETED
+**Complexity**: High | **Effort**: High
+**Story**: As a developer maintaining the AI agent codebase, I need the agent flow component to be properly modularized according to PRD architecture so that the codebase remains maintainable as we add more complex features and parallel processing capabilities.
+
+- [x] **Define integration/functional tests for refactored components** (e.g., test component separation, state management, prop passing)
+- [x] **Component separation**: Break down large agent flow component into focused sub-components
+  - `AgentFlowTimeline` - Progress visualization and step management
+  - `StepExecutor` - Individual step execution logic and state
+  - `ResultsDisplay` - Step output formatting and display
+  - `ErrorHandler` - Error state management and user feedback
+  - `ProgressIndicator` - Real-time progress and loading states
+- [x] **State management refactoring**: Implement proper state separation between components
+- [x] **Props and interface design**: Define clear component interfaces and data flow
+- [x] **Context providers**: Set up proper context for agent flow state sharing
+- [x] **Testing infrastructure**: Ensure all refactored components maintain test coverage
+- [x] **Performance optimization**: Implement proper memoization and re-render optimization
+- [x] **Validate by running the defined tests and confirming all pass**
+
+#### 3.3.2 Prompt Engineering System and Template Architecture ✅ COMPLETED
+**Complexity**: Medium | **Effort**: High
+**Story**: As a developer working with AI prompts, I need a centralized, maintainable prompt management system with versioning and templates so that prompts can be easily edited, tested, and optimized without touching business logic code.
+
+- [x] **Define integration/functional tests for prompt system** (e.g., test template loading, variable substitution, prompt validation)
+- [x] **Research best practices**: Investigate industry-standard prompt engineering patterns
+  - ✅ Study OpenAI best practices for prompt engineering and structure
+  - ✅ Research prompt template systems (LangChain, Prompt Templates, etc.)
+  - ✅ Analyze structured prompting techniques (Few-shot, Chain-of-thought, etc.)
+  - ✅ Review JSON schema enforcement patterns for reliable LLM outputs
+- [x] **Create prompt template architecture**: Design maintainable prompt system
+  - ✅ Create `prompts/` folder structure for organized prompt management
+  - ✅ Implement template system with variable substitution using Handlebars
+  - ✅ Add prompt versioning and fallback mechanisms
+  - ✅ Create prompt validation and testing framework using Zod
+- [x] **Structured prompt templates**: Create templates for each agent step
+  - ✅ `prompts/design-concepts/` - Design concept generation templates
+  - ✅ `prompts/design-evaluation/` - Design evaluation and scoring templates (prepared structure)
+  - ✅ `prompts/spec-selection/` - Specification selection logic templates (prepared structure)
+  - ✅ `prompts/figma-generation/` - Future Figma spec generation templates (prepared structure)
+  - ✅ `prompts/code-generation/` - Future code generation templates (prepared structure)
+- [x] **Prompt utility functions**: Create helper functions for prompt management
+  - ✅ Template loading and caching
+  - ✅ Variable substitution and validation
+  - ✅ Response format enforcement (JSON schema validation)
+  - ✅ Retry logic with prompt variations
+- [x] **Validate by running the defined tests and confirming all pass**
+
+**✅ PROMPT ENGINEERING SYSTEM COMPLETE** 
+- Implementation: Created structured prompt system with JSON templates
+- Tools: Integrated with Zod for schema validation and Handlebars for templating
+- Testing: Enhanced tests verify multi-concept generation works properly
+- Architecture: Templates separated by function with versioning support
+- Integration: Updated design concept generation to use the new system
+- Result: System now reliably generates multiple design concepts (3-5)
+
+#### 3.3.3 Code Architecture Refactoring (DAO & Service Layer) ✅ COMPLETED
+**Complexity**: Medium | **Effort**: Medium
+**Story**: As a developer maintaining the application codebase, I need clear separation between data access logic and business logic so that the code is more maintainable, testable, and easier to extend in future releases.
+
+- [x] **Define architecture plan**: Design directory structure for separation of concerns
+  - ✅ `lib/daos/` - Data Access Objects for external service interfaces
+  - ✅ `lib/services/` - Business logic components
+  - ✅ `lib/utils/` - Shared utility functions
+- [x] **Create directory structure**: Set up folders and index files
+  - ✅ Create directories with proper index.ts files
+  - ✅ Document the purpose of each layer in comments
+- [x] **Migrate DAO files**: Move data access code to the DAO layer
+  - ✅ Move `aiClient.ts` to `lib/daos/` (Azure AI integration)
+  - ✅ Move `azureClient.ts` to `lib/daos/` (Azure core services)
+  - ✅ Move `storageClient.ts` to `lib/daos/` (Blob storage)
+  - ✅ Move `cosmosClient.ts` to `lib/daos/` (CosmosDB)
+- [x] **Migrate service files**: Move business logic to the services layer
+  - ✅ Move `designConcept.ts` to `lib/services/` (Concept generation)
+  - ✅ Move `designEvaluation.ts` to `lib/services/` (Evaluation logic)
+  - ✅ Move `specSelection.ts` to `lib/services/` (Selection logic)
+- [x] **Migrate utility files**: Move shared utilities to utils layer
+  - ✅ Move `promptUtils.ts` to `lib/utils/` (Prompt management)
+  - ✅ Move `graphUtils.ts` to `lib/utils/` (Chart utilities)
+- [x] **Update imports**: Fix all import paths throughout the codebase
+  - ✅ Update imports in code files
+  - ✅ Update imports in documentation
+- [x] **Documentation updates**: Document the new architecture
+  - ✅ Update PRD with architecture diagram
+  - ✅ Update README with directory structure
+  - ✅ Update release documentation
+- [x] **Validate refactoring**: Ensure no functionality is broken
+  - ✅ Fix any errors from path changes
+  - ✅ Test key functionality after refactoring
+
+#### 3.3.4 Fix Multi-Concept Generation Bug (Critical Fix) ✅ COMPLETED
+**Complexity**: Medium | **Effort**: Medium
+**Story**: As a user expecting multiple design concepts from the AI agent, I need the design concept generation to reliably produce 3-5 distinct concepts instead of a single-element array so that I have meaningful options to evaluate and the agent pipeline works as intended.
+
+- [x] **Define integration/functional tests for multi-concept generation** (e.g., test array length, concept diversity, prompt reliability)
+- [x] **Debug current design concept generation**: Investigate why only 1 concept is returned despite prompt requesting multiple
+  - ✅ Analyzed current `lib/designConcept.ts` implementation
+  - ✅ Tested current prompt with various inputs to identify failure patterns
+  - ✅ Examined LLM response parsing and array handling logic
+- [x] **Prompt engineering refinement**: Improve LLM prompts to ensure consistent multi-concept output
+  - ✅ Implemented structured prompting with explicit JSON schema requirements
+  - ✅ Added few-shot examples showing expected multi-concept format
+  - ✅ Used clear instructions to guide concept generation process
+  - ✅ Implemented response format validation with schema validation
+- [x] **Response parsing robustness**: Enhance parsing logic to handle various LLM response formats
+  - ✅ Added JSON schema validation for concept arrays
+  - ✅ Implemented fallback parsing for edge cases including Markdown code blocks
+  - ✅ Added validation to ensure minimum concept count (3-5 concepts)
+  - ✅ Created alternative parsing strategies if initial attempt fails
+- [x] **Integration with evaluation step**: Ensure generated concepts work properly with the evaluation pipeline
+- [x] **End-to-end testing**: Verify the full concept generation → evaluation → selection pipeline
+- [x] **Validate by running the defined tests and confirming all pass**
+
+**✅ MULTI-CONCEPT GENERATION BUG FIX COMPLETE** 
+- Implementation: Completely rewrote design concept generation using structured prompt templates
+- Tools: Integrated with JSON schema validation and proper parsing of different response formats
+- Testing: Created comprehensive integration tests that verify multiple concepts generation
+- Architecture: Implemented as part of the prompt engineering system with version control
+- Results: System now reliably generates 3-5 diverse design concepts for any input brief
+
+#### 3.3.5 Fix Design Evaluation Scoring Logic (Critical Fix) ✅ COMPLETED
+**Complexity**: Medium | **Effort**: Medium  
+**Story**: As a user viewing design evaluation results, I need the evaluation scoring to return meaningful non-zero weights and scores when multiple concepts are provided so that I can understand the relative merits of each design concept and see proper selection logic.
+
+- [x] **Define integration/functional tests for evaluation scoring** (e.g., test weight calculation, score distribution, edge cases)
+- [x] **Debug current evaluation scoring**: Investigate why weights are zero when concepts > 1
+  - ✅ Analyzed current `lib/designEvaluation.ts` implementation
+  - ✅ Tested scoring logic with 3+ concepts to identify failure points
+  - ✅ Examined weight calculation and normalization logic
+- [x] **Fix scoring algorithm**: Implement robust evaluation logic
+  - ✅ Ensured proper weight distribution across multiple concepts
+  - ✅ Implemented meaningful scoring criteria (usability, aesthetics, innovation, feasibility)
+  - ✅ Added validation to prevent zero-weight results
+  - ✅ Created balanced scoring that properly differentiates between concepts
+- [x] **Prompt engineering for evaluation**: Improve evaluation prompt structure
+  - ✅ Used structured prompting with explicit scoring criteria
+  - ✅ Added clear instructions for proper evaluation
+  - ✅ Implemented scoring rubrics and guidelines in prompts
+  - ✅ Ensured consistent scoring format with JSON schema
+- [x] **Score normalization and validation**: Implement proper score processing
+  - ✅ Added fallback mechanisms to ensure non-zero scores
+  - ✅ Implemented rigorous validation for parsed responses
+  - ✅ Created multiple fallback strategies for edge cases
+  - ✅ Ensured meaningful scoring with alternative parsing approaches
+- [x] **Integration testing**: Verify evaluation works with concept generation
+- [x] **Validate by running the defined tests and confirming all pass**
+
+**✅ DESIGN EVALUATION SCORING LOGIC FIX COMPLETE**
+- Implementation: Rewrote design evaluation using comprehensive scoring system
+- Tools: Enhanced response parsing with multiple fallback mechanisms
+- Testing: Created detailed tests verifying non-zero scores for all concepts
+- Architecture: Integrated with prompt template system for maintainability
+- Results: System now provides meaningful scores, rankings, and reasoning for all concepts
+
+#### 3.3.6 Figma Spec Validation Error Handling (Critical Fix) ✅ COMPLETED
+**Complexity**: Medium | **Effort**: Medium
+**Story**: As a user running the AI agent pipeline, I need the system to gracefully handle invalid figma specs by filtering them out and continuing with valid ones, instead of stopping the entire flow when one spec has validation errors.
+
+**Problem**: When one of the 3 parallel figma spec generators produced an invalid spec (missing name field), the evaluation API returned a 400 error and stopped the entire flow instead of filtering out the invalid spec and continuing with the 2 valid ones.
+
+- [x] **Identify validation failure point**: Located strict validation in `/api/agent/evaluate-figma-specs`
+  - ✅ Found API was rejecting entire request if any single spec was invalid
+  - ✅ Traced error: "Invalid spec at index 2: missing or invalid name field"
+  - ✅ Confirmed frontend had fallback logic but API was preventing it from triggering
+- [x] **Implement graceful validation**: Change API to filter invalid specs and continue with valid ones
+  - ✅ Replaced strict validation with filtering approach in `app/api/agent/evaluate-figma-specs/route.ts`
+  - ✅ Added logic to separate valid and invalid specs
+  - ✅ Continue processing if at least 1 valid spec exists
+  - ✅ Return warning information about filtered specs in response
+- [x] **Enhance frontend handling**: Improve StepExecutor to log filtering warnings
+  - ✅ Updated `features/ai/components/flow/StepExecutor.tsx` to handle filtering warnings
+  - ✅ Added logging for filtered spec details
+  - ✅ Enhanced error messages to show original vs processed spec counts
+- [x] **Improve validation robustness**: Strengthen prompt template validation
+  - ✅ Enhanced `lib/utils/promptUtils.ts` to properly validate required fields
+  - ✅ Added support for checking `required` array in JSON schema
+  - ✅ Added validation for empty string fields and nested property types
+- [x] **Create comprehensive test**: Verify filtering behavior with mixed valid/invalid specs
+  - ✅ Created `tests/endpoints/test-figma-evaluation-invalid-specs.js`
+  - ✅ Test sends 5 specs: 2 valid, 3 invalid (missing name, null name, empty name)
+  - ✅ Verifies API returns 200 status with 2 evaluation results
+  - ✅ Confirms warning message about filtered specs is included
+  - ✅ Validates detailed invalid spec information is provided
+
+**✅ FIGMA SPEC VALIDATION ERROR HANDLING FIX COMPLETE**
+- API Changes: Modified evaluation endpoint to filter invalid specs instead of rejecting requests
+- Frontend Updates: Enhanced error handling and logging for filtered specs
+- Validation Improvements: Strengthened prompt template validation with required field checking
+- Test Coverage: Added comprehensive test for mixed valid/invalid spec scenarios
+- Results: System now gracefully continues with 2 valid specs when 1 fails, as expected
+
+#### 3.3.7 Test Suite Refactoring ✅ COMPLETED
+**Complexity**: Medium | **Effort**: Medium
+**Story**: As a developer, I need the tests organized by layer with simple runners so I can execute them quickly and reliably.
+
+ - [x] Categorized tests into baseline, dao, services, endpoints, ui, and e2e folders
+- [x] Created runner scripts for each category and a master `test:all` script
+- [x] Updated baseline scripts and documentation
+- [x] Validated by running `npm run lint` and `npm run build`
+- [x] Split service tests into `services` and `endpoints` groups
+
+### 3.4 Interactive Step Results Review ✅ COMPLETED
+**Complexity**: Medium | **Effort**: Medium
+**Story**: As a user watching the automated AI agent flow, I can click on any completed step in the timeline to view the detailed input/output from that step so that I can review what the AI generated at each stage without interrupting the automatic progression.
+
+- [x] **Define integration/functional tests for step results review** (e.g., test clickable steps, result display, state management)
+- [x] **Make completed steps clickable**: Implement interactive timeline steps
+- [x] **Step-specific result views**: Display detailed input/output for each step
+  - Step 1 (Design Concepts): Show input brief + generated concept list with descriptions
+  - Step 2 (Design Evaluation): Show input concepts + scoring breakdown and reasoning
+  - Step 3 (Spec Selection): Show evaluation results + selected concept with justification
+  - Future steps: Figma specs, code generation results, quality scores, etc.
+- [x] **Visual indicators**: Show which steps have reviewable content available
+- [x] **Non-disruptive UI**: Implement collapsible/expandable result panels
+- [x] **Persistent access**: Ensure results remain accessible even after agent moves to subsequent steps
+- [x] **Smooth UX**: Add animations and transitions for better user experience
+- [x] **Added Validation Panel**: Added ability for users to validate or invalidate each step with feedback
+
+✅ **INTERACTIVE STEP RESULTS REVIEW COMPLETE** 
+- Created new ValidationPanel component for users to validate or invalidate each step
+- Extended AgentFlowProvider with validation state management
+- Added validation UI indicators in the timeline
+- Implemented detailed result views for each step
+- Comprehensive test coverage for validation features
+- Added visual indicators for validated/invalidated steps
+- Added modal dialog for validation interaction
+- Implemented View/Hide Details toggle functionality for step results
+- [x] **AI transparency**: Show AI reasoning, decision criteria, and selection logic for each step
+- [x] **Validate by running the defined tests and confirming all pass**
+
+### 3.5 Step 4: Parallel Figma Spec Generation Infrastructure ✅ COMPLETED
+**Complexity**: Medium | **Effort**: High
+**Story**: As a user waiting for design specifications, I can see 3 parallel Figma spec generation processes with real-time progress indicators so that I understand the system is actively working and can see the parallel processing capability.
+
+- [x] **Review previous parallel processing patterns**: Study existing agent flow state management and component architecture for parallel operations
+- [x] Implement 3-box concurrent processing display for Figma spec generation
+- [x] Show real-time progress for each generation process
+- [x] Handle completion and error states for each parallel process
+- [x] Implement client-side state management for parallel processes
+
+### 3.6 Step 5: Figma Spec Generation and Validation ✅ COMPLETED
+**Complexity**: High | **Effort**: Very High
+**Story**: As a designer needing implementation specs, I can receive AI-generated Figma specifications that are tested for usability and design quality so that I have validated, implementable design specifications for my UI features.
+
+- [x] **Review previous AI integration patterns**: Study existing aiClient.ts and prompt engineering systems for generating structured outputs
+- [x] API route: `/api/agent/generate-figma-specs` (parallel generation)
+  - Input: Selected design concept, User GUID
+  - Generate 3 different Figma specs in parallel
+- [x] Backend: Use `aiClient.ts` to call LLM for parallel spec generation
+- [x] Validate each spec for design quality and technical feasibility
+- [x] Store specifications in structured format for selection
+- [x] Display generated specs in the 3-box UI
+
+✅ **FIGMA SPEC GENERATION AND VALIDATION COMPLETE**
+- Implementation: Real parallel processing with 3 concurrent Figma spec generations
+- Architecture: Comprehensive error handling with fallback mechanisms
+- UI Integration: 3-box display with real-time progress indicators
+- Quality Validation: Multiple JSON parsing strategies and response validation
+- State Management: Provider-level state with TypeScript types
+- Documentation: Complete technical analysis in step-3.5-implementation-analysis.md
+
+### 3.7 Enhanced Timeline with Expanded Steps ✅ COMPLETED
+**Complexity**: Medium | **Effort**: Medium
+**Story**: As a user interacting with the AI agent timeline, I want to see detailed progress through all agent steps including Figma spec generation, selection, actual Figma creation, code generation, evaluation, and download so that I have complete visibility into the AI agent's process.
+
+- [x] **Define integration/functional tests for expanded timeline** (e.g., test new step rendering, progress indicators)
+- [x] **Update step definitions**: Expand from 7 to 9 steps with proper naming
+  - Step 0: Design Concept Generation
+  - Step 1: Design Evaluation  
+  - Step 2: Spec Selection / Confirmation
+  - Step 3: Figma Spec Generation (3 Parallel)
+  - Step 4: Figma Spec Selection & Evaluation
+  - Step 5: Actual Figma Generation
+  - Step 6: Code Generation (3 Parallel)
+  - Step 7: Code Evaluation & Selection
+  - Step 8: Download Artifacts
+- [x] **Update StepExecutor**: Add useEffect handlers for new steps 4-8
+- [x] **Update StepResultPanel**: Add display logic for new step results
+- [x] **Update AgentFlowTimeline**: Ensure all steps render properly with visual indicators
+- [x] **Create API routes**: Add placeholder routes for new step functionality
+  - `/api/agent/select-figma-spec` - Step 4 functionality
+  - `/api/agent/generate-actual-figma` - Step 5 functionality  
+  - `/api/agent/generate-code` - Step 6 functionality
+  - `/api/agent/select-code` - Step 7 functionality
+- [x] **UI rendering**: Add step-specific UI components for visual feedback
+- [x] **Validate by running the defined tests and confirming all pass**
+
+**✅ ENHANCED TIMELINE COMPLETE**
+- Timeline now includes all 9 steps with proper visual indicators
+- Step executor handles automatic progression through new steps
+- API routes created for all new functionality (with mock implementations)
+- Step result panel displays appropriate content for each step
+- UI provides clear visual feedback for parallel processing steps
+- Status: Ready for frontend testing and API implementation
+
+### 3.8 Step 6: Figma Spec Evaluation and Quality Assurance ✅ COMPLETED
+**Complexity**: High | **Effort**: High
+**Story**: As a developer receiving design specifications, I can trust that Figma specs have been automatically evaluated for design clarity, component structure, and technical feasibility so that I can proceed with implementation knowing the specs are of high quality.
+
+**📚 Pre-Read Requirements:**
+- [Step 3.5 Implementation Analysis](./docs/technical/blueprint/step-3.5-implementation-analysis.md) - Study parallel processing patterns, error handling, and architectural decisions
+- [Core Capabilities Blueprint](./docs/technical/blueprint/core-capabilities.md) - Review agent step timeline architecture and development guidelines
+
+- [x] **Review previous evaluation patterns**: Study existing design evaluation scoring logic and quality assessment approaches
+- [x] Implement automated evaluation for design clarity and visual hierarchy
+- [x] Validate component structure and reusability
+- [x] Check technical feasibility for code generation
+- [x] Generate quality scores for each spec
+- [x] Display quality metrics in the UI
+
+✅ **FIGMA SPEC EVALUATION AND QUALITY ASSURANCE COMPLETE**
+- **Service Implementation**: Enhanced `figmaSpecEvaluation.ts` with comprehensive evaluation logic
+- **API Endpoint**: `/api/agent/evaluate-figma-specs` fully functional with parallel processing
+- **Prompt Templates**: Structured evaluation templates in `prompts/figma-spec-evaluation/v1.json`
+- **UI Integration**: Updated StepResultPanel to display quality assessment results using FigmaEvaluationResults component
+- **Error Handling**: Robust fallback mechanisms for AI response parsing failures
+- **Step Execution**: StepExecutor automatically triggers evaluation after Step 3 completion
+- **Provider State**: AgentFlowProvider properly manages figmaEvaluationResults state
+- **Visual Feedback**: Quality scores, issues, strengths, and recommendations displayed in timeline
+- **Testing**: API endpoint tested with live Azure OpenAI integration, proper error handling verified
+
+### 3.9 Step 7: Best Figma Spec Selection ✅ COMPLETED
+**Complexity**: Medium | **Effort**: Medium
+**Story**: As a user in the design pipeline, I can see the agent automatically select the most usable Figma spec based on effort vs. clarity tradeoffs so that the system proceeds with the optimal design specification without manual intervention.
+
+**📚 Pre-Read Requirements:**
+- [Step 3.5 Implementation Analysis](./docs/technical/blueprint/step-3.5-implementation-analysis.md) - Study parallel processing patterns, error handling, and architectural decisions
+- [Core Capabilities Blueprint](./docs/technical/blueprint/core-capabilities.md) - Review agent step timeline architecture and development guidelines
+
+- [x] **Review previous selection patterns**: Study existing spec selection logic and scoring algorithms from design evaluation step
+- [x] Implement scoring algorithm for spec selection
+- [x] Display selection reasoning and scores
+- [x] Automatically proceed with best spec
+- [x] Store selected spec in client-side state
+- [x] **Fix currentStep synchronization issue**: Added fallback trigger logic to ensure Step 5 executes even when currentStep tracking has synchronization issues
+
+✅ **BEST FIGMA SPEC SELECTION COMPLETE**
+- **Service Implementation**: Enhanced `figmaSpecSelection.ts` with comprehensive composite scoring algorithm (clarity 35%, feasibility 35%, structure 20%, accessibility 10%)
+- **API Endpoint**: `/api/agent/select-figma-spec` fully functional with proper error handling and validation
+- **Simple Logic**: Non-AI selection using deterministic scoring with issue penalties (critical: -3.0, high: -1.5, medium: -0.5, low: -0.1)
+- **State Management**: Added `selectedFigmaSpec` and `figmaSelectionReasoning` to AgentFlowProvider
+- **StepExecutor Integration**: Step 5 properly calls API with figmaSpecs and figmaEvaluationResults, stores results in state
+- **UI Display**: StepResultPanel shows selected spec, reasoning, and selection criteria for transparency
+- **State Transition**: Automatically transitions to Step 6 "Actual Figma Generation" after selection
+- **Error Handling**: Comprehensive fallback mechanisms including fallback selection when evaluation results missing
+- **Bug Fix**: Resolved currentStep synchronization issue with fallback trigger logic that ensures Step 5 executes when conditions are met regardless of currentStep value
+- **Testing**: Created comprehensive test suite for API endpoint validation with real evaluation data
+
+### 3.10 Step 8: Parallel Code Generation Infrastructure
+**Complexity**: Medium | **Effort**: High
+**Story**: As a user waiting for code implementation, I can see 3 parallel code generation processes with real-time progress indicators so that I understand the system is actively generating multiple implementation options.
+
+**📚 Pre-Read Requirements:**
+- [Step 3.5 Implementation Analysis](./docs/technical/blueprint/step-3.5-implementation-analysis.md) - Study parallel processing patterns, error handling, and architectural decisions
+- [Core Capabilities Blueprint](./docs/technical/blueprint/core-capabilities.md) - Review agent step timeline architecture and development guidelines
+
+- [ ] **Review previous parallel UI patterns**: Study existing 3-box display patterns and state management from Figma spec generation
+- [ ] Implement 3-box concurrent processing display for code generation
+- [ ] Show real-time progress for each generation process
+- [ ] Handle completion and error states for each parallel process
+- [ ] Implement client-side state management for code generation
+
+### 3.11 Step 9: Full Feature Code Generation
+**Complexity**: Very High | **Effort**: Very High
+**Story**: As a developer needing a complete UI feature, I can receive AI-generated Next.js + TypeScript implementations with React components and Tailwind styling so that I have fully functional, self-contained feature code ready for integration.
+
+**📚 Pre-Read Requirements:**
+- [Step 3.5 Implementation Analysis](./docs/technical/blueprint/step-3.5-implementation-analysis.md) - Study parallel processing patterns, error handling, and architectural decisions
+- [Core Capabilities Blueprint](./docs/technical/blueprint/core-capabilities.md) - Review agent step timeline architecture and development guidelines
+
+- [ ] **Review previous code generation patterns**: Study existing prompt templates and AI integration patterns for structured code output
+- [ ] API route: `/api/agent/generate-code` (parallel generation)
+  - Input: Selected Figma spec (JSON), User GUID
+  - Generate 3 different implementation approaches
+- [ ] Backend: Use `aiClient.ts` to call LLM for parallel code generation
+- [ ] Generate complete Next.js + TypeScript features
+- [ ] Include React components with Tailwind CSS
+- [ ] Create self-contained feature folders with minimal routing logic
+- [ ] Display generated code in the 3-box UI
+
+### 3.12 Step 10: Automated Code Testing and Quality Validation
+**Complexity**: Very High | **Effort**: Very High
+**Story**: As a developer receiving generated code, I can trust that all code implementations have been automatically tested for functionality, quality, accessibility, and structure so that I receive production-ready code that meets quality standards.
+
+**📚 Pre-Read Requirements:**
+- [Step 3.5 Implementation Analysis](./docs/technical/blueprint/step-3.5-implementation-analysis.md) - Study parallel processing patterns, error handling, and architectural decisions
+- [Core Capabilities Blueprint](./docs/technical/blueprint/core-capabilities.md) - Review agent step timeline architecture and development guidelines
+
+- [ ] **Review previous quality validation patterns**: Study existing evaluation scoring systems and quality assessment approaches
+- [ ] Test functionality: components render and handle interactions correctly
+- [ ] Validate code quality: clean, maintainable TypeScript/React code
+- [ ] Check accessibility: WCAG compliance and semantic HTML
+- [ ] Verify performance: optimized rendering and bundle size
+- [ ] Validate structure: proper component organization
+- [ ] Generate quality scores for each implementation
+
+### 3.13 Step 11: Aggregate Scoring and Best Code Selection
+**Complexity**: High | **Effort**: Medium
+**Story**: As a user in the code generation pipeline, I can see the agent automatically select the best code implementation using aggregate scoring that combines multiple evaluation metrics so that I receive the optimal implementation without manual review.
+
+**📚 Pre-Read Requirements:**
+- [Step 3.5 Implementation Analysis](./docs/technical/blueprint/step-3.5-implementation-analysis.md) - Study parallel processing patterns, error handling, and architectural decisions
+- [Core Capabilities Blueprint](./docs/technical/blueprint/core-capabilities.md) - Review agent step timeline architecture and development guidelines
+
+- [ ] **Review previous scoring patterns**: Study existing aggregate scoring logic from design evaluation and spec selection steps
+- [ ] Implement weighted evaluation combining all testing criteria
+- [ ] Automatically select highest-scoring implementation
+- [ ] Provide detailed scoring breakdown in execution trace
+- [ ] Display selection reasoning in the UI
+- [ ] Store selected code in client-side state
+
+### 3.14 Step 12: Complete Artifact Download Package
+**Complexity**: High | **Effort**: High
+**Story**: As a user completing the AI agent pipeline, I can download a complete ZIP archive containing the selected Figma specs, generated code, and full execution trace so that I have all deliverables and can understand the agent's decision-making process.
+
+**📚 Pre-Read Requirements:**
+- [Step 3.5 Implementation Analysis](./docs/technical/blueprint/step-3.5-implementation-analysis.md) - Study parallel processing patterns, error handling, and architectural decisions
+- [Core Capabilities Blueprint](./docs/technical/blueprint/core-capabilities.md) - Review agent step timeline architecture and development guidelines
+
+- [ ] **Review previous artifact handling patterns**: Study existing download utilities and Azure blob storage integration patterns
+- [ ] Create ZIP archive with selected Figma specs and code
+- [ ] Include detailed execution trace with all agent decisions
+- [ ] Provide download functionality from the UI
+- [ ] Store artifacts in user-specific blob storage path (`userId/executionId/`)
+- [ ] API route: `/api/agent/store-execution` for blob storage integration
+
+---
+
+## Phase 4: Execution Management & History (release 1.1 Prep)
+**Status**: FUTURE | **Target**: Advanced user management and execution tracking
+
+### 4.1 Execution History and User-Scoped Storage
+**Complexity**: High | **Effort**: High
+**Story**: As a user with multiple AI agent runs, I can access my execution history and download artifacts from past runs so that I can retrieve previous work and track my project iterations.
+
+**📚 Pre-Read Requirements:**
+- [Step 3.5 Implementation Analysis](./docs/technical/blueprint/step-3.5-implementation-analysis.md) - Study parallel processing patterns, error handling, and architectural decisions
+- [Core Capabilities Blueprint](./docs/technical/blueprint/core-capabilities.md) - Review agent step timeline architecture and development guidelines
+
+- [ ] **Review previous storage patterns**: Study existing user GUID implementation and blob storage organization patterns
+- [ ] Store all executions under user-specific blob storage paths (`userId/executionId/`)
+- [ ] API route: `/api/agent/get-execution-history` - List execution IDs for the user
+- [ ] API route: `/api/agent/get-execution-details` - Retrieve specific execution artifacts
+- [ ] Provide UI to browse execution history
+- [ ] Enable download of artifacts from past executions
+- [ ] Maintain execution metadata and trace logs
+
+---
+
+## Phase 5: Advanced Error Handling & Polish (release 1.1 Prep)
+**Status**: FUTURE | **Target**: Production-grade reliability and user experience
+
+### 5.1 Error Handling and User Feedback
+**Complexity**: Medium | **Effort**: High
+**Story**: As a user when the AI agent encounters errors, I can see clear error messages and understand what went wrong in the pipeline so that I can take appropriate action or retry with different inputs.
+
+**📚 Pre-Read Requirements:**
+- [Step 3.5 Implementation Analysis](./docs/technical/blueprint/step-3.5-implementation-analysis.md) - Study parallel processing patterns, error handling, and architectural decisions
+- [Core Capabilities Blueprint](./docs/technical/blueprint/core-capabilities.md) - Review agent step timeline architecture and development guidelines
+
+- [ ] **Review previous error handling patterns**: Study existing error management and user feedback systems in agent flow
+- [ ] Implement comprehensive error handling for all pipeline steps
+- [ ] Provide clear, actionable error messages to users
+- [ ] Log errors for debugging while protecting user privacy
+- [ ] Enable graceful degradation when possible
+- [ ] Display error states in the UI with recovery suggestions
+
+---
+
+## Success Criteria for Release 1.0
+
+### Must Have (MVP Features) ✅ Completed Infrastructure
+- [x] Docker image builds successfully ✅ GitHub Actions build completed
+- [x] Container runs locally without errors ✅ Tested and verified
+- [x] Azure Storage Account accessible via DefaultAzureCredential ✅ Blob operations working
+- [x] Azure AI Foundry accessible via DefaultAzureCredential ✅ GPT-4o-mini responses working
+- [x] Basic Azure integration tests pass locally ✅ All tests passing
+- [x] GitHub Actions workflow completes without failures ✅ Automated pipeline operational
+- [x] Azure App Service shows "Running" status ✅ Service is running
+- [x] Deployed app accessible via public URL ✅ HTTP 200 confirmed
+- [x] Next.js default page loads correctly ✅ SSR working
+
+### Must Have (Core Agent Flow Features) - In Progress
+#### **User Input & Flow Control:**
+- [x] Creative brief input always available to start new flows ✅ **COMPLETED**
+- [x] Automated progression through all steps without manual advancement ✅ **COMPLETED**
+- [x] Prominent abort button functionality throughout flow ✅ **COMPLETED**
+- [x] No manual "Continue to Next Step" buttons ✅ **COMPLETED**
+
+#### **Visual Flow & State Management:**
+- [x] Basic progress indicators and auto-advancement ✅ **COMPLETED** 
+- [x] Enhanced progress state indicators: Waiting (gray) → Processing (blue/animated) → Completed (green) → Error (red) ✅ **COMPLETED**
+- [x] Real-time progress updates showing current AI activity ✅ **COMPLETED**
+- [x] Visual timeline with step start/end timestamps ✅ **COMPLETED**
+- [ ] Interactive completed steps for input/output review
+
+#### **Error Handling & User Feedback:**
+- [x] Failed steps display with red theme indicators ✅ **COMPLETED**
+- [x] Error details section below main flow timeline ✅ **COMPLETED**
+- [x] Clear, actionable error messages with user guidance ✅ **COMPLETED**
+- [x] Flow stops on errors but preserves access to successful steps ✅ **COMPLETED**
+
+#### **Core AI Pipeline:**
+- [x] Initial pipeline steps: Creative brief → Design Concepts → Evaluation → Selection ✅ **COMPLETED**
+- [ ] Complete agent pipeline from creative brief to artifact download
+- [ ] 3-box parallel processing display for both Figma and code generation
+- [ ] Automated testing and selection of best specs and code
+- [ ] ZIP download of complete artifacts with execution trace
+- [ ] User-scoped execution storage and history in Azure Blob Storage
+
+### Nice to Have (Release 1.0 Stretch Goals)
+- [ ] Enhanced animations and visual polish
+- [ ] Performance optimizations for large file handling
+- [ ] Advanced error recovery suggestions
+- [ ] Execution history browsing UI

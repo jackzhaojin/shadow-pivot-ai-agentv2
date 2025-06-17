@@ -1,21 +1,468 @@
-# TSLA AI UI Agent - Release 1.1 Plan (Stabilization)
+# TSLA AI UI Agent - Release 1.1 (Post-MVP) Task Management
 
-See [prd-1.1.md](./prd-1.1.md) for requirements.
+## Project Overview
 
-## Goals
-- Stabilize the MVP by adding automated tests and fixing state issues.
+**Reference the PRD, always at prd.md for general context and release 1.1 **
 
-## Tasks
+- **Project Name**: TSLA AI UI Agent
+- **Framework**: Next.js 15.1.8 with App Router
+- **Release**: 1.1 (Post-MVP Enhancements)
+- **Status**: Planning Phase
+- **Prerequisites**: Release 1.0 (MVP) must be complete
 
-### 1. Cypress Testing
-- [ ] Install and configure Cypress.
-- [ ] Add basic end-to-end tests for agent flow.
-- [ ] Integrate tests into CI.
+## Release 1.1 Goals
+- **Primary Goal**: Enhance user experience and add advanced features
+- **Target Users**: Power users, enterprise customers, development teams
+- **Key Deliverables**: Advanced UX, GitHub integration, IaC automation
 
-### 2. React State Refactoring
-- [ ] Remove manual state triggers required in 1.0.
-- [ ] Fix the defect that requires hardware interaction to update state.
+---
 
-### 3. Cleanup
-- [ ] General refactoring and dependency updates.
+## Phase 1.1.1: Testing Infrastructure and Foundations
+**Status**: Planning | **Target**: Establish comprehensive testing and quality assurance
 
+### 1.1.1.1 Cypress UI Testing Infrastructure
+**Complexity**: Medium | **Effort**: High
+
+- **1.1.1.1.1 Cypress Setup and Configuration**
+  **Story**: As a developer ensuring UI quality, I can run comprehensive end-to-end tests using Cypress so that all user interfaces work correctly and regressions are caught early.
+
+  - [ ] **Review previous testing patterns**: Examine existing test infrastructure in `/tests` directory and understand current testing approach
+  - [ ] Install and configure Cypress for Next.js application
+  - [ ] Set up test environments and configuration files
+  - [ ] Create base test utilities and helper functions
+  - [ ] Implement CI/CD integration for automated testing
+
+- **1.1.1.1.2 Core Agent Flow UI Testing**
+  **Story**: As a QA engineer validating the AI agent pipeline, I can run automated tests for all agent flow interactions so that the core functionality is thoroughly validated.
+
+  - [ ] **Review previous agent flow patterns**: Study existing agent flow components and user interaction patterns
+  - [ ] Create comprehensive test suite for agent flow UI
+  - [ ] Test step-by-step progression and state management
+  - [ ] Validate user input handling and error states
+  - [ ] Implement visual regression testing for UI components
+
+- **1.1.1.1.3 Azure Integration UI Testing**
+  **Story**: As a developer ensuring Azure connectivity, I can run UI tests that validate Azure service integrations so that all cloud operations work correctly in the user interface.
+
+  - [ ] **Review previous Azure integration patterns**: Examine existing Azure client code and API integration approaches
+  - [ ] Create tests for Azure storage operations UI
+  - [ ] Test AI service integration and response handling
+  - [ ] Validate authentication and error handling flows
+  - [ ] Implement mock services for reliable testing
+
+---
+
+## Phase 1.1.2: Enhanced User Experience
+**Status**: Planning | **Target**: Improve UX and usability beyond MVP
+
+### 1.1.2.1 Advanced Visual Indicators and Progress Tracking
+**Complexity**: Medium | **Effort**: Medium
+
+- **1.1.2.1.1 Enhanced Progress Bars with Time Estimation**
+  **Story**: As a user waiting for AI generation, I can see detailed progress bars with time estimates so that I understand how long each step will take and can plan accordingly.
+
+  - [ ] **Review previous progress tracking patterns**: Study existing progress indicators and state management in agent flow components
+  - [ ] Add detailed progress bars for long-running generation steps
+  - [ ] Show estimated time remaining for each step
+  - [ ] Implement progress animations and micro-interactions
+
+- **1.1.2.1.2 Real-time Status Updates with WebSocket Integration**
+  **Story**: As a user monitoring AI agent execution, I can receive real-time status updates and error notifications so that I'm immediately informed of progress and issues without needing to refresh.
+
+  - [ ] **Review previous real-time update patterns**: Examine existing state management and component update mechanisms
+  - [ ] WebSocket integration for live progress updates
+  - [ ] Real-time error reporting and recovery suggestions
+  - [ ] Live resource usage monitoring during generation
+
+- **1.1.2.1.3 Interactive Visual Execution Timeline**
+  **Story**: As a user reviewing complex agent execution, I can explore an interactive timeline with branching for parallel processes so that I can understand the full execution flow and identify bottlenecks.
+
+  - [ ] **Review previous timeline patterns**: Study existing timeline components and execution tracking logic
+  - [ ] Enhanced timeline view with branching for parallel processes
+  - [ ] Interactive timeline with step details and logs
+  - [ ] Export timeline as visual documentation
+
+### 1.1.2.2 Individual File Preview Capabilities
+**Complexity**: High | **Effort**: High
+
+- **1.1.2.2.1 In-Browser Code File Preview System**
+  **Story**: As a developer reviewing generated code, I can preview individual files with syntax highlighting and formatting before downloading so that I can understand the code structure and quality without downloading the entire package.
+
+  - [ ] **Review previous file handling patterns**: Study existing download and artifact management systems
+  - [ ] Preview generated code files before download
+  - [ ] Syntax highlighting and code formatting
+  - [ ] Side-by-side comparison of multiple implementations
+
+- **1.1.2.2.2 Interactive Figma Spec Preview**
+  **Story**: As a designer reviewing generated specifications, I can view interactive previews of Figma specs with basic editing capabilities so that I can validate and fine-tune designs before implementation.
+
+  - [ ] **Review previous spec generation patterns**: Examine existing design concept and evaluation logic
+  - [ ] Render Figma specs as interactive previews
+  - [ ] Allow basic editing and annotation
+  - [ ] Export individual components or sections
+
+- **1.1.2.2.3 Live Code Preview and Testing Environment**
+  **Story**: As a developer validating generated components, I can test them in a live sandbox environment so that I can verify functionality and behavior before integration.
+
+  - [ ] **Review previous component rendering patterns**: Study existing React component structure and testing approaches
+  - [ ] Sandbox environment for testing generated components
+  - [ ] Real-time rendering of React components
+  - [ ] Interactive props testing and validation
+
+### 1.1.2.3 Retry and Modification Workflows
+**Complexity**: High | **Effort**: Very High
+
+- **1.1.2.3.1 Step-Level Retry Functionality**
+  **Story**: As a user experiencing a failed generation step, I can retry individual steps with modified parameters without restarting the entire pipeline so that I can recover from failures efficiently and iterate on specific aspects.
+
+  - [ ] **Review previous error handling patterns**: Study existing agent flow error management and state recovery mechanisms
+  - [ ] Retry individual failed steps without restarting entire pipeline
+  - [ ] Modify parameters and re-run specific steps
+  - [ ] Branch execution paths for A/B testing different approaches
+
+- **1.1.2.3.2 Interactive Parameter Adjustment Interface**
+  **Story**: As a power user fine-tuning AI generation, I can adjust generation parameters through an intuitive interface with real-time previews so that I can optimize results for my specific needs.
+
+  - [ ] **Review previous parameter management patterns**: Study existing prompt engineering and configuration systems
+  - [ ] UI for adjusting AI generation parameters
+  - [ ] Real-time preview of parameter changes
+  - [ ] Save parameter presets for future use
+
+- **1.1.2.3.3 Execution Branching and Merging System**
+  **Story**: As a user exploring different approaches, I can create alternative execution branches and merge successful elements so that I can experiment with variations and combine the best results.
+
+  - [ ] **Review previous state management patterns**: Study existing agent flow state and execution tracking systems
+  - [ ] Create alternative execution branches
+  - [ ] Compare results across different parameter sets
+  - [ ] Merge successful elements from different branches
+
+---
+
+## Phase 1.1.3: Advanced Features and Integrations
+**Status**: Planning | **Target**: Add enterprise-grade capabilities
+
+### 1.1.3.1 GitHub Integration and PR Workflows
+**Complexity**: Very High | **Effort**: Very High
+
+- **1.1.3.1.1 Automated GitHub PR Creation**
+  **Story**: As a developer integrating generated code, I can automatically create GitHub pull requests with generated code, specs, and documentation so that I can seamlessly integrate AI-generated features into existing development workflows.
+
+  - [ ] **Review previous GitHub integration patterns**: Study existing artifact management and download systems for integration workflows
+  - [ ] Create GitHub PRs with generated code
+  - [ ] Include Figma specs and documentation in PR
+  - [ ] Automated PR descriptions with generation details
+
+- **1.1.3.1.2 AI-Powered Code Review Integration**
+  **Story**: As a development team maintaining code quality, I can receive AI-powered code review comments and automated conflict resolution so that generated code meets our standards and integrates smoothly.
+
+  - [ ] **Review previous AI integration patterns**: Study existing AI client and prompt engineering systems for code analysis
+  - [ ] AI-powered code review comments
+  - [ ] Integration with existing PR workflows
+  - [ ] Automated conflict resolution suggestions
+
+- **1.1.3.1.3 Multi-Repository Management System**
+  **Story**: As a DevOps engineer managing large projects, I can deploy generated features across multiple repositories with coordinated testing so that I can maintain consistency across our microservices architecture.
+
+  - [ ] **Review previous deployment patterns**: Study existing Azure infrastructure and CI/CD pipeline configurations
+  - [ ] Multi-repository support for large projects
+  - [ ] Branch strategy integration
+  - [ ] Automated testing in PR environments
+
+### 1.1.3.2 Storybook and Testing Support
+**Complexity**: High | **Effort**: High
+
+- **1.1.3.2.1 Automated Storybook Generation**
+  **Story**: As a frontend developer needing component documentation, I can receive automatically generated Storybook stories for all generated components so that I have complete documentation and interactive examples for component usage.
+
+  - [ ] **Review previous component generation patterns**: Study existing React component generation and testing infrastructure
+  - [ ] Generate Storybook stories for all components
+  - [ ] Include interactive controls and documentation
+  - [ ] Visual regression testing integration
+
+- **1.1.3.2.2 Comprehensive Test Generation and Validation**
+  **Story**: As a quality-focused development team, I can receive automatically generated unit and integration tests for all components so that I maintain high test coverage and catch regressions early.
+
+  - [ ] **Review previous testing patterns**: Study existing test infrastructure and quality validation systems
+  - [ ] Generate unit tests for all components
+  - [ ] Integration tests for complex workflows
+  - [ ] Accessibility testing automation
+
+- **1.1.3.2.3 Quality Assurance Pipeline Integration**
+  **Story**: As a DevOps engineer ensuring code quality, I can integrate automated linting, performance testing, and security scanning so that all generated code meets our quality and security standards.
+
+  - [ ] **Review previous QA patterns**: Study existing CI/CD pipelines and quality assurance infrastructure
+  - [ ] Automated linting and formatting
+  - [ ] Performance testing and optimization
+  - [ ] Security scanning and vulnerability assessment
+
+### 1.1.3.3 Multi-Agent Collaboration
+**Complexity**: Very High | **Effort**: Very High
+
+- **1.1.3.3.1 Specialized Agent Architecture**
+  **Story**: As a user working on complex features, I can leverage specialized AI agents that collaborate on different aspects of the generation so that I receive higher quality results from agents optimized for specific tasks.
+
+  - [ ] **Review previous AI agent patterns**: Study existing agent flow architecture and AI integration systems
+  - [ ] Specialized agents for different aspects (design, code, testing)
+  - [ ] Agent communication protocols and handoffs
+  - [ ] Conflict resolution between agent recommendations
+
+- **1.1.3.3.2 Real-time Collaborative Workflows**
+  **Story**: As a team working collaboratively, I can share execution spaces and collaborate in real-time on AI generation so that we can leverage collective expertise and maintain consistency.
+
+  - [ ] **Review previous user management patterns**: Study existing user GUID systems and state management
+  - [ ] Multi-user collaboration on same execution
+  - [ ] Real-time collaboration features
+  - [ ] Shared execution spaces and permissions
+
+- **1.1.3.3.3 Agent Learning and Optimization System**
+  **Story**: As a system administrator optimizing AI performance, I can track agent performance metrics and implement feedback loops so that the system continuously improves and adapts to user preferences.
+
+  - [ ] **Review previous analytics patterns**: Study existing execution tracking and performance monitoring systems
+  - [ ] Feedback loops for agent performance improvement
+  - [ ] User preference learning and adaptation
+  - [ ] Quality metrics tracking and optimization
+
+---
+
+## Phase 1.1.4: Enterprise and Operations
+**Status**: Planning | **Target**: Production-ready enterprise features
+
+### 1.1.4.1 Infrastructure as Code (IaC) Automation
+**Complexity**: High | **Effort**: High
+
+- **1.1.4.1.1 Terraform Infrastructure Automation**
+  **Story**: As a DevOps engineer managing deployments, I can use Terraform templates to automatically provision and manage all Azure resources so that I can ensure consistent, reproducible infrastructure deployments.
+
+  - [ ] **Review previous infrastructure patterns**: Study existing Azure infrastructure setup and deployment configurations
+  - [ ] Complete Terraform modules for all Azure resources
+  - [ ] Multi-environment deployment automation
+  - [ ] Infrastructure state management and versioning
+
+- **1.1.4.1.2 Azure Bicep Template Implementation**
+  **Story**: As a DevOps engineer preferring Azure-native tooling, I can use Bicep templates for infrastructure automation so that I have an alternative to Terraform with native Azure integration.
+
+  - [ ] **Review previous Azure deployment patterns**: Study existing Azure resource configurations and deployment scripts
+  - [ ] Alternative IaC implementation using Azure Bicep
+  - [ ] ARM template generation and validation
+  - [ ] Resource lifecycle management
+
+- **1.1.4.1.3 Enhanced CI/CD Pipeline Integration**
+  **Story**: As a platform engineer ensuring reliable deployments, I can implement infrastructure deployment pipelines with rollback capabilities so that I can maintain system reliability and recover from issues quickly.
+
+  - [ ] **Review previous CI/CD patterns**: Study existing GitHub Actions workflows and deployment automation
+  - [ ] Infrastructure deployment pipelines
+  - [ ] Environment promotion workflows
+  - [ ] Rollback and disaster recovery procedures
+
+### 1.1.4.2 AI Metrics Dashboard and Analytics
+**Complexity**: Medium | **Effort**: High
+
+- **1.1.4.2.1 Performance Metrics and Usage Analytics**
+  **Story**: As a project manager tracking AI agent performance, I can view comprehensive metrics on generation quality, time, and user satisfaction so that I can optimize the AI pipeline and measure ROI.
+
+  - [ ] **Review previous analytics patterns**: Study existing execution tracking and performance monitoring systems
+  - [ ] AI generation time and quality metrics
+  - [ ] User satisfaction tracking and analysis
+  - [ ] Cost optimization and usage analytics
+
+- **1.1.4.2.2 Real-time Quality Monitoring Dashboard**
+  **Story**: As a system administrator monitoring AI quality, I can access real-time dashboards with automated alerting so that I can maintain high quality standards and respond quickly to degradation.
+
+  - [ ] **Review previous monitoring patterns**: Study existing Azure monitoring and error handling systems
+  - [ ] Real-time quality metrics for all generations
+  - [ ] Trend analysis and improvement tracking
+  - [ ] Automated alerting for quality degradation
+
+- **1.1.4.2.3 Business Intelligence and Predictive Analytics**
+  **Story**: As a business leader making strategic decisions, I can access usage patterns, ROI calculations, and predictive analytics so that I can make data-driven decisions about AI investments and capacity planning.
+
+  - [ ] **Review previous data analysis patterns**: Study existing execution data storage and analysis infrastructure
+  - [ ] Usage patterns and user behavior analysis
+  - [ ] ROI calculation and reporting
+  - [ ] Predictive analytics for capacity planning
+
+### 1.1.4.3 Multi-User and Privacy Controls
+**Complexity**: High | **Effort**: High
+
+- **1.1.4.3.1 Enterprise User Management System**
+  **Story**: As an enterprise administrator, I can manage user access, roles, and permissions for the AI agent system so that I can control who has access to which features and ensure compliance.
+
+  - [ ] **Review previous user management patterns**: Study existing user GUID systems and access control mechanisms
+  - [ ] User authentication and authorization
+  - [ ] Role-based access control (RBAC)
+  - [ ] Multi-tenant architecture implementation
+
+- **1.1.4.3.2 Privacy and Data Protection Controls**
+  **Story**: As a compliance officer ensuring data protection, I can configure privacy controls and audit logging so that we meet regulatory requirements and protect user data.
+
+  - [ ] **Review previous privacy patterns**: Study existing user GUID systems and data isolation mechanisms
+  - [ ] Execution isolation between users
+  - [ ] Data privacy controls and compliance
+  - [ ] Audit logging and compliance reporting
+
+- **1.1.4.3.3 Enterprise SSO and Directory Integration**
+  **Story**: As an IT administrator managing enterprise identity, I can integrate with existing SSO and directory systems so that users can access the AI agent with their corporate credentials and policies are enforced.
+
+  - [ ] **Review previous authentication patterns**: Study existing Azure authentication and identity management systems
+  - [ ] SSO integration (SAML, OIDC)
+  - [ ] Corporate directory integration
+  - [ ] Enterprise policy enforcement
+
+---
+
+## Phase 1.1.5: Performance and Optimization
+**Status**: Planning | **Target**: Scale and optimize for production workloads
+
+### 1.1.5.1 Cost Optimization and Resource Management
+**Complexity**: Medium | **Effort**: Medium
+
+- **1.1.5.1.1 Intelligent Blob Storage Optimization**
+  **Story**: As a system administrator managing storage costs, I can implement automated cleanup policies and intelligent tiering so that storage costs are optimized while maintaining data availability.
+
+  - [ ] **Review previous storage patterns**: Study existing Azure blob storage configuration and usage patterns
+  - [ ] Automated cleanup policies for old executions
+  - [ ] Intelligent storage tiering (Hot/Cool/Archive)
+  - [ ] Compression and deduplication strategies
+
+- **1.1.5.1.2 AI Service Cost Management and Optimization**
+  **Story**: As a financial controller monitoring AI costs, I can track token usage and implement cost optimization strategies so that AI generation remains cost-effective while maintaining quality.
+
+  - [ ] **Review previous AI cost patterns**: Study existing AI service usage and token management systems
+  - [ ] Token usage optimization and tracking
+  - [ ] Model selection based on cost/quality tradeoffs
+  - [ ] Caching strategies for repeated generations
+
+- **1.1.5.1.3 Auto-scaling and Performance Optimization**
+  **Story**: As a platform engineer ensuring system reliability, I can implement auto-scaling and performance monitoring so that the system handles varying loads efficiently while maintaining responsiveness.
+
+  - [ ] **Review previous scaling patterns**: Study existing Azure App Service scaling and performance monitoring configurations
+  - [ ] Auto-scaling for high-demand periods
+  - [ ] Load balancing and performance optimization
+  - [ ] Resource usage monitoring and alerting
+
+### 1.1.5.2 Advanced Security and Compliance
+**Complexity**: High | **Effort**: High
+
+- **1.1.5.2.1 Enhanced Authentication and Token Management**
+  **Story**: As a security administrator ensuring secure access, I can implement advanced authentication methods and token rotation so that the system maintains high security standards and prevents unauthorized access.
+
+  - [ ] **Review previous security patterns**: Study existing Azure authentication and managed identity configurations
+  - [ ] Advanced token rotation for blob SAS
+  - [ ] Certificate-based authentication options
+  - [ ] Multi-factor authentication integration
+
+- **1.1.5.2.2 Compliance and Governance Framework**
+  **Story**: As a compliance officer ensuring regulatory compliance, I can configure GDPR and SOC 2 compliance features with data residency controls so that the system meets all regulatory requirements.
+
+  - [ ] **Review previous compliance patterns**: Study existing data privacy and audit logging implementations
+  - [ ] GDPR compliance features
+  - [ ] SOC 2 Type II compliance preparation
+  - [ ] Data residency and sovereignty controls
+
+- **1.1.5.2.3 Security Monitoring and Threat Detection**
+  **Story**: As a security engineer protecting the system, I can implement real-time security monitoring with automated threat detection so that security incidents are identified and responded to quickly.
+
+  - [ ] **Review previous monitoring patterns**: Study existing Azure monitoring and error handling systems
+  - [ ] Real-time security monitoring and alerting
+  - [ ] Threat detection and response automation
+  - [ ] Security audit trails and reporting
+
+---
+
+## Release 1.1 Task Summary
+
+The above tasks are organized into numbered sections that combine agile user stories with detailed implementation tasks. Each numbered task includes:
+
+- **Story Context**: "As a ... I can ... so that ..." format explaining the user value
+- **Pattern Review Requirement**: "Review previous [domain] patterns" to ensure consistency and reuse
+- **Implementation Tasks**: Detailed `[ ]` checkboxes with specific deliverables
+
+### Quick Reference - Major Story Themes:
+
+**Testing Foundation (1.1.1.x)**: Cypress UI testing, comprehensive test coverage
+**Enhanced UX (1.1.2.x)**: Progress tracking, file preview, retry workflows
+**Advanced Features (1.1.3.x)**: GitHub integration, Storybook, multi-agent collaboration
+**Enterprise (1.1.4.x)**: IaC automation, metrics dashboards, user management
+**Performance (1.1.5.x)**: Cost optimization, security, compliance  
+
+---
+
+## Success Criteria for Release 1.1
+
+### Must Have (Enhanced UX)
+- [ ] Individual file preview with syntax highlighting
+- [ ] Step-level retry functionality for failed operations
+- [ ] Enhanced visual progress indicators and real-time updates
+- [ ] Multi-user execution isolation and privacy controls
+
+---
+
+## Success Criteria for Release 1.1
+
+### Must Have (Testing Foundation)
+- [ ] Comprehensive Cypress UI testing infrastructure
+- [ ] Individual file preview with syntax highlighting
+- [ ] Step-level retry functionality for failed operations
+- [ ] Enhanced visual progress indicators and real-time updates
+
+### Should Have (Advanced Features)
+- [ ] GitHub PR integration for seamless code delivery
+- [ ] Automated Storybook generation for all components
+- [ ] AI metrics dashboard with performance tracking
+- [ ] Basic multi-agent collaboration workflows
+
+### Could Have (Enterprise Features)
+- [ ] Complete Infrastructure as Code automation
+- [ ] Enterprise user management and RBAC
+- [ ] Advanced security and compliance features
+- [ ] Cost optimization and resource management tools
+
+### Won't Have (Future Releases)
+- [ ] Real-time collaborative editing of generated code
+- [ ] Custom AI model training and fine-tuning
+- [ ] Integration with non-Microsoft cloud platforms
+- [ ] White-label customization options
+
+## Dependencies and Prerequisites
+
+### Technical Dependencies
+- **Release 1.0 Completion**: All MVP features must be stable and deployed
+- **Azure Infrastructure**: Enhanced monitoring and scaling capabilities
+- **Third-party Integrations**: GitHub API, Storybook, additional testing frameworks
+
+### Resource Requirements
+- **Development Team**: Additional frontend and DevOps engineers
+- **Infrastructure**: Enhanced Azure services for scaling and monitoring
+- **Third-party Services**: GitHub Enterprise, monitoring and analytics tools
+
+## Risk Assessment
+
+### High Risk Items
+- **Multi-Agent Coordination**: Complex technical implementation with unclear user value
+- **GitHub Integration**: Dependency on external API changes and rate limits
+- **IaC Automation**: Requires significant DevOps expertise and testing
+
+### Mitigation Strategies
+- **Phased Rollout**: Implement features incrementally with user feedback
+- **Fallback Options**: Maintain manual alternatives for automated features
+- **External Dependencies**: Build abstraction layers for third-party integrations
+
+## Progress Tracking
+
+### Planning Phase (Current)
+- [ ] Complete Release 1.0 MVP features
+- [ ] Gather user feedback from MVP deployment
+- [ ] Prioritize Release 1.1 features based on user needs
+- [ ] Create detailed technical specifications for each feature
+
+### Development Phase (Future)
+- [ ] Set up enhanced development environment
+- [ ] Implement features in priority order
+- [ ] Continuous integration testing for new features
+- [ ] Beta testing with select users
+
+### Deployment Phase (Future)
+- [ ] Staged rollout of Release 1.1 features
+- [ ] Performance monitoring and optimization
+- [ ] User training and documentation updates
+- [ ] Production monitoring and support procedures

@@ -1,8 +1,8 @@
 # Repository Guidelines
 
-This repo contains the **TSLA AI UI Agent** built with Next.js 15.1.8. All contributions should follow the release PRDs (`prd-1.0.md`, `prd-1.1.md`, etc.) and the matching `release-*.mdc` task plans.
+This repo contains the **TSLA AI UI Agent** built with Next.js 15.1.8. All contributions should follow the high level design described in `prd.md` in root project and the task breakdown in `release-1.0.mdc` (MVP) or `release-1.1.mdc` (Post-MVP).
 
-We're focusing on release 1.0 tasks unless the plan specifies a later version.
+We're on 1.0 at the moment, do not do 1.1 yet.
 
 Also I will only ask you take on a bite size, if you finish the 1.2.3 (example) you're on, do not move onto 1.2.4 or 1.3.1.
 
@@ -28,7 +28,7 @@ Use the structure outlined in the PRD when adding new code:
 ## Development Rules
 - Use **TypeScript** and **TailwindCSS** for new code.
 - Server components and API routes may call Azure SDKs. Do not call them from client components.
-- Keep new documentation under `docs/` and update the relevant `release-*.mdc` file when a task is completed.
+- Keep new documentation under `docs/` and update `release-1.0.mdc` or `release-1.1.mdc` when a task is completed.
 - when developing test driven development which is always needed, never use az cli commands since it doesn't work on codex, always use node and then DefaultAzureCredential, which works for everyone
 - All Azure authentication and testing should use DefaultAzureCredential with Service Principal credentials (AZURE_CLIENT_ID, AZURE_CLIENT_SECRET, AZURE_TENANT_ID)
 
@@ -39,7 +39,7 @@ Use the structure outlined in the PRD when adding new code:
 
 ## Pull Requests
 - Start with the ID in the mdc if possible, if you're requested to work on let's say 3.2.4, make sure 3.2.4 is the first thing in the pull request
-- Summarize major changes and reference the appropriate PRD or release plan when relevant.
+- Summarize major changes and reference the PRD or release-1.0.mdc/release-1.1.mdc document when relevant.
 - Provide the results of the programmatic checks listed below.
 
 ## Setup
