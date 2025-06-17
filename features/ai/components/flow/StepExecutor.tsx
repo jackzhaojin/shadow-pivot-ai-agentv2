@@ -4,7 +4,9 @@ import { useAgentFlow } from '@/providers/AgentFlowProvider';
 import { selectBestDesignConcept } from '@/lib/services/specSelection';
 import { useUserGuid } from '@/providers/UserGuidProvider';
 import { FigmaSpec } from '@/lib/services/figmaSpec';
+import { SpecTestingResult } from '@/lib/services/figmaSpecTesting';
 import FigmaGenerationGrid from './FigmaGenerationGrid';
+import { FigmaTestingResults } from './FigmaTestingResults';
 
 interface StepExecutorProps {
   brief: string;
@@ -30,7 +32,9 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
     figmaSpecStates,
     setFigmaSpecStates,
     figmaSpecs,
-    setFigmaSpecs
+    setFigmaSpecs,
+    figmaTestingResults,
+    setFigmaTestingResults
   } = useAgentFlow();
 
   const userGuid = useUserGuid();
@@ -413,28 +417,107 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
     }
   }, [currentStep, selectedConcept, aborted, userGuid, setFigmaSpecStates, setFigmaSpecs, completeStep, addError]);
 
-  // Step 4: Figma Spec Selection & Evaluation
+  // Step 4: Figma Spec Testing & Quality Assurance
   useEffect(() => {
-    console.log('🎯 StepExecutor - Step 4 useEffect triggered:', {
+    console.log('🧪 StepExecutor - Step 4 (Testing) useEffect triggered:', {
       currentStep,
       figmaSpecsLength: figmaSpecs.length,
       figmaSpecs: figmaSpecs,
       aborted,
-      condition: currentStep === 4 && !aborted,
-      stepName: currentStep === 4 ? 'Figma Spec Selection & Evaluation' : `Step ${currentStep}`,
+      condition: currentStep === 4 && figmaSpecs.length > 0 && !aborted,
+      stepName: currentStep === 4 ? 'Figma Spec Testing & Quality Assurance' : `Step ${currentStep}`,
       debugging: {
         currentStepIs4: currentStep === 4,
         hasFigmaSpecs: figmaSpecs.length > 0,
         notAborted: !aborted,
-        allConditionsMet: currentStep === 4 && !aborted,
+        allConditionsMet: currentStep === 4 && figmaSpecs.length > 0 && !aborted,
         userGuid: userGuid
       }
     });
-    if (currentStep === 4 && !aborted) {
+
+    if (currentStep === 4 && figmaSpecs.length > 0 && !aborted) {
+      console.log('🚀 StepExecutor - Starting Figma spec testing and quality assurance process');
+      const testFigmaSpecsQuality = async () => {
+        try {
+          console.log('📡 StepExecutor - Making API call to /api/agent/test-figma-specs with specs:', {
+            specsCount: figmaSpecs.length,
+            specsPreview: figmaSpecs.map((s, i) => ({
+              index: i,
+              name: s.name?.substring(0, 30) + '...',
+              componentCount: s.components?.length || 0
+            }))
+          });
+
+          const res = await fetch('/api/agent/test-figma-specs', {
+            method: 'POST',
+            headers: { 
+              'Content-Type': 'application/json', 
+              'x-user-guid': userGuid 
+            },
+            body: JSON.stringify({ figmaSpecs })
+          });
+
+          console.log('📨 StepExecutor - Testing API response status:', res.status);
+          const data = await res.json();
+          console.log('📊 StepExecutor - Step 4 API response data:', data);
+
+          if (data.testingResults && Array.isArray(data.testingResults)) {
+            console.log('✅ StepExecutor - Testing results received:', {
+              resultsCount: data.testingResults.length,
+              avgScore: data.summary?.avgOverallScore || 0,
+              totalIssues: data.summary?.totalIssues || 0,
+              highQualitySpecs: data.summary?.highQualitySpecs || 0
+            });
+
+            // Store testing results in state
+            setFigmaTestingResults(data.testingResults);
+            
+            // Complete step 4 (testing)
+            console.log('🏁 StepExecutor - Completing step 4 - Figma Spec Testing & Quality Assurance');
+            completeStep(4);
+          } else {
+            console.error('❌ StepExecutor - Invalid testing results format');
+            addError('Failed to get valid testing results', 4);
+          }
+        } catch (err) {
+          const message = err instanceof Error ? err.message : 'Unknown error';
+          console.error('💥 StepExecutor - Step 4 API call error:', err);
+          addError(message, 4);
+        }
+      };
+
+      testFigmaSpecsQuality();
+    } else {
+      console.log('⏸️ StepExecutor - Step 4 (Testing) conditions not met:', {
+        currentStepIs4: currentStep === 4,
+        hasFigmaSpecs: figmaSpecs.length > 0,
+        notAborted: !aborted
+      });
+    }
+  }, [currentStep, figmaSpecs, aborted, userGuid, setFigmaTestingResults, completeStep, addError]);
+
+  // Step 5: Figma Spec Selection & Evaluation  
+  useEffect(() => {
+    console.log('🎯 StepExecutor - Step 5 (Selection) useEffect triggered:', {
+      currentStep,
+      figmaSpecsLength: figmaSpecs.length,
+      figmaTestingResultsLength: figmaTestingResults.length,
+      aborted,
+      condition: currentStep === 5 && figmaTestingResults.length > 0 && !aborted,
+      stepName: currentStep === 5 ? 'Figma Spec Selection & Evaluation' : `Step ${currentStep}`,
+      debugging: {
+        currentStepIs5: currentStep === 5,
+        hasFigmaTestingResults: figmaTestingResults.length > 0,
+        notAborted: !aborted,
+        allConditionsMet: currentStep === 5 && figmaTestingResults.length > 0 && !aborted,
+        userGuid: userGuid
+      }
+    });
+    if (currentStep === 5 && !aborted) {
       console.log('🚀 StepExecutor - Starting Figma spec selection process');
       const selectBestFigmaSpec = async () => {
         try {
-          // Check if we have figmaSpecs, if not, use mock data for now
+          // Use the figma specs we have (they should be tested by now)
           const specsToProcess = figmaSpecs.length > 0 ? figmaSpecs : [
             { name: 'Mock Spec 1', description: 'Mock description for testing' },
             { name: 'Mock Spec 2', description: 'Another mock spec' },
@@ -450,43 +533,44 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
           
           console.log('📨 StepExecutor - Figma selection API response status:', res.status);
           const data = await res.json();
-          console.log('📊 StepExecutor - Step 4 API response data:', data);
+          console.log('📊 StepExecutor - Step 5 API response data:', data);
           
           if (data.selectedSpec) {
             // TODO: Store selected Figma spec in state
             console.log('✅ StepExecutor - Selected Figma spec:', data.selectedSpec);
-            completeStep(4);
+            completeStep(5);
           } else {
             console.error('❌ StepExecutor - No selected spec returned');
-            addError('Failed to select Figma spec', 4);
+            addError('Failed to select Figma spec', 5);
           }
         } catch (err) {
           const message = err instanceof Error ? err.message : 'Unknown error';
-          console.error('💥 StepExecutor - Step 4 API call error:', err);
-          addError(message, 4);
+          console.error('💥 StepExecutor - Step 5 API call error:', err);
+          addError(message, 5);
         }
       };
       
       selectBestFigmaSpec();
     } else {
-      console.log('⏸️ StepExecutor - Step 4 conditions not met:', {
-        currentStepIs4: currentStep === 4,
+      console.log('⏸️ StepExecutor - Step 5 conditions not met:', {
+        currentStepIs5: currentStep === 5,
         hasFigmaSpecs: figmaSpecs.length > 0,
+        hasFigmaTestingResults: figmaTestingResults.length > 0,
         figmaSpecsDetails: figmaSpecs,
         notAborted: !aborted
       });
     }
-  }, [currentStep, figmaSpecs, aborted, userGuid, completeStep, addError]);
+  }, [currentStep, figmaSpecs, figmaTestingResults, aborted, userGuid, completeStep, addError]);
 
-  // Step 5: Actual Figma Generation
+  // Step 6: Actual Figma Generation
   useEffect(() => {
-    console.log('🎨 StepExecutor - Step 5 useEffect triggered:', {
+    console.log('🎨 StepExecutor - Step 6 useEffect triggered:', {
       currentStep,
       aborted,
-      condition: currentStep === 5 && !aborted,
-      stepName: currentStep === 5 ? 'Actual Figma Generation' : `Step ${currentStep}`
+      condition: currentStep === 6 && !aborted,
+      stepName: currentStep === 6 ? 'Actual Figma Generation' : `Step ${currentStep}`
     });
-    if (currentStep === 5 && !aborted) {
+    if (currentStep === 6 && !aborted) {
       console.log('🚀 StepExecutor - Starting actual Figma generation process');
       const generateActualFigma = async () => {
         try {
@@ -520,15 +604,15 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
     }
   }, [currentStep, aborted, userGuid, completeStep, addError]);
 
-  // Step 6: Code Generation (3 Parallel Paths)
+  // Step 7: Code Generation (3 Parallel Paths)
   useEffect(() => {
-    console.log('💻 StepExecutor - Step 6 useEffect triggered:', {
+    console.log('💻 StepExecutor - Step 7 useEffect triggered:', {
       currentStep,
       aborted,
-      condition: currentStep === 6 && !aborted,
-      stepName: currentStep === 6 ? 'Code Generation (3 Parallel)' : `Step ${currentStep}`
+      condition: currentStep === 7 && !aborted,
+      stepName: currentStep === 7 ? 'Code Generation (3 Parallel)' : `Step ${currentStep}`
     });
-    if (currentStep === 6 && !aborted) {
+    if (currentStep === 7 && !aborted) {
       console.log('🚀 StepExecutor - Starting parallel code generation process');
       const generateCodeParallel = async () => {
         try {
@@ -912,14 +996,38 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
       )}
       {currentStep === 4 && (
         <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">Evaluating & Selecting Figma Spec</h2>
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-            <p className="text-gray-600">AI is evaluating generated specs to select the best one...</p>
-          </div>
+          <h2 className="text-xl font-semibold text-gray-900 mb-4">Figma Spec Testing & Quality Assurance</h2>
+          {figmaTestingResults.length === 0 ? (
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600 mx-auto mb-4"></div>
+              <p className="text-gray-600">AI is evaluating spec quality, design clarity, technical feasibility, and accessibility compliance...</p>
+            </div>
+          ) : (
+            <FigmaTestingResults results={figmaTestingResults} />
+          )}
         </div>
       )}
       {currentStep === 5 && (
+        <div className="space-y-6">
+          {/* Previous testing results for reference */}
+          {figmaTestingResults.length > 0 && (
+            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8">
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">Quality Assessment Results</h2>
+              <FigmaTestingResults results={figmaTestingResults} />
+            </div>
+          )}
+          
+          {/* Current step progress */}
+          <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8">
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">Evaluating & Selecting Best Figma Spec</h2>
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
+              <p className="text-gray-600">AI is analyzing quality scores and selecting the optimal spec for implementation...</p>
+            </div>
+          </div>
+        </div>
+      )}
+      {currentStep === 6 && (
         <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 mb-8">
           <h2 className="text-xl font-semibold text-gray-900 mb-4">Generating Actual Figma File</h2>
           <div className="text-center">
@@ -928,7 +1036,7 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
           </div>
         </div>
       )}
-      {currentStep === 6 && (
+      {currentStep === 7 && (
         <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 mb-8">
           <h2 className="text-xl font-semibold text-gray-900 mb-4">Generating Code (3 Parallel)</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -941,7 +1049,7 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
           </div>
         </div>
       )}
-      {currentStep === 7 && (
+      {currentStep === 8 && (
         <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 mb-8">
           <h2 className="text-xl font-semibold text-gray-900 mb-4">Evaluating & Selecting Code</h2>
           <div className="text-center">
@@ -950,7 +1058,7 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
           </div>
         </div>
       )}
-      {currentStep === 8 && (
+      {currentStep === 9 && (
         <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 mb-8">
           <h2 className="text-xl font-semibold text-gray-900 mb-4">Ready for Download</h2>
           <div className="text-center">

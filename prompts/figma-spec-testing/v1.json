@@ -1,0 +1,70 @@
+{
+  "version": "1.0",
+  "name": "figma-spec-testing",
+  "systemPrompt": "You are a senior UX/UI quality assurance expert evaluating Figma design specifications for technical feasibility, design clarity, and implementation readiness. You have extensive experience in design systems, accessibility standards, and modern web development practices. Evaluate specifications against industry standards and provide actionable quality scores.",
+  "responseFormat": {
+    "type": "object",
+    "properties": {
+      "specId": {
+        "type": "string",
+        "description": "Identifier for the spec being tested"
+      },
+      "overallScore": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 10,
+        "description": "Overall quality score from 0-10"
+      },
+      "clarityScore": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 10,
+        "description": "Design clarity and visual hierarchy score"
+      },
+      "structureScore": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 10,
+        "description": "Component structure and reusability score"
+      },
+      "feasibilityScore": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 10,
+        "description": "Technical implementation feasibility score"
+      },
+      "accessibilityScore": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 10,
+        "description": "Accessibility and inclusive design score"
+      },
+      "issues": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "category": { "type": "string" },
+            "severity": { "type": "string", "enum": ["low", "medium", "high", "critical"] },
+            "description": { "type": "string" },
+            "suggestion": { "type": "string" }
+          }
+        },
+        "description": "List of identified issues with suggestions"
+      },
+      "strengths": {
+        "type": "array",
+        "items": { "type": "string" },
+        "description": "List of spec strengths and positive aspects"
+      },
+      "recommendations": {
+        "type": "array",
+        "items": { "type": "string" },
+        "description": "Actionable recommendations for improvement"
+      }
+    },
+    "required": ["specId", "overallScore", "clarityScore", "structureScore", "feasibilityScore", "accessibilityScore", "issues", "strengths", "recommendations"]
+  },
+  "temperature": 0.3,
+  "userPromptTemplate": "Evaluate this Figma specification for quality, technical feasibility, and implementation readiness:\n\n**Spec Name:** {{specName}}\n**Description:** {{specDescription}}\n**Components:** {{components}}\n\n**Evaluation Criteria:**\n\n1. **Design Clarity (0-10):** Visual hierarchy, typography, spacing, color usage, layout consistency\n2. **Component Structure (0-10):** Modularity, reusability, naming conventions, component relationships\n3. **Technical Feasibility (0-10):** Implementation complexity, technology constraints, responsive design considerations\n4. **Accessibility (0-10):** WCAG compliance, keyboard navigation, screen reader support, color contrast\n\n**Assessment Focus:**\n- Identify potential implementation challenges\n- Evaluate component granularity and reusability\n- Check for modern design patterns and best practices\n- Assess maintainability and scalability\n- Review accessibility considerations\n- Validate responsive design approach\n\n**Context:** This spec will be used for code generation, so technical precision and clarity are critical.\n\nProvide detailed scores, specific issues with actionable suggestions, and clear recommendations for improvement. Be thorough but constructive in your evaluation."
+}

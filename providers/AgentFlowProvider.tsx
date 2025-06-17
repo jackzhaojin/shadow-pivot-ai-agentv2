@@ -2,6 +2,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import type { DesignEvaluationResult } from '@/lib/services/designEvaluation';
 import type { FigmaSpec } from '@/lib/services/figmaSpec';
+import type { SpecTestingResult } from '@/lib/services/figmaSpecTesting';
 import {
   type ExecutionTrace,
   createExecutionTrace,
@@ -14,6 +15,7 @@ export const agentSteps = [
   'Design Evaluation',
   'Spec Selection / Confirmation',
   'Figma Spec Generation (3 Parallel)',
+  'Figma Spec Testing & Quality Assurance',
   'Figma Spec Selection & Evaluation',
   'Actual Figma Generation',
   'Code Generation (3 Parallel)',
@@ -48,6 +50,8 @@ interface AgentFlowContextValue {
   setFigmaSpecStates: React.Dispatch<React.SetStateAction<FigmaGenState[]>>;
   figmaSpecs: FigmaSpec[];
   setFigmaSpecs: (specs: FigmaSpec[]) => void;
+  figmaTestingResults: SpecTestingResult[];
+  setFigmaTestingResults: (results: SpecTestingResult[]) => void;
 }
 
 const AgentFlowContext = createContext<AgentFlowContextValue | undefined>(undefined);
@@ -79,6 +83,7 @@ export function AgentFlowProvider({ children }: { children: React.ReactNode }) {
   const initialFigmaStates = () => createFigmaGenStateArray(3);
   const [figmaSpecStates, setFigmaSpecStates] = useState(initialFigmaStates());
   const [figmaSpecs, setFigmaSpecs] = useState<FigmaSpec[]>([]);
+  const [figmaTestingResults, setFigmaTestingResults] = useState<SpecTestingResult[]>([]);
 
   // Add logging for key state setters
   const setDesignConceptsWithLogging = (concepts: string[]) => {
@@ -115,6 +120,16 @@ export function AgentFlowProvider({ children }: { children: React.ReactNode }) {
       currentStep
     });
     setFigmaSpecs(specs);
+  };
+
+  const setFigmaTestingResultsWithLogging = (results: SpecTestingResult[]) => {
+    console.log('🧪 AgentFlowProvider - setFigmaTestingResults called:', {
+      resultCount: results.length,
+      avgScore: results.length > 0 ? results.reduce((sum, r) => sum + r.overallScore, 0) / results.length : 0,
+      results,
+      currentStep
+    });
+    setFigmaTestingResults(results);
   };
 
   const startExecution = () => {
@@ -229,7 +244,9 @@ export function AgentFlowProvider({ children }: { children: React.ReactNode }) {
         figmaSpecStates,
         setFigmaSpecStates,
         figmaSpecs,
-        setFigmaSpecs: setFigmaSpecsWithLogging
+        setFigmaSpecs: setFigmaSpecsWithLogging,
+        figmaTestingResults,
+        setFigmaTestingResults: setFigmaTestingResultsWithLogging
       }}
     >
       {children}
