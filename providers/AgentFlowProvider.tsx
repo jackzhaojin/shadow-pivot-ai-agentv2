@@ -52,6 +52,10 @@ interface AgentFlowContextValue {
   setFigmaSpecs: (specs: FigmaSpec[]) => void;
   figmaEvaluationResults: SpecEvaluationResult[];
   setFigmaEvaluationResults: (results: SpecEvaluationResult[]) => void;
+  selectedFigmaSpec: FigmaSpec | null;
+  setSelectedFigmaSpec: (spec: FigmaSpec | null) => void;
+  figmaSelectionReasoning: string | null;
+  setFigmaSelectionReasoning: (reasoning: string | null) => void;
 }
 
 const AgentFlowContext = createContext<AgentFlowContextValue | undefined>(undefined);
@@ -84,6 +88,8 @@ export function AgentFlowProvider({ children }: { children: React.ReactNode }) {
   const [figmaSpecStates, setFigmaSpecStates] = useState(initialFigmaStates());
   const [figmaSpecs, setFigmaSpecs] = useState<FigmaSpec[]>([]);
   const [figmaEvaluationResults, setFigmaEvaluationResults] = useState<SpecEvaluationResult[]>([]);
+  const [selectedFigmaSpec, setSelectedFigmaSpec] = useState<FigmaSpec | null>(null);
+  const [figmaSelectionReasoning, setFigmaSelectionReasoning] = useState<string | null>(null);
 
   // Add logging for key state setters
   const setDesignConceptsWithLogging = (concepts: string[]) => {
@@ -246,7 +252,11 @@ export function AgentFlowProvider({ children }: { children: React.ReactNode }) {
         figmaSpecs,
         setFigmaSpecs: setFigmaSpecsWithLogging,
         figmaEvaluationResults,
-        setFigmaEvaluationResults: setFigmaEvaluationResultsWithLogging
+        setFigmaEvaluationResults: setFigmaEvaluationResultsWithLogging,
+        selectedFigmaSpec,
+        setSelectedFigmaSpec,
+        figmaSelectionReasoning,
+        setFigmaSelectionReasoning
       }}
     >
       {children}

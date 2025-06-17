@@ -1,41 +1,64 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { selectBestFigmaSpec } from '@/lib/services/figmaSpecSelection';
 
 export async function POST(request: NextRequest) {
+  console.log('🎯 /api/agent/select-figma-spec - Request received');
+  
   try {
-    const { figmaSpecs } = await request.json();
-    
-    console.log('🎯 API - Select Figma Spec called with:', {
-      specsCount: figmaSpecs?.length || 0,
+    const body = await request.json();
+    console.log('📝 /api/agent/select-figma-spec - Request body parsed:', {
+      hasFigmaSpecs: !!body.figmaSpecs,
+      hasFigmaEvaluationResults: !!body.figmaEvaluationResults,
+      figmaSpecsCount: body.figmaSpecs?.length || 0,
+      evaluationsCount: body.figmaEvaluationResults?.length || 0,
       userGuid: request.headers.get('x-user-guid')
     });
 
-    // TODO: Implement actual Figma spec selection logic
-    // For now, return a mock selection
-    const selectedSpec = figmaSpecs && figmaSpecs.length > 0 ? figmaSpecs[0] : null;
+    const { figmaSpecs, figmaEvaluationResults } = body;
+
+    if (!figmaSpecs || !Array.isArray(figmaSpecs) || figmaSpecs.length === 0) {
+      console.error('❌ /api/agent/select-figma-spec - Invalid or missing figmaSpecs');
+      return NextResponse.json({
+        success: false,
+        error: 'figmaSpecs must be a non-empty array'
+      }, { status: 400 });
+    }
+
+    if (!figmaEvaluationResults || !Array.isArray(figmaEvaluationResults)) {
+      console.error('❌ /api/agent/select-figma-spec - Invalid or missing figmaEvaluationResults');
+      return NextResponse.json({
+        success: false,
+        error: 'figmaEvaluationResults must be an array'
+      }, { status: 400 });
+    }
+
+    console.log('🚀 /api/agent/select-figma-spec - Starting selection using simple logic (no AI)');
+
+    // Use simple selection logic (no AI needed) - similar to selectBestDesignConcept
+    const { selectedSpec, selectionReason, ranking } = selectBestFigmaSpec(
+      figmaSpecs, 
+      figmaEvaluationResults
+    );
     
-    // Simulate processing time
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    console.log('✅ API - Figma spec selection completed:', {
+    console.log('✅ /api/agent/select-figma-spec - Selection completed:', {
       selectedSpecName: selectedSpec?.name || 'None',
-      selectionCriteria: 'Mock selection - first spec chosen'
+      selectionMethod: 'Simple composite scoring (effort vs clarity tradeoffs)',
+      reason: selectionReason.substring(0, 100) + '...',
+      rankingCount: ranking.length
     });
 
     return NextResponse.json({
+      success: true,
       selectedSpec,
-      reason: 'Selected based on highest design clarity score and component reusability',
-      criteria: [
-        'Design clarity: 95/100',
-        'Component structure: 90/100', 
-        'Technical feasibility: 88/100',
-        'UI/UX alignment: 92/100'
-      ]
+      reasoning: selectionReason,
+      ranking
     });
+
   } catch (error) {
-    console.error('💥 API - Figma spec selection error:', error);
-    return NextResponse.json(
-      { error: 'Failed to select Figma spec' },
-      { status: 500 }
-    );
+    console.error('💥 /api/agent/select-figma-spec - Selection failed:', error);
+    return NextResponse.json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to select Figma spec'
+    }, { status: 500 });
   }
 }

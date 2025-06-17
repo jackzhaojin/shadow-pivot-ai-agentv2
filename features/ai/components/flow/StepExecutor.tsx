@@ -34,7 +34,11 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
     figmaSpecs,
     setFigmaSpecs,
     figmaEvaluationResults,
-    setFigmaEvaluationResults
+    setFigmaEvaluationResults,
+    selectedFigmaSpec,
+    setSelectedFigmaSpec,
+    figmaSelectionReasoning,
+    setFigmaSelectionReasoning
   } = useAgentFlow();
 
   const userGuid = useUserGuid();
@@ -739,75 +743,83 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
     }
   }, [isStep4Running, userGuid, setFigmaEvaluationResults, completeStep, addError]);
 
-  // Step 5: Figma Spec Selection & Evaluation  
+  // Step 5: Figma Spec Selection (Simple Logic, No AI)
   useEffect(() => {
-    console.log('🎯 StepExecutor - Step 5 (Selection) useEffect triggered:', {
+    console.log('🎯 StepExecutor - Step 5 (Figma Spec Selection) useEffect triggered:', {
       currentStep,
       figmaSpecsLength: figmaSpecs.length,
       figmaEvaluationResultsLength: figmaEvaluationResults.length,
       aborted,
-      condition: currentStep === 5 && figmaEvaluationResults.length > 0 && !aborted,
-      stepName: currentStep === 5 ? 'Figma Spec Selection & Evaluation' : `Step ${currentStep}`,
+      condition: currentStep === 5 && figmaSpecs.length > 0 && figmaEvaluationResults.length > 0 && !aborted,
+      stepName: currentStep === 5 ? 'Figma Spec Selection' : `Step ${currentStep}`,
       debugging: {
         currentStepIs5: currentStep === 5,
+        hasFigmaSpecs: figmaSpecs.length > 0,
         hasFigmaEvaluationResults: figmaEvaluationResults.length > 0,
         notAborted: !aborted,
-        allConditionsMet: currentStep === 5 && figmaEvaluationResults.length > 0 && !aborted,
+        allConditionsMet: currentStep === 5 && figmaSpecs.length > 0 && figmaEvaluationResults.length > 0 && !aborted,
         userGuid: userGuid
       }
     });
-    if (currentStep === 5 && figmaEvaluationResults.length > 0 && !aborted) {
-      console.log('🚀 StepExecutor - Starting Figma spec selection process');
-      const selectBestFigmaSpec = async () => {
+
+    if (currentStep === 5 && figmaSpecs.length > 0 && figmaEvaluationResults.length > 0 && !aborted) {
+      console.log('🚀 StepExecutor - Starting Figma spec selection process (simple logic, no AI)');
+      
+      const selectBestFigmaSpecProcess = async () => {
         try {
-          // Use the figma specs we have (they should be tested by now)
-          const specsToProcess = figmaSpecs.length > 0 ? figmaSpecs : [
-            { name: 'Mock Spec 1', description: 'Mock description for testing' },
-            { name: 'Mock Spec 2', description: 'Another mock spec' },
-            { name: 'Mock Spec 3', description: 'Third mock spec' }
-          ];
+          console.log('📡 StepExecutor - Making API call to /api/agent/select-figma-spec with:', {
+            figmaSpecsCount: figmaSpecs.length,
+            evaluationResultsCount: figmaEvaluationResults.length
+          });
           
-          console.log('📡 StepExecutor - Making API call to /api/agent/select-figma-spec with specs:', specsToProcess);
           const res = await fetch('/api/agent/select-figma-spec', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'x-user-guid': userGuid },
-            body: JSON.stringify({ figmaSpecs: specsToProcess })
+            body: JSON.stringify({ 
+              figmaSpecs,
+              figmaEvaluationResults
+            })
           });
           
           console.log('📨 StepExecutor - Figma selection API response status:', res.status);
           const data = await res.json();
           console.log('📊 StepExecutor - Step 5 API response data:', data);
           
-          if (data.selectedSpec) {
-            // TODO: Store selected Figma spec in state
-            console.log('✅ StepExecutor - Selected Figma spec:', data.selectedSpec);
-            completeStep(5);
-          } else if (data.success === true) {
-            // Handle case where API succeeds but doesn't return selectedSpec in expected format
-            console.log('⚠️ StepExecutor - API succeeded but no selectedSpec, proceeding anyway');
+          if (data.success && data.selectedSpec) {
+            console.log('✅ StepExecutor - Selected Figma spec successfully:', {
+              selectedSpecName: data.selectedSpec.name,
+              reasoning: data.reasoning?.substring(0, 100) + '...'
+            });
+            
+            // Store the selected spec and reasoning in state
+            setSelectedFigmaSpec(data.selectedSpec);
+            setFigmaSelectionReasoning(data.reasoning);
+            
+            console.log('🏁 StepExecutor - Completing step 5 - Figma Spec Selection');
             completeStep(5);
           } else {
-            console.error('❌ StepExecutor - No selected spec returned:', data);
-            // Complete anyway to prevent workflow from getting stuck
-            console.log('🔄 StepExecutor - Completing Step 5 anyway to prevent blocking');
-            completeStep(5);
+            console.error('❌ StepExecutor - API succeeded but no selectedSpec returned:', data);
+            addError('Figma spec selection failed - no spec selected', 5);
           }
         } catch (err) {
           const message = err instanceof Error ? err.message : 'Unknown error';
           console.error('💥 StepExecutor - Step 5 API call error:', err);
-          // Complete anyway to prevent workflow from getting stuck
-          console.log('🔄 StepExecutor - Completing Step 5 despite error to prevent blocking');
-          completeStep(5);
+          addError(`Figma spec selection failed: ${message}`, 5);
         }
       };
       
-      selectBestFigmaSpec();
+      selectBestFigmaSpecProcess();
     } else if (currentStep === 5 && figmaSpecs.length > 0 && !aborted) {
       // Fallback: if we're on step 5 but don't have evaluation results yet, wait a bit then proceed
       console.log('⏰ StepExecutor - Step 5: No evaluation results yet, setting up fallback timer');
       setTimeout(() => {
         if (currentStep === 5 && !aborted) {
           console.log('🔄 StepExecutor - Step 5 fallback: proceeding without evaluation results');
+          // Use first spec as fallback selection
+          if (figmaSpecs.length > 0) {
+            setSelectedFigmaSpec(figmaSpecs[0]);
+            setFigmaSelectionReasoning('Fallback selection: chose first available spec due to missing evaluation results');
+          }
           completeStep(5);
         }
       }, 2000);
@@ -816,53 +828,62 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
         currentStepIs5: currentStep === 5,
         hasFigmaSpecs: figmaSpecs.length > 0,
         hasFigmaEvaluationResults: figmaEvaluationResults.length > 0,
-        figmaSpecsDetails: figmaSpecs,
+        figmaSpecsDetails: figmaSpecs.map(s => s.name),
         notAborted: !aborted
       });
     }
-  }, [currentStep, figmaSpecs, figmaEvaluationResults, aborted, userGuid, completeStep, addError]);
+  }, [currentStep, figmaSpecs, figmaEvaluationResults, aborted, userGuid, completeStep, addError, setSelectedFigmaSpec, setFigmaSelectionReasoning]);
 
   // Step 6: Actual Figma Generation
   useEffect(() => {
-    console.log('🎨 StepExecutor - Step 6 useEffect triggered:', {
+    console.log('🎨 StepExecutor - Step 6 (Actual Figma Generation) useEffect triggered:', {
       currentStep,
+      selectedFigmaSpec: selectedFigmaSpec?.name || 'None',
       aborted,
-      condition: currentStep === 6 && !aborted,
+      condition: currentStep === 6 && selectedFigmaSpec && !aborted,
       stepName: currentStep === 6 ? 'Actual Figma Generation' : `Step ${currentStep}`
     });
-    if (currentStep === 6 && !aborted) {
-      console.log('🚀 StepExecutor - Starting actual Figma generation process');
+    
+    if (currentStep === 6 && selectedFigmaSpec && !aborted) {
+      console.log('🚀 StepExecutor - Starting actual Figma generation process with selected spec:', selectedFigmaSpec.name);
       const generateActualFigma = async () => {
         try {
-          console.log('📡 StepExecutor - Making API call to /api/agent/generate-actual-figma');
+          console.log('📡 StepExecutor - Making API call to /api/agent/generate-actual-figma with selected spec');
           const res = await fetch('/api/agent/generate-actual-figma', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'x-user-guid': userGuid },
-            body: JSON.stringify({ selectedSpec: 'TODO: Pass selected spec from state' })
+            body: JSON.stringify({ selectedSpec: selectedFigmaSpec })
           });
           
           console.log('📨 StepExecutor - Actual Figma API response status:', res.status);
           const data = await res.json();
-          console.log('📊 StepExecutor - Step 5 API response data:', data);
+          console.log('📊 StepExecutor - Step 6 API response data:', data);
           
           if (data.figmaFile) {
             // TODO: Store actual Figma file in state
             console.log('✅ StepExecutor - Generated actual Figma file:', data.figmaFile);
-            completeStep(5);
+            completeStep(6);
           } else {
             console.error('❌ StepExecutor - No Figma file returned');
-            addError('Failed to generate actual Figma file', 5);
+            addError('Failed to generate actual Figma file', 6);
           }
         } catch (err) {
           const message = err instanceof Error ? err.message : 'Unknown error';
-          console.error('💥 StepExecutor - Step 5 API call error:', err);
-          addError(message, 5);
+          console.error('💥 StepExecutor - Step 6 API call error:', err);
+          addError(message, 6);
         }
       };
       
       generateActualFigma();
+    } else {
+      console.log('⏸️ StepExecutor - Step 6 conditions not met:', {
+        currentStepIs6: currentStep === 6,
+        hasSelectedFigmaSpec: !!selectedFigmaSpec,
+        selectedSpecName: selectedFigmaSpec?.name || 'None',
+        notAborted: !aborted
+      });
     }
-  }, [currentStep, aborted, userGuid, completeStep, addError]);
+  }, [currentStep, selectedFigmaSpec, aborted, userGuid, completeStep, addError]);
 
   // Step 7: Code Generation (3 Parallel Paths)
   useEffect(() => {

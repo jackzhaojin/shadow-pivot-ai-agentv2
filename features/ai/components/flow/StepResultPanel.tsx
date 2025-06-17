@@ -168,22 +168,39 @@ export default function StepResultPanel({
       </div>
     );
   } else if (stepIndex === 5) {
+    // Get selected Figma spec and reasoning from provider
+    const { selectedFigmaSpec, figmaSelectionReasoning } = useAgentFlow();
+    
     content = (
       <div>
-        <h4 className="font-semibold mb-2">Figma Spec Selection & Evaluation</h4>
+        <h4 className="font-semibold mb-2">Figma Spec Selection</h4>
         <div className="text-sm text-gray-700">
-          <p className="mb-2">AI selected the best Figma specification based on quality scores:</p>
-          <ul className="list-disc list-inside space-y-1 text-gray-600 mb-3">
-            <li>Overall quality score and assessment results</li>
-            <li>Lowest number of critical and high severity issues</li>
-            <li>Best balance of clarity, structure, and feasibility</li>
-            <li>Strongest alignment with accessibility standards</li>
-          </ul>
-          {/* TODO: Display selected Figma spec details with quality metrics */}
-          <div className="mt-3 p-3 bg-green-50 border border-green-200 rounded-lg">
-            <p className="text-green-800 font-medium">Selected: Highest quality specification</p>
-            <p className="text-green-600 text-xs mt-1">Ready for Figma generation</p>
-          </div>
+          <p className="mb-2">Selected the best Figma specification using simple logic (effort vs. clarity tradeoffs):</p>
+          
+          {selectedFigmaSpec ? (
+            <div className="space-y-3">
+              <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
+                <p className="text-green-800 font-medium">✅ Selected: {selectedFigmaSpec.name}</p>
+                <p className="text-green-600 text-sm mt-1">{selectedFigmaSpec.description}</p>
+              </div>
+              
+              {figmaSelectionReasoning && (
+                <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                  <p className="text-blue-800 font-medium text-sm">Selection Reasoning:</p>
+                  <p className="text-blue-700 text-sm mt-1">{figmaSelectionReasoning}</p>
+                </div>
+              )}
+              
+              <div className="text-xs text-gray-600 mt-2">
+                <p><strong>Selection Criteria:</strong> Composite scoring based on clarity (35%), feasibility (35%), structure (20%), accessibility (10%), minus penalties for critical/high issues</p>
+              </div>
+            </div>
+          ) : (
+            <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+              <p className="text-yellow-800 font-medium">⏳ Figma spec selection in progress...</p>
+              <p className="text-yellow-600 text-xs mt-1">Processing evaluation results</p>
+            </div>
+          )}
         </div>
       </div>
     );
