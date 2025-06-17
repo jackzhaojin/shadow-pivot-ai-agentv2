@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import { SpecEvaluationResult } from '@/lib/services/figmaSpecEvaluation';
 
 interface FigmaEvaluationResultsProps {

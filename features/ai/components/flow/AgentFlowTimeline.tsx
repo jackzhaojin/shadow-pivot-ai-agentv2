@@ -3,6 +3,7 @@ import React from 'react';
 import StepResultPanel from './StepResultPanel';
 import type { DesignEvaluationResult } from '../../../../lib/services/designEvaluation';
 import type { FigmaSpec } from '../../../../lib/services/figmaSpec';
+import type { SpecEvaluationResult } from '../../../../lib/services/figmaSpecEvaluation';
 
 interface AgentFlowTimelineProps {
   steps: string[];
@@ -19,6 +20,7 @@ interface AgentFlowTimelineProps {
   evaluationResults?: DesignEvaluationResult[];
   selectedConcept?: string | null;
   figmaSpecs?: FigmaSpec[];
+  figmaEvaluationResults?: SpecEvaluationResult[];
 }
 
 function StepIcon({ 
@@ -100,21 +102,22 @@ function ConnectorLine({ index, stepsLength, completed, currentStep, failedStep 
   );
 }
 
-export default function AgentFlowTimeline({ 
-  steps, 
-  currentStep, 
-  completed, 
-  failedStep, 
-  aborted, 
-  onStepClick, 
-  openSteps, 
-  validatedSteps, 
+export default function AgentFlowTimeline({
+  steps,
+  currentStep,
+  completed,
+  failedStep,
+  aborted,
+  onStepClick,
+  openSteps,
+  validatedSteps,
   invalidatedSteps,
   brief = '',
   designConcepts = [],
   evaluationResults = [],
   selectedConcept = null,
-  figmaSpecs = []
+  figmaSpecs = [],
+  figmaEvaluationResults = []
 }: AgentFlowTimelineProps) {
   return (
     <div className="space-y-6">
@@ -209,6 +212,7 @@ export default function AgentFlowTimeline({
                     evaluationResults={evaluationResults}
                     selectedConcept={selectedConcept}
                     figmaSpecs={figmaSpecs}
+                    figmaEvaluationResults={figmaEvaluationResults}
                     onClose={() => onStepClick?.(index)}
                   />
                 </div>

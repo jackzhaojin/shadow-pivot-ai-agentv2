@@ -2,8 +2,10 @@
 import React, { useState } from 'react';
 import type { DesignEvaluationResult } from '../../../../lib/services/designEvaluation';
 import type { FigmaSpec } from '../../../../lib/services/figmaSpec';
+import type { SpecEvaluationResult } from '../../../../lib/services/figmaSpecEvaluation';
 import { useAgentFlow as originalUseAgentFlow } from '../../../../providers/AgentFlowProvider';
 import ValidationPanel from './ValidationPanel';
+import { FigmaEvaluationResults } from './FigmaEvaluationResults';
 
 // Special handling for test environment
 let useAgentFlow = originalUseAgentFlow;
@@ -23,6 +25,7 @@ interface StepResultPanelProps {
   evaluationResults: DesignEvaluationResult[];
   selectedConcept: string | null;
   figmaSpecs?: FigmaSpec[];
+  figmaEvaluationResults?: SpecEvaluationResult[];
   onClose?: () => void;
 }
 
@@ -33,9 +36,10 @@ export default function StepResultPanel({
   evaluationResults,
   selectedConcept,
   figmaSpecs = [],
+  figmaEvaluationResults = [],
   onClose
 }: StepResultPanelProps) {
-  const { validatedSteps, invalidatedSteps, markStepValidated, markStepInvalidated } = useAgentFlow();
+  const { validatedSteps, invalidatedSteps, markStepValidated, markStepInvalidated, figmaEvaluationResults: providerEvaluationResults } = useAgentFlow();
   const [showDetails, setShowDetails] = useState(true); // Initially show details for a better user experience
   
   const isValidated = validatedSteps.has(stepIndex);
@@ -116,25 +120,50 @@ export default function StepResultPanel({
       </div>
     );
   } else if (stepIndex === 4) {
+    const evaluationResultsToShow = figmaEvaluationResults.length > 0 ? figmaEvaluationResults : providerEvaluationResults;
     content = (
       <div>
-        <h4 className="font-semibold mb-2">Figma Spec Selection & Evaluation</h4>
+        <h4 className="font-semibold mb-2">Figma Spec Evaluation & Quality Assurance</h4>
         <div className="text-sm text-gray-700">
-          <p className="mb-2">AI evaluated {figmaSpecs.length} Figma specifications and selected the best one based on:</p>
-          <ul className="list-disc list-inside space-y-1 text-gray-600">
+          <p className="mb-3">AI performed comprehensive quality evaluation of {figmaSpecs.length} Figma specifications, assessing:</p>
+          <ul className="list-disc list-inside space-y-1 text-gray-600 mb-4">
             <li>Design clarity and visual hierarchy</li>
             <li>Component structure and reusability</li>
             <li>Technical feasibility for code generation</li>
-            <li>Alignment with modern UI/UX principles</li>
+            <li>Accessibility and inclusive design principles</li>
           </ul>
-          {/* TODO: Display selected Figma spec details */}
-          <div className="mt-3 p-3 bg-green-50 border border-green-200 rounded-lg">
-            <p className="text-green-800 font-medium">Selected: Best scoring specification</p>
-          </div>
+          {evaluationResultsToShow.length > 0 ? (
+            <FigmaEvaluationResults results={evaluationResultsToShow} />
+          ) : (
+            <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+              <p className="text-yellow-800 font-medium">⏳ Quality evaluation in progress...</p>
+              <p className="text-yellow-600 text-xs mt-1">Analyzing {figmaSpecs.length} specifications</p>
+            </div>
+          )}
         </div>
       </div>
     );
   } else if (stepIndex === 5) {
+    content = (
+      <div>
+        <h4 className="font-semibold mb-2">Figma Spec Selection & Evaluation</h4>
+        <div className="text-sm text-gray-700">
+          <p className="mb-2">AI selected the best Figma specification based on quality scores:</p>
+          <ul className="list-disc list-inside space-y-1 text-gray-600 mb-3">
+            <li>Overall quality score and assessment results</li>
+            <li>Lowest number of critical and high severity issues</li>
+            <li>Best balance of clarity, structure, and feasibility</li>
+            <li>Strongest alignment with accessibility standards</li>
+          </ul>
+          {/* TODO: Display selected Figma spec details with quality metrics */}
+          <div className="mt-3 p-3 bg-green-50 border border-green-200 rounded-lg">
+            <p className="text-green-800 font-medium">Selected: Highest quality specification</p>
+            <p className="text-green-600 text-xs mt-1">Ready for Figma generation</p>
+          </div>
+        </div>
+      </div>
+    );
+  } else if (stepIndex === 6) {
     content = (
       <div>
         <h4 className="font-semibold mb-2">Actual Figma Generation</h4>
@@ -148,7 +177,7 @@ export default function StepResultPanel({
         </div>
       </div>
     );
-  } else if (stepIndex === 6) {
+  } else if (stepIndex === 7) {
     content = (
       <div>
         <h4 className="font-semibold mb-2">Code Generation (3 Parallel)</h4>
@@ -166,7 +195,7 @@ export default function StepResultPanel({
         </div>
       </div>
     );
-  } else if (stepIndex === 7) {
+  } else if (stepIndex === 8) {
     content = (
       <div>
         <h4 className="font-semibold mb-2">Code Evaluation & Selection</h4>
@@ -186,7 +215,7 @@ export default function StepResultPanel({
         </div>
       </div>
     );
-  } else if (stepIndex === 8) {
+  } else if (stepIndex === 9) {
     content = (
       <div>
         <h4 className="font-semibold mb-2">Download Artifacts</h4>
