@@ -54,7 +54,7 @@ export function FigmaEvaluationResults({ results }: FigmaEvaluationResultsProps)
 
       <div className="grid gap-6">
         {results.map((result, index) => (
-          <div key={result.specId || index} className="border border-gray-200 rounded-xl p-6 bg-white shadow-sm">
+          <div key={`${result.specId || 'spec'}-${index}`} className="border border-gray-200 rounded-xl p-6 bg-white shadow-sm">
             {/* Header with overall score */}
             <div className="flex items-center justify-between mb-4">
               <h4 className="text-md font-medium text-gray-900">

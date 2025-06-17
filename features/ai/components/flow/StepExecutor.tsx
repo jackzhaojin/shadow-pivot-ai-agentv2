@@ -776,6 +776,25 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
         // Complete step 4 (evaluation)
         console.log('🏁 StepExecutor - Manual completing step 4 - Figma Spec Evaluation & Quality Assurance');
         completeStep(4);
+
+        // IMMEDIATE manual trigger for Step 5 - same pattern as Step 4 manual trigger
+        console.log('🚀🚀 StepExecutor - IMMEDIATE manual trigger for Step 5 after Step 4 completion');
+        setTimeout(() => {
+          console.log('🎯🎯 StepExecutor - Executing immediate Step 5 trigger with current data:', {
+            figmaSpecsToEvaluateCount: figmaSpecsToEvaluate.length,
+            evaluationResultsCount: data.evaluationResults?.length || 0
+          });
+          
+          if (figmaSpecsToEvaluate.length > 0 && data.evaluationResults && data.evaluationResults.length > 0) {
+            console.log('📡🎯 StepExecutor - Triggering Step 5 with valid data');
+            triggerFigmaSelection();
+          } else {
+            console.error('❌ StepExecutor - Immediate Step 5 trigger: Missing required data:', {
+              hasFigmaSpecsToEvaluate: figmaSpecsToEvaluate.length > 0,
+              hasEvaluationResults: data.evaluationResults && data.evaluationResults.length > 0
+            });
+          }
+        }, 100);
       } else if (data.success === true) {
         // Handle case where API returns success but with unexpected structure
         console.log('⚠️ StepExecutor - Manual trigger: API returned success with unexpected structure:', data);
@@ -795,6 +814,15 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
         
         setFigmaEvaluationResults(fallbackResults);
         completeStep(4);
+
+        // IMMEDIATE manual trigger for Step 5 - success fallback path
+        setTimeout(() => {
+          console.log('🚀🚀 StepExecutor - IMMEDIATE manual trigger for Step 5 after success fallback completion');
+          if (figmaSpecsToEvaluate.length > 0 && fallbackResults.length > 0) {
+            console.log('📡🎯 StepExecutor - Triggering Step 5 with fallback data');
+            triggerFigmaSelection();
+          }
+        }, 100);
       } else {
         console.error('❌ StepExecutor - Manual evaluation: Invalid results format:', data);
         
@@ -818,6 +846,15 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
         
         setFigmaEvaluationResults(fallbackResults);
         completeStep(4);
+
+        // IMMEDIATE manual trigger for Step 5 - error fallback path
+        setTimeout(() => {
+          console.log('🚀🚀 StepExecutor - IMMEDIATE manual trigger for Step 5 after error fallback completion');
+          if (figmaSpecsToEvaluate.length > 0 && fallbackResults.length > 0) {
+            console.log('📡🎯 StepExecutor - Triggering Step 5 with error fallback data');
+            triggerFigmaSelection();
+          }
+        }, 100);
       }
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Unknown error';
