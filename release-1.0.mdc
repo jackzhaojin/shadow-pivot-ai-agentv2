@@ -395,7 +395,44 @@
 - Architecture: Integrated with prompt template system for maintainability
 - Results: System now provides meaningful scores, rankings, and reasoning for all concepts
 
-#### 3.3.6 Test Suite Refactoring ✅ COMPLETED
+#### 3.3.6 Figma Spec Validation Error Handling (Critical Fix) ✅ COMPLETED
+**Complexity**: Medium | **Effort**: Medium
+**Story**: As a user running the AI agent pipeline, I need the system to gracefully handle invalid figma specs by filtering them out and continuing with valid ones, instead of stopping the entire flow when one spec has validation errors.
+
+**Problem**: When one of the 3 parallel figma spec generators produced an invalid spec (missing name field), the evaluation API returned a 400 error and stopped the entire flow instead of filtering out the invalid spec and continuing with the 2 valid ones.
+
+- [x] **Identify validation failure point**: Located strict validation in `/api/agent/evaluate-figma-specs`
+  - ✅ Found API was rejecting entire request if any single spec was invalid
+  - ✅ Traced error: "Invalid spec at index 2: missing or invalid name field"
+  - ✅ Confirmed frontend had fallback logic but API was preventing it from triggering
+- [x] **Implement graceful validation**: Change API to filter invalid specs and continue with valid ones
+  - ✅ Replaced strict validation with filtering approach in `app/api/agent/evaluate-figma-specs/route.ts`
+  - ✅ Added logic to separate valid and invalid specs
+  - ✅ Continue processing if at least 1 valid spec exists
+  - ✅ Return warning information about filtered specs in response
+- [x] **Enhance frontend handling**: Improve StepExecutor to log filtering warnings
+  - ✅ Updated `features/ai/components/flow/StepExecutor.tsx` to handle filtering warnings
+  - ✅ Added logging for filtered spec details
+  - ✅ Enhanced error messages to show original vs processed spec counts
+- [x] **Improve validation robustness**: Strengthen prompt template validation
+  - ✅ Enhanced `lib/utils/promptUtils.ts` to properly validate required fields
+  - ✅ Added support for checking `required` array in JSON schema
+  - ✅ Added validation for empty string fields and nested property types
+- [x] **Create comprehensive test**: Verify filtering behavior with mixed valid/invalid specs
+  - ✅ Created `tests/endpoints/test-figma-evaluation-invalid-specs.js`
+  - ✅ Test sends 5 specs: 2 valid, 3 invalid (missing name, null name, empty name)
+  - ✅ Verifies API returns 200 status with 2 evaluation results
+  - ✅ Confirms warning message about filtered specs is included
+  - ✅ Validates detailed invalid spec information is provided
+
+**✅ FIGMA SPEC VALIDATION ERROR HANDLING FIX COMPLETE**
+- API Changes: Modified evaluation endpoint to filter invalid specs instead of rejecting requests
+- Frontend Updates: Enhanced error handling and logging for filtered specs
+- Validation Improvements: Strengthened prompt template validation with required field checking
+- Test Coverage: Added comprehensive test for mixed valid/invalid spec scenarios
+- Results: System now gracefully continues with 2 valid specs when 1 fails, as expected
+
+#### 3.3.7 Test Suite Refactoring ✅ COMPLETED
 **Complexity**: Medium | **Effort**: Medium
 **Story**: As a developer, I need the tests organized by layer with simple runners so I can execute them quickly and reliably.
 

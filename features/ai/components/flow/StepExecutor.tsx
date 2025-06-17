@@ -682,8 +682,18 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
       if (data.evaluationResults && Array.isArray(data.evaluationResults)) {
         console.log('✅ StepExecutor - Manual evaluation results received:', {
           resultsCount: data.evaluationResults.length,
-          avgScore: data.evaluationResults.reduce((sum: number, r: any) => sum + r.overallScore, 0) / data.evaluationResults.length
+          avgScore: data.evaluationResults.reduce((sum: number, r: any) => sum + r.overallScore, 0) / data.evaluationResults.length,
+          originalSpecsCount: figmaSpecsToEvaluate.length,
+          hasWarning: !!data.warning
         });
+
+        // Log if some specs were filtered out
+        if (data.warning) {
+          console.warn('⚠️ StepExecutor - Some specs were filtered out during evaluation:', data.warning);
+          if (data.invalidSpecs) {
+            console.warn('📝 StepExecutor - Details of invalid specs:', data.invalidSpecs);
+          }
+        }
 
         // Store evaluation results in state
         setFigmaEvaluationResults(data.evaluationResults);

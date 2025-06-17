@@ -15,6 +15,7 @@ const promptTemplateSchema = z.object({
       description: z.string()
     }).optional(),
     properties: z.record(z.any()).optional(),
+    required: z.array(z.string()).optional(),
     minItems: z.number().optional(),
     maxItems: z.number().optional()
   }).optional(),
@@ -87,7 +88,8 @@ export function validateResponse(response: unknown, template: PromptTemplate): {
   }
 
   try {
-    const { type, minItems, maxItems } = template.responseFormat;
+    const { type, minItems, maxItems, properties, required } = template.responseFormat;
+    const errors: string[] = [];
     
     if (type === 'array') {
       if (!Array.isArray(response)) {
@@ -98,18 +100,59 @@ export function validateResponse(response: unknown, template: PromptTemplate): {
       }
       
       if (minItems !== undefined && response.length < minItems) {
-        return { 
-          isValid: false, 
-          errors: [`Response array must contain at least ${minItems} items, but got ${response.length}`] 
-        };
+        errors.push(`Response array must contain at least ${minItems} items, but got ${response.length}`);
       }
       
       if (maxItems !== undefined && response.length > maxItems) {
-        return { 
-          isValid: false, 
-          errors: [`Response array must contain at most ${maxItems} items, but got ${response.length}`] 
+        errors.push(`Response array must contain at most ${maxItems} items, but got ${response.length}`);
+      }
+    } else if (type === 'object') {
+      if (!response || typeof response !== 'object' || Array.isArray(response)) {
+        return {
+          isValid: false,
+          errors: ['Response is not an object']
         };
       }
+      
+      // Check required fields
+      if (required && Array.isArray(required)) {
+        const responseObj = response as Record<string, unknown>;
+        for (const field of required) {
+          if (!(field in responseObj) || responseObj[field] === null || responseObj[field] === undefined) {
+            errors.push(`Required field '${field}' is missing`);
+          } else if (typeof responseObj[field] === 'string' && (responseObj[field] as string).trim() === '') {
+            errors.push(`Required field '${field}' is empty`);
+          }
+        }
+      }
+      
+      // Validate property types if specified
+      if (properties) {
+        const responseObj = response as Record<string, unknown>;
+        for (const [fieldName, fieldSpec] of Object.entries(properties)) {
+          if (fieldName in responseObj) {
+            const fieldValue = responseObj[fieldName];
+            if (typeof fieldSpec === 'object' && fieldSpec && 'type' in fieldSpec) {
+              const expectedType = (fieldSpec as any).type;
+              if (expectedType === 'array' && !Array.isArray(fieldValue)) {
+                errors.push(`Field '${fieldName}' should be an array`);
+              } else if (expectedType === 'string' && typeof fieldValue !== 'string') {
+                errors.push(`Field '${fieldName}' should be a string`);
+              } else if (expectedType === 'array' && Array.isArray(fieldValue)) {
+                // Check minItems for array fields
+                const arraySpec = fieldSpec as any;
+                if (arraySpec.minItems !== undefined && fieldValue.length < arraySpec.minItems) {
+                  errors.push(`Field '${fieldName}' must contain at least ${arraySpec.minItems} items`);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    
+    if (errors.length > 0) {
+      return { isValid: false, errors };
     }
     
     return { isValid: true, parsedResponse: response };
