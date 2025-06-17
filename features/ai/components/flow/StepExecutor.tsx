@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useState } from 'react';
 import { useAgentFlow } from '@/providers/AgentFlowProvider';
 import { selectBestDesignConcept } from '@/lib/services/specSelection';
 import { useUserGuid } from '@/providers/UserGuidProvider';
@@ -450,19 +450,23 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
   }, [currentStep, selectedConcept, aborted, userGuid, setFigmaSpecStates, setFigmaSpecs, completeStep, addError]);
 
   // Step 4: Figma Spec Evaluation & Quality Assurance
+  const [isStep4Running, setIsStep4Running] = useState(false);
+  
   useEffect(() => {
     console.log('🧪🧪🧪 StepExecutor - Step 4 (Testing) useEffect triggered:', {
       currentStep,
       figmaSpecsLength: figmaSpecs.length,
       figmaSpecs: figmaSpecs.map((spec, i) => ({ index: i, name: spec.name, componentsCount: spec.components?.length })),
       aborted,
-      condition: currentStep === 4 && figmaSpecs.length > 0 && !aborted,
+      isStep4Running,
+      condition: currentStep === 4 && figmaSpecs.length > 0 && !aborted && !isStep4Running,
       stepName: currentStep === 4 ? 'Figma Spec Testing & Quality Assurance' : `Step ${currentStep}`,
       debugging: {
         currentStepIs4: currentStep === 4,
         hasFigmaSpecs: figmaSpecs.length > 0,
         notAborted: !aborted,
-        allConditionsMet: currentStep === 4 && figmaSpecs.length > 0 && !aborted,
+        notAlreadyRunning: !isStep4Running,
+        allConditionsMet: currentStep === 4 && figmaSpecs.length > 0 && !aborted && !isStep4Running,
         userGuid: userGuid
       }
     });
@@ -472,10 +476,12 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
     console.log('  - currentStep === 4:', currentStep === 4, '(currentStep is:', currentStep, ')');
     console.log('  - figmaSpecs.length > 0:', figmaSpecs.length > 0, '(length is:', figmaSpecs.length, ')');
     console.log('  - !aborted:', !aborted, '(aborted is:', aborted, ')');
-    console.log('  - Combined condition:', currentStep === 4 && figmaSpecs.length > 0 && !aborted);
+    console.log('  - !isStep4Running:', !isStep4Running, '(isStep4Running is:', isStep4Running, ')');
+    console.log('  - Combined condition:', currentStep === 4 && figmaSpecs.length > 0 && !aborted && !isStep4Running);
 
-    if (currentStep === 4 && figmaSpecs.length > 0 && !aborted) {
+    if (currentStep === 4 && figmaSpecs.length > 0 && !aborted && !isStep4Running) {
       console.log('🚀🚀🚀 StepExecutor - Starting Figma spec evaluation and quality assurance process');
+      setIsStep4Running(true);
       const evaluateFigmaSpecsQuality = async () => {
         try {
           console.log('📡 StepExecutor - Making API call to /api/agent/evaluate-figma-specs with specs:', {
@@ -521,11 +527,13 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
           const message = err instanceof Error ? err.message : 'Unknown error';
           console.error('💥 StepExecutor - Step 4 API call error:', err);
           addError(message, 4);
+        } finally {
+          setIsStep4Running(false);
         }
       };
 
       evaluateFigmaSpecsQuality();
-    } else if (currentStep === 4 && figmaSpecs.length === 0 && !aborted) {
+    } else if (currentStep === 4 && figmaSpecs.length === 0 && !aborted && !isStep4Running) {
       // Fallback: Try with mock data if no figmaSpecs yet (race condition handling)
       console.log('🔧🔧🔧 StepExecutor - Step 4 triggered but no figmaSpecs yet, using fallback with timeout');
       setTimeout(() => {
@@ -533,7 +541,7 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
           figmaSpecsLength: figmaSpecs.length,
           stillOnStep4: currentStep === 4
         });
-        if (currentStep === 4 && figmaSpecs.length === 0) {
+        if (currentStep === 4 && figmaSpecs.length === 0 && !isStep4Running) {
           console.log('🔄 StepExecutor - Using mock data for Step 4 evaluation');
           const mockFigmaSpecs = [
             { name: 'Mock Figma Spec 1', description: 'Mock spec for testing', components: [] },
@@ -542,6 +550,7 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
           ];
           
           const evaluateWithMockData = async () => {
+            setIsStep4Running(true);
             try {
               console.log('📡 StepExecutor - Making API call with mock data');
               const res = await fetch('/api/agent/evaluate-figma-specs', {
@@ -564,6 +573,8 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
             } catch (err) {
               console.error('💥 StepExecutor - Mock evaluation error:', err);
               addError('Failed to evaluate with mock data', 4);
+            } finally {
+              setIsStep4Running(false);
             }
           };
           
@@ -576,18 +587,24 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
         hasFigmaSpecs: figmaSpecs.length > 0,
         notAborted: !aborted,
         figmaSpecsDetails: figmaSpecs.map((spec, i) => ({ index: i, name: spec.name })),
-        willRetryWithTimeout: currentStep === 4 && figmaSpecs.length === 0 && !aborted
+        willRetryWithTimeout: currentStep === 4 && figmaSpecs.length === 0 && !aborted && !isStep4Running
       });
     }
-  }, [currentStep, figmaSpecs, aborted, userGuid, setFigmaEvaluationResults, completeStep, addError]);
+  }, [currentStep, figmaSpecs, aborted, isStep4Running, userGuid, setFigmaEvaluationResults, completeStep, addError]);
 
   // Manual trigger for Step 4 to handle timing issues
   const triggerStep4FigmaEvaluation = useCallback(async (figmaSpecsToEvaluate: FigmaSpec[]) => {
+    if (isStep4Running) {
+      console.log('⏸️ StepExecutor - Step 4 already running, skipping manual trigger');
+      return;
+    }
+    
     console.log('🚀🚀🚀 StepExecutor - Manual trigger for Step 4 Figma evaluation:', {
       specsCount: figmaSpecsToEvaluate.length,
       userGuid
     });
 
+    setIsStep4Running(true);
     try {
       console.log('📡 StepExecutor - Making API call to /api/agent/evaluate-figma-specs with manual trigger');
       const res = await fetch('/api/agent/evaluate-figma-specs', {
@@ -623,8 +640,10 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
       const message = err instanceof Error ? err.message : 'Unknown error';
       console.error('💥 StepExecutor - Manual Step 4 API call error:', err);
       addError(message, 4);
+    } finally {
+      setIsStep4Running(false);
     }
-  }, [userGuid, setFigmaEvaluationResults, completeStep, addError]);
+  }, [isStep4Running, userGuid, setFigmaEvaluationResults, completeStep, addError]);
 
   // Step 5: Figma Spec Selection & Evaluation  
   useEffect(() => {
@@ -1043,12 +1062,6 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
         
         completeStep(3);
         console.log('🎉 StepExecutor - Step 3 completion called, should advance to Step 4');
-        
-        // Force trigger Step 4 evaluation since state sync might have timing issues
-        setTimeout(() => {
-          console.log('🔄 StepExecutor - Force triggering Step 4 evaluation after Step 3 completion');
-          triggerStep4FigmaEvaluation(successfulResults);
-        }, 100); // Small delay to ensure state updates
         
         // Debug: Check if step 4 will trigger
         setTimeout(() => {

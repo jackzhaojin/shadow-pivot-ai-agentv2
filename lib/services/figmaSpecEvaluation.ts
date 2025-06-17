@@ -358,13 +358,13 @@ function createErrorEvaluationResult(spec: FigmaSpec, index: number, errorMessag
 
 /**
  * Evaluates multiple Figma specs in parallel for quality assessment
- * Following established patterns from design evaluation and parallel processing
+ * Expects exactly 3 specs - processes them all in parallel with rate limit protection
  */
 export async function evaluateFigmaSpecs(specs: FigmaSpec[]): Promise<SpecEvaluationResult[]> {
-  console.log('🚀 evaluateFigmaSpecs - Starting batch evaluation:', {
+  console.log('🚀 evaluateFigmaSpecs - Starting evaluation:', {
     specsCount: specs.length,
-    specsNames: specs.map(s => s.name).slice(0, 3),
-    hasMoreSpecs: specs.length > 3
+    specsNames: specs.map(s => s.name),
+    expectedCount: 3
   });
 
   if (!specs || specs.length === 0) {
@@ -372,8 +372,12 @@ export async function evaluateFigmaSpecs(specs: FigmaSpec[]): Promise<SpecEvalua
     return [];
   }
 
+  if (specs.length !== 3) {
+    console.warn('⚠️ evaluateFigmaSpecs - Expected exactly 3 specs, got:', specs.length);
+  }
+
   try {
-    // Process all specs in parallel for maximum efficiency
+    // Process all specs in parallel (should be exactly 3)
     const promises = specs.map((spec, index) => evaluateFigmaSpec(spec, index));
     
     console.log('⏳ evaluateFigmaSpecs - Executing parallel evaluation calls:', {

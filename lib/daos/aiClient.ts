@@ -23,10 +23,14 @@ export async function generateChatCompletion(
     maxTokens?: number;
     temperature?: number;
     topP?: number;
+    retryAttempts?: number;
+    retryDelay?: number;
   } = {}
 ) {
   const client = getAIClient();
   const deploymentName = process.env.AZURE_OPENAI_DEPLOYMENT_NAME || 'gpt-4o-mini-deployment';
+  const retryAttempts = options.retryAttempts || 3;
+  const baseRetryDelay = options.retryDelay || 1000;
   
   console.log('🔗 generateChatCompletion - Making AI request:', {
     endpoint: process.env.AZURE_OPENAI_ENDPOINT || 'https://story-generation-v1.openai.azure.com/',
@@ -35,68 +39,116 @@ export async function generateChatCompletion(
     systemPromptLength: messages.find(m => m.role === 'system')?.content?.length || 0,
     userPromptLength: messages.find(m => m.role === 'user')?.content?.length || 0,
     maxTokens: options.maxTokens || 1000,
-    temperature: options.temperature || 0.7
+    temperature: options.temperature || 0.7,
+    retryAttempts
   });
   
-  try {
-    const response = await client.chat.completions.create({
-      model: deploymentName,
-      messages,
-      max_tokens: options.maxTokens || 1000,
-      temperature: options.temperature || 0.7,
-      top_p: options.topP || 1.0
-    });
-    
-    console.log('✅ generateChatCompletion - AI response received:', {
-      hasResponse: !!response,
-      id: response.id,
-      object: response.object,
-      created: response.created,
-      model: response.model,
-      choicesCount: response.choices?.length || 0,
-      usagePromptTokens: response.usage?.prompt_tokens,
-      usageCompletionTokens: response.usage?.completion_tokens,
-      usageTotalTokens: response.usage?.total_tokens,
-      finishReason: response.choices?.[0]?.finish_reason
-    });
-    
-    return response;
-  } catch (error) {
-    // Enhanced error logging for debugging
-    const errorInfo = {
-      error,
-      errorMessage: error instanceof Error ? error.message : 'Unknown error',
-      errorStack: error instanceof Error ? error.stack : undefined,
-      errorType: error?.constructor?.name,
-      deployment: deploymentName,
-      endpoint: process.env.AZURE_OPENAI_ENDPOINT
-    };
-
-    // Check for specific error types
-    if (error && typeof error === 'object') {
-      const errObj = error as {
-        status?: number;
-        code?: number | string;
-        message?: string;
-        headers?: Record<string, string>;
-        response?: {
+  for (let attempt = 1; attempt <= retryAttempts; attempt++) {
+    try {
+      const response = await client.chat.completions.create({
+        model: deploymentName,
+        messages,
+        max_tokens: options.maxTokens || 1000,
+        temperature: options.temperature || 0.7,
+        top_p: options.topP || 1.0
+      });
+      
+      console.log('✅ generateChatCompletion - AI response received:', {
+        attempt,
+        hasResponse: !!response,
+        id: response.id,
+        object: response.object,
+        created: response.created,
+        model: response.model,
+        choicesCount: response.choices?.length || 0,
+        usagePromptTokens: response.usage?.prompt_tokens,
+        usageCompletionTokens: response.usage?.completion_tokens,
+        usageTotalTokens: response.usage?.total_tokens,
+        finishReason: response.choices?.[0]?.finish_reason
+      });
+      
+      return response;
+    } catch (error) {      // Check for rate limiting (429) and handle retries
+      if (error && typeof error === 'object') {
+        const errObj = error as {
           status?: number;
-          statusText?: string;
+          code?: number | string;
+          message?: string;
           headers?: Record<string, string>;
-          data?: unknown;
+          response?: {
+            status?: number;
+            statusText?: string;
+            headers?: Record<string, string>;
+            data?: unknown;
+          };
         };
-        body?: unknown;
-        statusText?: string;
-        config?: { url?: string };
-        url?: string;
-        errno?: number;
-        hostname?: string;
-        port?: number;
-        address?: string;
-        type?: string;
-        name?: string;
-        cause?: unknown;
+        
+        // Rate limiting (429) - retry with exponential backoff
+        if (errObj.status === 429 || errObj.code === 429 || (error instanceof Error && error.message?.includes('429'))) {
+          const retryAfter = errObj.headers?.['retry-after'] || errObj.response?.headers?.['retry-after'];
+          const retryDelay = retryAfter ? parseInt(retryAfter) * 1000 : baseRetryDelay * Math.pow(2, attempt - 1);
+          
+          logError('AI_CLIENT_RATE_LIMIT', `Rate limit exceeded (429) - Attempt ${attempt}/${retryAttempts}`, {
+            attempt,
+            maxAttempts: retryAttempts,
+            retryDelay,
+            retryAfter,
+            status: errObj.status,
+            code: errObj.code,
+            remainingRequests: errObj.headers?.['x-ratelimit-remaining-requests'],
+            remainingTokens: errObj.headers?.['x-ratelimit-remaining-tokens']
+          });
+          
+          console.error(`🚫 generateChatCompletion - Rate limit exceeded (429) - Attempt ${attempt}/${retryAttempts}:`, {
+            retryDelay,
+            retryAfter,
+            willRetry: attempt < retryAttempts
+          });
+          
+          if (attempt < retryAttempts) {
+            console.log(`⏳ Waiting ${retryDelay}ms before retry...`);
+            await new Promise(resolve => setTimeout(resolve, retryDelay));
+            continue; // Retry the request
+          }
+        }
+      }
+
+      // Enhanced error logging for debugging
+      const errorInfo = {
+        error,
+        errorMessage: error instanceof Error ? error.message : 'Unknown error',
+        errorStack: error instanceof Error ? error.stack : undefined,
+        errorType: error?.constructor?.name,
+        deployment: deploymentName,
+        endpoint: process.env.AZURE_OPENAI_ENDPOINT,
+        attempt
       };
+
+      // Check for specific error types
+      if (error && typeof error === 'object') {
+        const errObj = error as {
+          status?: number;
+          code?: number | string;
+          message?: string;
+          headers?: Record<string, string>;
+          response?: {
+            status?: number;
+            statusText?: string;
+            headers?: Record<string, string>;
+            data?: unknown;
+          };
+          body?: unknown;
+          statusText?: string;
+          config?: { url?: string };
+          url?: string;
+          errno?: number;
+          hostname?: string;
+          port?: number;
+          address?: string;
+          type?: string;
+          name?: string;
+          cause?: unknown;
+        };
       
       // Rate limiting (429)
       if (errObj.status === 429 || errObj.code === 429 || (error instanceof Error && error.message?.includes('429'))) {
@@ -116,6 +168,15 @@ export async function generateChatCompletion(
         
         logError('AI_CLIENT_RATE_LIMIT', 'Rate limit exceeded (429)', rateLimitInfo);
         console.error('🚫 generateChatCompletion - Rate limit exceeded (429):', rateLimitInfo);
+        
+        // If this was the last attempt or not a retryable error, throw the error
+        if (attempt === retryAttempts) {
+          // Log final error before throwing
+          if (errObj.status === 429 || errObj.code === 429) {
+            console.error('💥 generateChatCompletion - All retry attempts exhausted for rate limit');
+          }
+          throw error;
+        }
       }
       // Other HTTP errors
       else if (errObj.status || errObj.response?.status) {
@@ -129,6 +190,7 @@ export async function generateChatCompletion(
             url: errObj.config?.url || errObj.url
           }
         });
+        throw error;
       }
       // Network/connection errors
       else if (errObj.code === 'ENOTFOUND' || errObj.code === 'ECONNREFUSED' || errObj.code === 'ETIMEDOUT') {
@@ -142,6 +204,7 @@ export async function generateChatCompletion(
             address: errObj.address
           }
         });
+        throw error;
       }
       // Generic structured error
       else {
@@ -156,14 +219,18 @@ export async function generateChatCompletion(
             cause: errObj.cause
           }
         });
+        throw error;
       }
     } else {
       // Simple error logging
       console.error('💥 generateChatCompletion - AI request failed:', errorInfo);
+      throw error;
     }
-    
-    throw error;
+    }
   }
+  
+  // If we reach here, all retries failed
+  throw new Error(`AI request failed after ${retryAttempts} attempts`);
 }
 
 export async function generateText(
