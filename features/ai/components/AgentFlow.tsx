@@ -21,7 +21,8 @@ export default function AgentFlow() {
     failedStep,
     validatedSteps,
     invalidatedSteps,
-    figmaSpecs
+    figmaSpecs,
+    figmaEvaluationResults
   } = useAgentFlow();
 
   const userGuid = useUserGuid();
@@ -128,6 +129,7 @@ export default function AgentFlow() {
               evaluationResults={evaluationResults}
               selectedConcept={selectedConcept}
               figmaSpecs={figmaSpecs}
+              figmaEvaluationResults={figmaEvaluationResults}
             />
           </div>
         )}
