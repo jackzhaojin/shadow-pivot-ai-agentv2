@@ -546,6 +546,7 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
 
   // Step 4: Figma Spec Evaluation & Quality Assurance
   const [isStep4Running, setIsStep4Running] = useState(false);
+  const [isStep5Running, setIsStep5Running] = useState(false);
   
   useEffect(() => {
     console.log('🧪🧪🧪 StepExecutor - Step 4 (Testing) useEffect triggered:', {
@@ -1329,6 +1330,86 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
       nextStep();
     }
   }, [currentStep, aborted, failedStep, designConcepts, nextStep]);
+
+  // Manual trigger for Step 5 after Step 4 completion
+  const triggerFigmaSelection = useCallback(async () => {
+    if (isStep5Running) {
+      console.log('⏸️ StepExecutor - Manual Step 5 trigger: already running, skipping');
+      return;
+    }
+
+    console.log('🚀🚀🚀 StepExecutor - Manual trigger for Step 5 Figma selection:', {
+      figmaSpecsCount: figmaSpecs.length,
+      evaluationResultsCount: figmaEvaluationResults.length,
+      userGuid,
+      hasSelectedSpec: !!selectedFigmaSpec
+    });
+
+    if (figmaSpecs.length === 0 || figmaEvaluationResults.length === 0) {
+      console.error('❌ StepExecutor - Manual Step 5 trigger: Missing required data');
+      return;
+    }
+
+    setIsStep5Running(true);
+
+    try {
+      console.log('📡 StepExecutor - Making API call to /api/agent/select-figma-spec with manual trigger');
+      
+      const res = await fetch('/api/agent/select-figma-spec', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-user-guid': userGuid },
+        body: JSON.stringify({ 
+          figmaSpecs,
+          figmaEvaluationResults
+        })
+      });
+      
+      console.log('📨 StepExecutor - Manual selection API response status:', res.status);
+      const data = await res.json();
+      console.log('📊 StepExecutor - Manual Step 5 API response data:', data);
+      
+      if (data.success && data.selectedSpec) {
+        console.log('✅ StepExecutor - Manual selection results received:', {
+          selectedSpecName: data.selectedSpec.name,
+          reasoning: data.reasoning?.substring(0, 100) + '...'
+        });
+        
+        setSelectedFigmaSpec(data.selectedSpec);
+        setFigmaSelectionReasoning(data.reasoning);
+        
+        console.log('🏁 StepExecutor - Manual completing step 5 - Figma Spec Selection');
+        completeStep(5);
+      } else {
+        console.error('❌ StepExecutor - Manual selection: Invalid results format:', data);
+        addError('Figma spec selection failed - no spec selected', 5);
+      }
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Unknown error';
+      console.error('💥 StepExecutor - Manual Step 5 API call error:', err);
+      addError(`Figma spec selection failed: ${message}`, 5);
+    } finally {
+      setIsStep5Running(false);
+    }
+  }, [isStep5Running, figmaSpecs, figmaEvaluationResults, userGuid, selectedFigmaSpec, setSelectedFigmaSpec, setFigmaSelectionReasoning, completeStep, addError]);
+
+  // Force trigger Step 5 after Step 4 completion
+  useEffect(() => {
+    console.log('🔄 StepExecutor - Post-Step-4-completion verification:', {
+      currentStep,
+      figmaEvaluationResultsLength: figmaEvaluationResults.length,
+      figmaSpecsLength: figmaSpecs.length,
+      selectedFigmaSpec: selectedFigmaSpec?.name || 'None',
+      aborted
+    });
+
+    // Force trigger Step 5 when Step 4 has completed and we have evaluation results
+    if (currentStep === 5 && figmaEvaluationResults.length > 0 && figmaSpecs.length > 0 && !selectedFigmaSpec && !aborted) {
+      console.log('🚀 StepExecutor - Force triggering Step 5 from post-completion verification');
+      setTimeout(() => {
+        triggerFigmaSelection();
+      }, 100);
+    }
+  }, [currentStep, figmaEvaluationResults.length, figmaSpecs.length, selectedFigmaSpec, aborted, triggerFigmaSelection]);
 
   return (
     <>

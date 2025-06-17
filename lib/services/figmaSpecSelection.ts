@@ -16,7 +16,15 @@ export function selectBestFigmaSpec(
   evaluations: SpecEvaluationResult[]
 ): { selectedSpec: FigmaSpec | null; selectionReason: string; ranking: FigmaSpecWithEvaluation[] } {
   
+  console.log('🎯 selectBestFigmaSpec - Starting selection process:', {
+    specsCount: specs.length,
+    evaluationsCount: evaluations.length,
+    specNames: specs.map(s => s.name),
+    evaluationIds: evaluations.map(e => e.specId)
+  });
+  
   if (specs.length === 0 || evaluations.length === 0) {
+    console.log('❌ selectBestFigmaSpec - No specs or evaluations available');
     return {
       selectedSpec: null,
       selectionReason: 'No specs or evaluations available for selection',
@@ -84,6 +92,13 @@ export function selectBestFigmaSpec(
   
   // Generate selection reasoning
   const reasoning = generateSelectionReason(bestSpec, rankedSpecs);
+
+  console.log('✅ selectBestFigmaSpec - Selection completed:', {
+    selectedSpecName: selectedSpec.name,
+    compositeScore: bestSpec.compositeScore,
+    reasoningLength: reasoning.length,
+    totalSpecs: rankedSpecs.length
+  });
 
   return {
     selectedSpec,
