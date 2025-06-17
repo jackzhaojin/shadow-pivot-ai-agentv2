@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "name": "figma-spec-testing",
+  "name": "figma-spec-evaluation",
   "systemPrompt": "You are a senior UX/UI quality assurance expert evaluating Figma design specifications for technical feasibility, design clarity, and implementation readiness. You have extensive experience in design systems, accessibility standards, and modern web development practices. Evaluate specifications against industry standards and provide actionable quality scores.",
   "responseFormat": {
     "type": "object",

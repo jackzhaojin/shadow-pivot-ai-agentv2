@@ -3,7 +3,7 @@ import { loadPromptTemplate, applyTemplate, validateResponse } from '../utils/pr
 import path from 'path';
 import type { FigmaSpec } from './figmaSpec';
 
-export interface SpecTestingResult {
+export interface SpecEvaluationResult {
   specId: string;
   overallScore: number;
   clarityScore: number;
@@ -21,19 +21,19 @@ export interface SpecTestingResult {
 }
 
 /**
- * Tests and evaluates a single Figma spec for quality, clarity, and technical feasibility
+ * Evaluates a single Figma spec for quality, clarity, and technical feasibility
  * Following established patterns from design evaluation and figma spec generation
  */
-export async function testFigmaSpec(spec: FigmaSpec, index = 0): Promise<SpecTestingResult> {
-  console.log('🧪 testFigmaSpec - Starting quality evaluation for spec:', {
+export async function evaluateFigmaSpec(spec: FigmaSpec, index = 0): Promise<SpecEvaluationResult> {
+  console.log('🧪 evaluateFigmaSpec - Starting quality evaluation for spec:', {
     specName: spec.name?.substring(0, 50) + '...',
     specDescription: spec.description?.substring(0, 100) + '...',
     componentCount: spec.components?.length || 0,
     index
   });
 
-  const templatePath = path.join('prompts', 'figma-spec-testing', 'v1.json');
-  console.log('📁 testFigmaSpec - Loading template from:', templatePath);
+  const templatePath = path.join('prompts', 'figma-spec-evaluation', 'v1.json');
+  console.log('📁 evaluateFigmaSpec - Loading template from:', templatePath);
 
   let template, systemPrompt, userPrompt, temperature;
   try {
