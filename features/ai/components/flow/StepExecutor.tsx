@@ -1034,18 +1034,39 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
     console.log('📦 StepExecutor - Step 6 (Download Figma Specification) useEffect triggered:', {
       currentStep,
       selectedFigmaSpec: selectedFigmaSpec?.name || 'None',
+      selectedFigmaSpecDesc: selectedFigmaSpec?.description?.substring(0, 50) || 'None',
       aborted,
       condition: currentStep === 6 && selectedFigmaSpec && !aborted,
       stepName: currentStep === 6 ? 'Download Figma Specification' : `Step ${currentStep}`
     });
     
-    if (currentStep === 6 && selectedFigmaSpec && !aborted) {
-      console.log('🚀 StepExecutor - Download step reached - auto-completing since download is user-initiated');
-      // Auto-complete this step since download is user-initiated
-      setTimeout(() => {
-        console.log('✅ StepExecutor - Auto-completing download Figma specification step');
-        completeStep(6);
-      }, 1000);
+    if (currentStep === 6 && !aborted) {
+      if (selectedFigmaSpec) {
+        console.log('🚀 StepExecutor - Download step reached with selectedFigmaSpec - auto-completing');
+        // Auto-complete this step since download is user-initiated
+        setTimeout(() => {
+          console.log('✅ StepExecutor - Auto-completing download Figma specification step');
+          completeStep(6);
+        }, 1000);
+      } else {
+        // Give React a moment to update state, then check again
+        console.log('⏳ StepExecutor - Step 6 reached but selectedFigmaSpec not set yet, checking again in 500ms...');
+        setTimeout(() => {
+          const currentSelectedSpec = selectedFigmaSpec;
+          console.log('🔄 StepExecutor - Rechecking Step 6 conditions after delay:', {
+            currentStep,
+            hasSelectedSpec: !!currentSelectedSpec,
+            willTriggerCompletion: currentStep === 6 && currentSelectedSpec && !aborted
+          });
+          
+          if (currentStep === 6 && currentSelectedSpec && !aborted) {
+            console.log('✅ StepExecutor - Auto-completing download Figma specification step (delayed)');
+            completeStep(6);
+          } else {
+            console.log('⚠️ StepExecutor - Step 6 still missing selectedFigmaSpec after delay. State sync issue?');
+          }
+        }, 500);
+      }
     } else {
       console.log('⏸️ StepExecutor - Step 6 conditions not met:', {
         currentStepIs6: currentStep === 6,

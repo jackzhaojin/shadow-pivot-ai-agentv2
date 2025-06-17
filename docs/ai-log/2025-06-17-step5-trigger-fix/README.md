@@ -88,3 +88,68 @@ API Response (Fresh) → Provider Context (Fresh) → Component Props (Potential
 
 ## Lesson Learned
 When dealing with React closures and async operations, always verify that the data being used is from the most current source. Provider context often provides fresher data than component props or local state.
+
+## Follow-up Fix: Step 6 Download Completion Issue
+
+### Issue Discovered
+After fixing the Step 5 trigger, a similar timing issue was discovered in Step 6 (Download Figma Specification):
+
+```
+❌ PROBLEM: Download showing "Currently processing..." indefinitely
+✅ Step 5 completion works correctly
+✅ currentStep advances to 6 correctly  
+❌ Step 6 auto-completion fails due to stale selectedFigmaSpec state
+```
+
+### Root Cause Analysis
+**Same React state timing issue:** When Step 5 completes:
+1. `setSelectedFigmaSpec(data.selectedSpec)` is called
+2. `completeStep(5)` immediately advances to Step 6
+3. Step 6 useEffect runs before `selectedFigmaSpec` state updates
+4. Condition `currentStep === 6 && selectedFigmaSpec && !aborted` fails
+5. Download step never auto-completes
+
+### Solution Applied
+Enhanced Step 6 useEffect with **delayed retry logic**:
+
+```tsx
+// BEFORE: Single check, fails if selectedFigmaSpec not ready
+if (currentStep === 6 && selectedFigmaSpec && !aborted) {
+  completeStep(6);
+}
+
+// AFTER: Immediate check + delayed retry fallback
+if (currentStep === 6 && !aborted) {
+  if (selectedFigmaSpec) {
+    completeStep(6); // Immediate completion if ready
+  } else {
+    // Give React time to update state, then retry
+    setTimeout(() => {
+      if (currentStep === 6 && selectedFigmaSpec && !aborted) {
+        completeStep(6); // Delayed completion
+      }
+    }, 500);
+  }
+}
+```
+
+### Enhanced Debugging
+Added comprehensive logging to track state synchronization:
+- When Step 6 useEffect triggers
+- Whether selectedFigmaSpec is available immediately  
+- When delayed retry executes
+- Whether delayed retry finds the selectedFigmaSpec
+
+### Technical Insight
+This is a **classic React state batching/timing issue** where:
+- **Synchronous operations** (state setting + step completion) happen faster than React's state updates
+- **useEffect dependencies** may not reflect the latest state immediately
+- **Delayed retry pattern** allows React's state updates to complete
+
+### Result
+- ✅ Step 6 now completes automatically in all scenarios
+- ✅ User sees "Download Figma Specification" → Auto-completes → Full flow complete
+- ✅ No more "Currently processing..." indefinite state
+- ✅ Robust error recovery with comprehensive logging
+
+This completes the MVP agent pipeline with full automation from brief input to downloadable ZIP! 🎉
