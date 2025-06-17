@@ -9,6 +9,7 @@ function runEndpointTests() {
     run('npm run test:design-concepts');
     run('npm run test:design-evaluation');
     run('npm run test:figma-spec');
+    run('npm run test:figma-evaluation');
   } else {
     console.log('⚠️  Skipping endpoint tests in Codex environment');
   }
