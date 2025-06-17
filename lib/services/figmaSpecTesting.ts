@@ -118,7 +118,7 @@ export async function evaluateFigmaSpec(spec: FigmaSpec, index = 0): Promise<Spe
       }
     }
 
-    let data: SpecTestingResult;
+    let data: SpecEvaluationResult;
     try {
       console.log('🔄 testFigmaSpec - Parsing JSON content:', jsonContent.substring(0, 200) + '...');
       data = JSON.parse(jsonContent);
@@ -188,7 +188,7 @@ export async function evaluateFigmaSpec(spec: FigmaSpec, index = 0): Promise<Spe
       console.log('🛠️ testFigmaSpec - Attempting fallback parsing...');
 
       // Create fallback result
-      const fallbackResult: SpecTestingResult = {
+      const fallbackResult: SpecEvaluationResult = {
         specId: spec.name || `spec-${index}`,
         overallScore: 6.5, // Reasonable middle score
         clarityScore: 7.0,
@@ -227,7 +227,7 @@ export async function evaluateFigmaSpec(spec: FigmaSpec, index = 0): Promise<Spe
     });
 
     // Create error fallback result
-    const errorResult: SpecTestingResult = {
+    const errorResult: SpecEvaluationResult = {
       specId: spec.name || `spec-${index}`,
       overallScore: 5.0, // Neutral score for errors
       clarityScore: 5.0,
@@ -255,7 +255,7 @@ export async function evaluateFigmaSpec(spec: FigmaSpec, index = 0): Promise<Spe
  * Tests multiple Figma specs for quality and returns results
  * Uses parallel processing patterns from Step 3.5 implementation
  */
-export async function testFigmaSpecs(specs: FigmaSpec[]): Promise<SpecTestingResult[]> {
+export async function testFigmaSpecs(specs: FigmaSpec[]): Promise<SpecEvaluationResult[]> {
   console.log('🧪 testFigmaSpecs - Starting quality evaluation for multiple specs:', {
     specsCount: specs.length,
     specsPreview: specs.map((s, i) => ({
@@ -272,7 +272,7 @@ export async function testFigmaSpecs(specs: FigmaSpec[]): Promise<SpecTestingRes
 
   try {
     // Use parallel processing for efficiency (following Step 3.5 patterns)
-    const promises = specs.map((spec, index) => testFigmaSpec(spec, index));
+    const promises = specs.map((spec, index) => evaluateFigmaSpec(spec, index));
     const results = await Promise.allSettled(promises);
 
     console.log('📊 testFigmaSpecs - Parallel testing completed:', {
@@ -312,7 +312,7 @@ export async function testFigmaSpecs(specs: FigmaSpec[]): Promise<SpecTestingRes
           ],
           strengths: ['Spec available for manual review'],
           recommendations: ['Perform manual quality assessment', 'Verify component specifications']
-        } as SpecTestingResult;
+        } as SpecEvaluationResult;
       }
     });
 
@@ -351,6 +351,6 @@ export async function testFigmaSpecs(specs: FigmaSpec[]): Promise<SpecTestingRes
       ],
       strengths: [],
       recommendations: ['Manual quality assessment required']
-    } as SpecTestingResult));
+    } as SpecEvaluationResult));
   }
 }

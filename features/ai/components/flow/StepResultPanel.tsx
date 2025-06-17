@@ -94,25 +94,49 @@ export default function StepResultPanel({
       </div>
     );
   } else if (stepIndex === 3) {
+    const successfulSpecs = figmaSpecs.length;
+    const totalExpected = 3;
+    
     content = (
       <div>
         <h4 className="font-semibold mb-2">Figma Specifications (3 Parallel)</h4>
-        {figmaSpecs.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {figmaSpecs.map((spec, i) => (
-              <div key={i} className="border rounded-lg p-3 bg-gray-50">
-                <h5 className="font-medium text-sm mb-1">{spec.name}</h5>
-                <p className="text-xs text-gray-600 mb-2">{spec.description}</p>
-                <div className="text-xs">
-                  <span className="font-medium">Components:</span>
-                  <ul className="mt-1 space-y-1">
-                    {spec.components?.map((comp: string, j: number) => (
-                      <li key={j} className="text-gray-700">• {comp}</li>
-                    ))}
-                  </ul>
+        {successfulSpecs > 0 ? (
+          <div>
+            <div className={`p-2 mb-3 rounded-lg ${
+              successfulSpecs === totalExpected 
+                ? 'bg-green-50 border border-green-200' 
+                : 'bg-yellow-50 border border-yellow-200'
+            }`}>
+              <p className={`font-medium ${
+                successfulSpecs === totalExpected ? 'text-green-800' : 'text-yellow-800'
+              }`}>
+                {successfulSpecs === totalExpected 
+                  ? `✅ All ${totalExpected} Figma specs generated successfully!`
+                  : `⚠️ ${successfulSpecs} out of ${totalExpected} Figma specs generated successfully`
+                }
+              </p>
+              {successfulSpecs < totalExpected && (
+                <p className="text-yellow-600 text-xs mt-1">
+                  Some AI calls failed, but proceeding with the successful specifications.
+                </p>
+              )}
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {figmaSpecs.map((spec, i) => (
+                <div key={i} className="border rounded-lg p-3 bg-gray-50">
+                  <h5 className="font-medium text-sm mb-1">{spec.name}</h5>
+                  <p className="text-xs text-gray-600 mb-2">{spec.description}</p>
+                  <div className="text-xs">
+                    <span className="font-medium">Components:</span>
+                    <ul className="mt-1 space-y-1">
+                      {spec.components?.map((comp: string, j: number) => (
+                        <li key={j} className="text-gray-700">• {comp}</li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         ) : (
           <div className="text-sm text-gray-500">No Figma specs generated yet</div>
