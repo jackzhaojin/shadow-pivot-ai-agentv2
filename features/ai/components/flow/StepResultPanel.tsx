@@ -144,7 +144,6 @@ export default function StepResultPanel({
       </div>
     );
   } else if (stepIndex === 4) {
-    const evaluationResultsToShow = figmaEvaluationResults.length > 0 ? figmaEvaluationResults : providerEvaluationResults;
     content = (
       <div>
         <h4 className="font-semibold mb-2">Figma Spec Evaluation & Quality Assurance</h4>
@@ -156,8 +155,8 @@ export default function StepResultPanel({
             <li>Technical feasibility for code generation</li>
             <li>Accessibility and inclusive design principles</li>
           </ul>
-          {evaluationResultsToShow.length > 0 ? (
-            <FigmaEvaluationResults results={evaluationResultsToShow} />
+          {figmaEvaluationResults.length > 0 ? (
+            <FigmaEvaluationResults results={figmaEvaluationResults} />
           ) : (
             <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
               <p className="text-yellow-800 font-medium">⏳ Quality evaluation in progress...</p>
@@ -190,15 +189,43 @@ export default function StepResultPanel({
                   <p className="text-blue-700 text-sm mt-1">{figmaSelectionReasoning}</p>
                 </div>
               )}
-              
-              <div className="text-xs text-gray-600 mt-2">
-                <p><strong>Selection Criteria:</strong> Composite scoring based on clarity (35%), feasibility (35%), structure (20%), accessibility (10%), minus penalties for critical/high issues</p>
-              </div>
             </div>
           ) : (
-            <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-              <p className="text-yellow-800 font-medium">⏳ Figma spec selection in progress...</p>
-              <p className="text-yellow-600 text-xs mt-1">Processing evaluation results</p>
+            <div className="space-y-3">
+              <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                <p className="text-yellow-800 font-medium">⏳ Processing selection...</p>
+                <p className="text-yellow-700 text-sm mt-1">
+                  Evaluating {figmaSpecs.length} Figma specifications with {figmaEvaluationResults.length} evaluation results.
+                </p>
+              </div>
+              
+              {/* Manual trigger button for debugging */}
+              <button
+                onClick={async () => {
+                  console.log('🔧 Manual Step 5 trigger button clicked');
+                  try {
+                    const res = await fetch('/api/agent/select-figma-spec', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json', 'x-user-guid': 'manual-trigger' },
+                      body: JSON.stringify({ 
+                        figmaSpecs,
+                        figmaEvaluationResults: figmaEvaluationResults.length > 0 ? figmaEvaluationResults : providerEvaluationResults
+                      })
+                    });
+                    const data = await res.json();
+                    console.log('🔧 Manual trigger result:', data);
+                    if (data.success && data.selectedSpec) {
+                      // This would normally be handled by the StepExecutor, but for debugging
+                      window.location.reload(); // Simple way to refresh state
+                    }
+                  } catch (err) {
+                    console.error('🔧 Manual trigger error:', err);
+                  }
+                }}
+                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm"
+              >
+                🔧 Manual Trigger (Debug)
+              </button>
             </div>
           )}
         </div>

@@ -1409,7 +1409,19 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
         triggerFigmaSelection();
       }, 100);
     }
-  }, [currentStep, figmaEvaluationResults.length, figmaSpecs.length, selectedFigmaSpec, aborted, triggerFigmaSelection]);
+    
+    // Additional aggressive trigger for Step 5 - trigger if we have data regardless of currentStep
+    if (figmaEvaluationResults.length > 0 && figmaSpecs.length > 0 && !selectedFigmaSpec && !aborted && !isStep5Running) {
+      console.log('🚀🚀 StepExecutor - AGGRESSIVE Step 5 trigger regardless of currentStep:', {
+        currentStep,
+        hasData: true,
+        willTrigger: true
+      });
+      setTimeout(() => {
+        triggerFigmaSelection();
+      }, 200);
+    }
+  }, [currentStep, figmaEvaluationResults.length, figmaSpecs.length, selectedFigmaSpec, aborted, triggerFigmaSelection, isStep5Running]);
 
   return (
     <>
