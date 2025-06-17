@@ -25,7 +25,7 @@ This directory contains detailed technical documentation for the AI Agent Flow p
 ## 📚 How to Use This Documentation
 
 ### For Developers
-- **New to the project?** Start with the main [README.md](../../README.md) and [PRD](../../prd.md)
+- **New to the project?** Start with the main [README.md](../../README.md) and [PRD 1.0](../../prd-1.0.md)
 - **Encountering issues?** Check the debugging guides and known issue resolutions
 - **Adding new features?** Review implementation patterns and architectural decisions
 
@@ -77,7 +77,8 @@ This documentation index is maintained alongside the codebase. When adding new t
 ## 📖 Related Documentation
 
 - **[Project README](../../README.md)** - Project overview and setup
-- **[Product Requirements Document (PRD)](../../prd.md)** - Product specifications and technical design
+- **[Product Requirements Document (PRD 1.0)](../../prd-1.0.md)** - Product specifications and technical design
+- **[PRD Backlog](../../prd-backlog.md)** - Full historical requirements
 - **[Agent Guide (AGENTS.md)](../../AGENTS.md)** - AI agent implementation details
 - **[AI Development Logs](../ai-log/)** - Session-by-session development history
 

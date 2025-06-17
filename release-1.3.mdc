@@ -1,0 +1,14 @@
+# TSLA AI UI Agent - Release 1.3 Task Plan
+
+This release adds code sample upload and generation features. See `prd-1.3.md`.
+
+## Goals
+- Allow uploading a ZIP of existing code.
+- Generate new components that mirror the uploaded style.
+- Provide combined download of code and Figma specs.
+
+## Tasks
+1. Implement file upload API and client-side form.
+2. Parse uploaded archive to extract style conventions.
+3. Integrate style extraction into generation prompts.
+4. Package code with Figma specs for download.

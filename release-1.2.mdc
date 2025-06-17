@@ -1,0 +1,12 @@
+# TSLA AI UI Agent - Release 1.2 Task Plan
+
+Refer to `prd-1.2.md` for detailed requirements.
+
+## Goals
+- Persist user sessions and generated Figma files.
+- Provide a session history page with download links.
+
+## Tasks
+1. Implement server-side session storage with identifier cookies.
+2. Store Figma archives per session and expose an API to fetch them.
+3. Create a history page listing prior sessions and download buttons.

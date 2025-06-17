@@ -114,8 +114,11 @@ docs/                    # Project documentation
   ├── ai-log/            # Logs from AI agent development sessions
   └── ...                # Other documentation files
 infrastructure.md       # Azure infrastructure setup guide
-release-1.0.mdc          # Release 1.0 (MVP) task management and progress
-release-1.1.mdc          # Release 1.1 (Post-MVP) task management and planning
+release-1.0.mdc          # Release 1.0 (MVP) task plan
+release-1.1.mdc          # Release 1.1 (Stabilization) plan
+release-1.2.mdc          # Release 1.2 task plan
+release-1.3.mdc          # Release 1.3 task plan
+release-backlog.mdc      # Backlog tasks from earlier plans
 AGENTS.md                # Repository guidelines for contributors
 ...                      # Other configuration files (Docker, Next.js, TS, etc.)
 ```
@@ -133,9 +136,16 @@ AGENTS.md                # Repository guidelines for contributors
 For more detailed information, please refer to the following documents:
 
 - **Core Project Documents**
-  - [AI Agent PRD](./prd.md): Product Requirements for the AI Agent.
-  - [Release 1.0 Task Management](./release-1.0.mdc): MVP task breakdown, phases, and progress.
-  - [Release 1.1 Task Management](./release-1.1.mdc): Post-MVP enhancements and advanced features.
+  - [PRD 1.0](./prd-1.0.md): MVP product requirements.
+  - [PRD 1.1](./prd-1.1.md): Stabilization requirements.
+  - [PRD 1.2](./prd-1.2.md): Session management requirements.
+  - [PRD 1.3](./prd-1.3.md): Code sample upload requirements.
+  - [PRD Backlog](./prd-backlog.md): Original full requirements document.
+  - [Release 1.0 Task Plan](./release-1.0.mdc): MVP tasks.
+  - [Release 1.1 Task Plan](./release-1.1.mdc): Stabilization tasks.
+  - [Release 1.2 Task Plan](./release-1.2.mdc): Session management tasks.
+  - [Release 1.3 Task Plan](./release-1.3.mdc): Code sample upload tasks.
+  - [Release Backlog](./release-backlog.mdc): Archived tasks from earlier plans.
   - [Repository Guidelines (AGENTS.md)](./AGENTS.md): Guidelines for contributing to this repository.
 - **Technical Guides**
   - [Azure Infrastructure Setup](./infrastructure.md): Guide to setting up necessary Azure resources.
