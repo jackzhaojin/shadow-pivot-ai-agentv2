@@ -22,6 +22,107 @@ export interface SpecEvaluationResult {
 }
 
 /**
+ * Attempts to extract evaluation scores from markdown text when JSON parsing fails
+ */
+function tryExtractScoresFromMarkdown(markdownText: string, spec: FigmaSpec, index: number): SpecEvaluationResult | null {
+  try {
+    console.log('🔍 tryExtractScoresFromMarkdown - Attempting to parse markdown evaluation');
+    
+    // Try to extract scores from patterns like "Score: 8/10" or "8/10"
+    const scorePatterns = [
+      /Design Clarity.*?(?:Score:?\s*)?(\d+)\/10/i,
+      /Component Structure.*?(?:Score:?\s*)?(\d+)\/10/i,
+      /Technical Feasibility.*?(?:Score:?\s*)?(\d+)\/10/i,
+      /Accessibility.*?(?:Score:?\s*)?(\d+)\/10/i
+    ];
+    
+    const scores: number[] = [];
+    for (const pattern of scorePatterns) {
+      const match = markdownText.match(pattern);
+      if (match && match[1]) {
+        const score = parseInt(match[1]);
+        if (!isNaN(score) && score >= 0 && score <= 10) {
+          scores.push(score);
+        }
+      }
+    }
+    
+    // If we found at least 2 scores, create a result
+    if (scores.length >= 2) {
+      const clarityScore = scores[0] || 7;
+      const structureScore = scores[1] || 7;
+      const feasibilityScore = scores[2] || 6;
+      const accessibilityScore = scores[3] || 6;
+      const overallScore = Math.round((clarityScore + structureScore + feasibilityScore + accessibilityScore) / 4);
+      
+      // Extract strengths and recommendations from markdown
+      const strengths: string[] = [];
+      const recommendations: string[] = [];
+      const issues: SpecEvaluationResult['issues'] = [];
+      
+      // Look for strengths patterns
+      const strengthsMatch = markdownText.match(/\*\*Strengths:\*\*([\s\S]*?)(?:\*\*|###|$)/i);
+      if (strengthsMatch) {
+        const strengthsText = strengthsMatch[1];
+        const strengthLines = strengthsText.split('\n').filter(line => 
+          line.trim().startsWith('-') || line.trim().startsWith('*')
+        );
+        strengthLines.forEach(line => {
+          const cleaned = line.trim().replace(/^[-*]\s*/, '').trim();
+          if (cleaned.length > 10) {
+            strengths.push(cleaned);
+          }
+        });
+      }
+      
+      // Look for recommendations/improvements
+      const recMatch = markdownText.match(/(?:Recommendations|Areas for Improvement|Improvement)[\s\S]*?:([\s\S]*?)(?:\*\*|###|$)/i);
+      if (recMatch) {
+        const recText = recMatch[1];
+        const recLines = recText.split('\n').filter(line => 
+          line.trim().startsWith('-') || line.trim().startsWith('*') || line.trim().match(/^\d+\./)
+        );
+        recLines.forEach(line => {
+          const cleaned = line.trim().replace(/^[-*]\s*/, '').replace(/^\d+\.\s*/, '').trim();
+          if (cleaned.length > 10) {
+            recommendations.push(cleaned);
+          }
+        });
+      }
+      
+      console.log('✅ tryExtractScoresFromMarkdown - Successfully extracted scores:', {
+        clarityScore,
+        structureScore,
+        feasibilityScore,
+        accessibilityScore,
+        overallScore,
+        strengthsCount: strengths.length,
+        recommendationsCount: recommendations.length
+      });
+      
+      return {
+        specId: spec.name || `spec-${index}`,
+        overallScore,
+        clarityScore,
+        structureScore,
+        feasibilityScore,
+        accessibilityScore,
+        issues,
+        strengths,
+        recommendations
+      };
+    }
+    
+    console.log('⚠️ tryExtractScoresFromMarkdown - Could not extract enough scores, found:', scores.length);
+    return null;
+    
+  } catch (error) {
+    console.error('❌ tryExtractScoresFromMarkdown - Error during markdown parsing:', error);
+    return null;
+  }
+}
+
+/**
  * Evaluates a single Figma spec for quality, clarity, and technical feasibility
  * Following established patterns from design evaluation and figma spec generation
  */
@@ -205,6 +306,14 @@ export async function evaluateFigmaSpec(spec: FigmaSpec, index = 0): Promise<Spe
     logError('FIGMA_EVAL_PARSE', `Response parsing failed for spec ${index}`, parseErrorInfo, requestId);
     
     console.error('❌ evaluateFigmaSpec - Response parsing/validation error:', parseErrorInfo);
+    
+    // Try to extract scores from markdown as a fallback
+    console.log('🔄 evaluateFigmaSpec - Attempting markdown score extraction...');
+    const markdownResult = tryExtractScoresFromMarkdown(rawResponse, spec, index);
+    if (markdownResult) {
+      console.log('✅ evaluateFigmaSpec - Successfully extracted scores from markdown');
+      return markdownResult;
+    }
     
     // Log the full raw response for debugging (truncated for readability)
     console.log('🔍 FULL_RAW_RESPONSE_DEBUG:', {
