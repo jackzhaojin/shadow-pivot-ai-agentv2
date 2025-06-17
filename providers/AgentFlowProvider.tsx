@@ -88,6 +88,17 @@ export function AgentFlowProvider({ children }: { children: React.ReactNode }) {
   const [selectedFigmaSpec, setSelectedFigmaSpec] = useState<FigmaSpec | null>(null);
   const [figmaSelectionReasoning, setFigmaSelectionReasoning] = useState<string | null>(null);
 
+  // Add logging for key state changes
+  useEffect(() => {
+    console.log('📦 AgentFlowProvider - selectedFigmaSpec changed:', {
+      hasSpec: !!selectedFigmaSpec,
+      specName: selectedFigmaSpec?.name || 'None',
+      specDesc: selectedFigmaSpec?.description?.substring(0, 50) || 'None',
+      currentStep,
+      timestamp: new Date().toISOString()
+    });
+  }, [selectedFigmaSpec, currentStep]);
+
   // Add logging for key state setters
   const setDesignConceptsWithLogging = (concepts: string[]) => {
     console.log('🎨 AgentFlowProvider - setDesignConcepts called:', {
@@ -133,6 +144,25 @@ export function AgentFlowProvider({ children }: { children: React.ReactNode }) {
       currentStep
     });
     setFigmaEvaluationResults(results);
+  };
+
+  const setSelectedFigmaSpecWithLogging = (spec: FigmaSpec | null) => {
+    console.log('📦 AgentFlowProvider - setSelectedFigmaSpec called:', {
+      previousSpecName: selectedFigmaSpec?.name || 'None',
+      newSpecName: spec?.name || 'None',
+      newSpecDesc: spec?.description?.substring(0, 50) || 'None',
+      currentStep,
+      timestamp: new Date().toISOString()
+    });
+    setSelectedFigmaSpec(spec);
+  };
+
+  const setFigmaSelectionReasoningWithLogging = (reasoning: string | null) => {
+    console.log('💭 AgentFlowProvider - setFigmaSelectionReasoning called:', {
+      reasoning: reasoning?.substring(0, 100) || 'None',
+      currentStep
+    });
+    setFigmaSelectionReasoning(reasoning);
   };
 
   const startExecution = () => {
@@ -251,9 +281,9 @@ export function AgentFlowProvider({ children }: { children: React.ReactNode }) {
         figmaEvaluationResults,
         setFigmaEvaluationResults: setFigmaEvaluationResultsWithLogging,
         selectedFigmaSpec,
-        setSelectedFigmaSpec,
+        setSelectedFigmaSpec: setSelectedFigmaSpecWithLogging,
         figmaSelectionReasoning,
-        setFigmaSelectionReasoning
+        setFigmaSelectionReasoning: setFigmaSelectionReasoningWithLogging
       }}
     >
       {children}

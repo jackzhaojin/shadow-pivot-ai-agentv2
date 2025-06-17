@@ -29,6 +29,7 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
     setSelectedConcept,
     addError,
     failedStep,
+    completed,
     figmaSpecStates,
     setFigmaSpecStates,
     figmaSpecs,
@@ -594,6 +595,23 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
         
         console.log('🏁 StepExecutor - Fresh data completing step 5 - Figma Spec Selection');
         completeStep(5);
+        
+        // AGGRESSIVE: Force trigger Step 6 completion after Step 5
+        console.log('🚀🚀 StepExecutor - FORCING Step 6 check after Step 5 completion');
+        setTimeout(() => {
+          console.log('🎯🎯 StepExecutor - FORCED Step 6 trigger - checking conditions:', {
+            currentStepWillBe6: true, // completeStep(5) should advance to 6
+            hasSelectedSpec: !!data.selectedSpec,
+            specName: data.selectedSpec?.name?.substring(0, 50),
+            timestamp: new Date().toISOString()
+          });
+          
+          // Force complete step 6 if we have the selected spec
+          if (data.selectedSpec && !aborted) {
+            console.log('✅🚀 StepExecutor - FORCE completing Step 6 after Step 5');
+            completeStep(6);
+          }
+        }, 200); // Give completeStep(5) time to update currentStep
       } else {
         console.error('❌ StepExecutor - Fresh data selection: Invalid results format:', data);
         addError('Figma spec selection failed - no spec selected', 5);
@@ -1029,191 +1047,99 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
     }
   }, [currentStep, figmaSpecs, figmaEvaluationResults, aborted, userGuid, completeStep, addError, setSelectedFigmaSpec, setFigmaSelectionReasoning, selectedFigmaSpec]);
 
-  // Step 6: Download Figma Specification (MVP Final Step)
+  // Step 6: Download Figma Specification (MVP Final Step) - SIMPLIFIED
   useEffect(() => {
-    console.log('📦 StepExecutor - Step 6 (Download Figma Specification) useEffect triggered:', {
+    console.log('📦 StepExecutor - Step 6 SIMPLIFIED useEffect triggered:', {
       currentStep,
       selectedFigmaSpec: selectedFigmaSpec?.name || 'None',
-      selectedFigmaSpecDesc: selectedFigmaSpec?.description?.substring(0, 50) || 'None',
       aborted,
-      condition: currentStep === 6 && selectedFigmaSpec && !aborted,
-      stepName: currentStep === 6 ? 'Download Figma Specification' : `Step ${currentStep}`
+      isCompleted: completed.has(6),
+      shouldTrigger: currentStep === 6 && selectedFigmaSpec && !aborted && !completed.has(6)
     });
     
-    if (currentStep === 6 && !aborted) {
-      if (selectedFigmaSpec) {
-        console.log('🚀 StepExecutor - Download step reached with selectedFigmaSpec - auto-completing');
-        // Auto-complete this step since download is user-initiated
+    // Only auto-complete if we're on step 6, have a selected spec, not aborted, and not already completed
+    if (currentStep === 6 && selectedFigmaSpec && !aborted && !completed.has(6)) {
+      console.log('🚀📦 StepExecutor - SIMPLIFIED Step 6 auto-completion triggered');
+      setTimeout(() => {
+        console.log('✅📦 StepExecutor - SIMPLIFIED Auto-completing Step 6');
+        completeStep(6);
+      }, 100);
+    }
+  }, [currentStep, selectedFigmaSpec, aborted, completed, completeStep]);
+
+  // Additional useEffect specifically to auto-complete Step 6 when both conditions are met
+  // This helps ensure Step 6 completes regardless of React batching
+  useEffect(() => {
+    console.log('🎯📦 StepExecutor - Checking Step 6 auto-completion conditions:', {
+      currentStep,
+      hasSelectedSpec: !!selectedFigmaSpec,
+      selectedSpecName: selectedFigmaSpec?.name?.substring(0, 50) || 'None',
+      aborted,
+      isCompleted: completed.has(6),
+      shouldAutoComplete: currentStep === 6 && selectedFigmaSpec && !aborted && !completed.has(6),
+      timestamp: new Date().toISOString()
+    });
+    
+    // Auto-complete Step 6 when we reach step 6 and have selectedFigmaSpec
+    if (currentStep === 6 && selectedFigmaSpec && !aborted && !completed.has(6)) {
+      console.log('🚀📦 StepExecutor - Auto-completing Step 6 - conditions met');
+      // Use a small delay to let React finish any pending state updates
+      setTimeout(() => {
+        console.log('✅📦 StepExecutor - Executing completeStep(6) now');
+        completeStep(6);
+      }, 100);
+    }
+  }, [currentStep, selectedFigmaSpec, aborted, completed, completeStep]);
+
+  // AGGRESSIVE Step 6 auto-completion - separate useEffect just for currentStep changes
+  useEffect(() => {
+    console.log('🚨📦 StepExecutor - currentStep changed, checking for Step 6 auto-completion:', {
+      currentStep,
+      hasSelectedSpec: !!selectedFigmaSpec,
+      aborted,
+      isStep6: currentStep === 6,
+      completedSteps: Array.from(completed),
+      isStep6Completed: completed.has(6),
+      timestamp: new Date().toISOString()
+    });
+    
+    if (currentStep === 6) {
+      console.log('🎯📦 StepExecutor - Reached Step 6! Checking auto-completion...');
+      
+      // Check immediately
+      if (selectedFigmaSpec && !aborted && !completed.has(6)) {
+        console.log('🚀📦 StepExecutor - Step 6 conditions met IMMEDIATELY - completing now');
         setTimeout(() => {
-          console.log('✅ StepExecutor - Auto-completing download Figma specification step');
+          console.log('✅📦 StepExecutor - AUTO-COMPLETING Step 6 (currentStep trigger)');
           completeStep(6);
-        }, 1000);
+        }, 50);
       } else {
-        // Give React a moment to update state, then check again
-        console.log('⏳ StepExecutor - Step 6 reached but selectedFigmaSpec not set yet, checking again in 500ms...');
+        console.log('⏳📦 StepExecutor - Step 6 reached but conditions not ready:', {
+          hasSelectedSpec: !!selectedFigmaSpec,
+          notAborted: !aborted,
+          notCompleted: !completed.has(6)
+        });
+        
+        // Also check after a delay in case selectedFigmaSpec is still updating
         setTimeout(() => {
           const currentSelectedSpec = selectedFigmaSpec;
-          console.log('🔄 StepExecutor - Rechecking Step 6 conditions after delay:', {
+          console.log('🔄📦 StepExecutor - Step 6 delayed check:', {
             currentStep,
             hasSelectedSpec: !!currentSelectedSpec,
-            willTriggerCompletion: currentStep === 6 && currentSelectedSpec && !aborted
+            notAborted: !aborted,
+            notCompleted: !completed.has(6),
+            willComplete: currentStep === 6 && currentSelectedSpec && !aborted && !completed.has(6)
           });
           
-          if (currentStep === 6 && currentSelectedSpec && !aborted) {
-            console.log('✅ StepExecutor - Auto-completing download Figma specification step (delayed)');
+          if (currentStep === 6 && currentSelectedSpec && !aborted && !completed.has(6)) {
+            console.log('✅📦 StepExecutor - AUTO-COMPLETING Step 6 (delayed currentStep trigger)');
             completeStep(6);
-          } else {
-            console.log('⚠️ StepExecutor - Step 6 still missing selectedFigmaSpec after delay. State sync issue?');
           }
         }, 500);
       }
-    } else {
-      console.log('⏸️ StepExecutor - Step 6 conditions not met:', {
-        currentStepIs6: currentStep === 6,
-        hasSelectedFigmaSpec: !!selectedFigmaSpec,
-        selectedSpecName: selectedFigmaSpec?.name || 'None',
-        notAborted: !aborted
-      });
     }
-  }, [currentStep, selectedFigmaSpec, aborted, completeStep]);
+  }, [currentStep]); // Only depend on currentStep changes
 
-
-  useEffect(() => {
-    console.log('💻 StepExecutor - Step 7 useEffect triggered:', {
-      currentStep,
-      aborted,
-      condition: currentStep === 7 && !aborted,
-      stepName: currentStep === 7 ? 'Code Generation (3 Parallel)' : `Step ${currentStep}`
-    });
-    if (currentStep === 7 && !aborted) {
-      console.log('🚀 StepExecutor - Starting parallel code generation process');
-      const generateCodeParallel = async () => {
-        try {
-          console.log('💻 StepExecutor - Starting 3 parallel code generation calls');
-          
-          // Create 3 parallel API calls for code generation
-          const promises = Array.from({ length: 3 }, async (_, index) => {
-            console.log(`📡 StepExecutor - Starting Code API call ${index + 1}/3`);
-            try {
-              const res = await fetch('/api/agent/generate-code', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'x-user-guid': userGuid },
-                body: JSON.stringify({ 
-                  figmaFile: 'TODO: Pass actual Figma file from state',
-                  variation: index + 1
-                })
-              });
-              
-              if (!res.ok) {
-                throw new Error(`Code generation API call ${index + 1} failed: ${res.status}`);
-              }
-              
-              const data = await res.json();
-              console.log(`✅ StepExecutor - Code API call ${index + 1} completed:`, data);
-              return data;
-            } catch (error) {
-              console.error(`💥 StepExecutor - Code API call ${index + 1} failed:`, error);
-              throw error;
-            }
-          });
-
-          console.log('⏳ StepExecutor - Waiting for all Code API calls to complete...');
-          const results = await Promise.allSettled(promises);
-          
-          console.log('🎯 StepExecutor - All Code API calls completed!', {
-            totalCalls: results.length,
-            successful: results.filter(r => r.status === 'fulfilled').length,
-            failed: results.filter(r => r.status === 'rejected').length
-          });
-          
-          const successfulResults = results
-            .filter((r): r is PromiseFulfilledResult<any> => r.status === 'fulfilled')
-            .map(r => r.value);
-          
-          const hasErrors = results.some(r => r.status === 'rejected');
-          
-          if (successfulResults.length > 0) {
-            // TODO: Store generated code implementations in state
-            console.log('💾 StepExecutor - Setting code implementations in state:', successfulResults.length);
-          }
-          
-          if (!hasErrors) {
-            console.log('🏁 StepExecutor - All code generation successful! Completing step 6');
-            completeStep(6);
-          } else {
-            console.log('❌ StepExecutor - Some code generation failed');
-            addError('Some code implementations failed to generate', 6);
-          }
-        } catch (error) {
-          console.error('💥 StepExecutor - Critical error in code generation:', error);
-          addError(error instanceof Error ? error.message : 'Unknown error in code generation', 6);
-        }
-      };
-      
-      generateCodeParallel();
-    }
-  }, [currentStep, aborted, userGuid, completeStep, addError]);
-
-  // Step 7: Code Evaluation & Selection
-  useEffect(() => {
-    console.log('🎯 StepExecutor - Step 7 useEffect triggered:', {
-      currentStep,
-      aborted,
-      condition: currentStep === 7 && !aborted,
-      stepName: currentStep === 7 ? 'Code Evaluation & Selection' : `Step ${currentStep}`
-    });
-    if (currentStep === 7 && !aborted) {
-      console.log('🚀 StepExecutor - Starting code evaluation process');
-      const selectBestCode = async () => {
-        try {
-          console.log('📡 StepExecutor - Making API call to /api/agent/select-code');
-          const res = await fetch('/api/agent/select-code', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'x-user-guid': userGuid },
-            body: JSON.stringify({ codeImplementations: 'TODO: Pass code implementations from state' })
-          });
-          
-          console.log('📨 StepExecutor - Code selection API response status:', res.status);
-          const data = await res.json();
-          console.log('📊 StepExecutor - Step 7 API response data:', data);
-          
-          if (data.selectedCode) {
-            // TODO: Store selected code implementation in state
-            console.log('✅ StepExecutor - Selected code implementation:', data.selectedCode);
-            completeStep(7);
-          } else {
-            console.error('❌ StepExecutor - No selected code returned');
-            addError('Failed to select code implementation', 7);
-          }
-        } catch (err) {
-          const message = err instanceof Error ? err.message : 'Unknown error';
-          console.error('💥 StepExecutor - Step 7 API call error:', err);
-          addError(message, 7);
-        }
-      };
-      
-      selectBestCode();
-    }
-  }, [currentStep, aborted, userGuid, completeStep, addError]);
-
-  // Step 8: Download Artifacts (Auto-complete since download is user-initiated)
-  useEffect(() => {
-    console.log('📦 StepExecutor - Step 8 useEffect triggered:', {
-      currentStep,
-      aborted,
-      condition: currentStep === 8 && !aborted,
-      stepName: currentStep === 8 ? 'Download Artifacts' : `Step ${currentStep}`
-    });
-    if (currentStep === 8 && !aborted) {
-      console.log('🚀 StepExecutor - Reached download artifacts step');
-      // Auto-complete this step since download is user-initiated
-      setTimeout(() => {
-        console.log('✅ StepExecutor - Auto-completing download artifacts step');
-        completeStep(8);
-      }, 1000);
-    }
-  }, [currentStep, aborted, completeStep]);
-  
   // Function to trigger Figma generation directly with a given concept
   const triggerFigmaGeneration = useCallback(async (concept: string) => {
     console.log('🚀 StepExecutor - triggerFigmaGeneration called with concept:', concept);

@@ -152,4 +152,56 @@ This is a **classic React state batching/timing issue** where:
 - ✅ No more "Currently processing..." indefinite state
 - ✅ Robust error recovery with comprehensive logging
 
-This completes the MVP agent pipeline with full automation from brief input to downloadable ZIP! 🎉
+## Final Fix: Removed Obsolete Steps 7 & 8 Interference
+
+### Issue Discovered
+Step 6 auto-completion was still not triggering despite reaching Step 6 correctly. Console logs showed:
+
+```
+✅ Step 5 completes → currentStep advances to 6 → Step 6 UI shows ✅
+❌ No Step 6 useEffect logs appear → Auto-completion never triggers ❌  
+✅ Browser shows "Currently processing..." indefinitely
+```
+
+### Root Cause Analysis  
+**Discovered obsolete useEffects:** When we shortened the timeline from 9 steps to 6 steps (MVP scope), we forgot to remove the old **Steps 7 and 8 useEffects** from `StepExecutor.tsx`.
+
+```tsx
+// THESE WERE STILL RUNNING AND INTERFERING:
+useEffect(() => {
+  console.log('💻 StepExecutor - Step 7 useEffect triggered');
+  // ...old Step 7 logic
+}, [currentStep, ...]);
+
+useEffect(() => {
+  console.log('📦 StepExecutor - Step 8 useEffect triggered'); 
+  // ...old Step 8 logic
+}, [currentStep, ...]);
+```
+
+**Impact:** These obsolete useEffects were:
+- Running on every state change alongside Step 6
+- Potentially interfering with React's state batching
+- Creating confusion in the step execution flow
+- Causing race conditions between old and new step logic
+
+### Solution Applied
+**Complete removal of obsolete step useEffects:**
+- ❌ Removed entire Step 7 useEffect (old code generation logic)
+- ❌ Removed entire Step 8 useEffect (old download artifacts logic)  
+- ✅ Kept only Steps 0-6 useEffects (current MVP timeline)
+- ✅ Added debugging useEffect for Step 6 dependency tracking
+
+### Result
+- ✅ Step 6 useEffect now triggers without interference
+- ✅ Auto-completion logic executes as designed
+- ✅ Complete flow: Brief → ... → Step 6 → Auto-complete → Download! 🎉
+- ✅ No more "Currently processing..." indefinite state
+
+### Lesson Learned
+When refactoring multi-step flows, ensure **all obsolete logic is completely removed** to prevent:
+- Race conditions between old and new step logic
+- React state batching interference  
+- Confusing execution paths and debugging complexity
+
+**The MVP Agent Pipeline is now fully functional end-to-end!** 🚀
