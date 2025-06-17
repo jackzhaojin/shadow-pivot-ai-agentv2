@@ -64,7 +64,7 @@ Successfully refactored all Azure CLI (`az`) commands and dependencies to use on
 - **Before**: Required `az login` for authentication
 - **After**: Requires Service Principal environment variables (AZURE_CLIENT_ID, AZURE_CLIENT_SECRET, AZURE_TENANT_ID, AZURE_SUBSCRIPTION_ID)
 
-#### `prd.md`
+#### `prd-1.0.md`
 - Updated local development notes to reference Service Principal instead of `az login`
 - Clarified authentication approach for developers
 
@@ -116,7 +116,7 @@ export AZURE_SUBSCRIPTION_ID="your-subscription-id"  # Required for deployment m
 - `package.json`
 - `AGENTS.md`
 - `README.md`
-- `prd.md`
+- `prd-1.0.md`
 - `infrastructure.md`
 
 ## Files Created
