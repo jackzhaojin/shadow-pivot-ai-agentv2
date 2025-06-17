@@ -275,6 +275,25 @@ export default function StepResultPanel({
         </div>
       </div>
     );
+  } else if (stepIndex === 6) {
+    content = (
+      <div>
+        <h4 className="font-semibold mb-2">Download Figma Specification</h4>
+        <div className="text-sm text-gray-700">
+          <p className="mb-2">Complete Figma specification package ready for download including:</p>
+          <ul className="list-disc list-inside space-y-1 text-gray-600 mb-3">
+            <li>Selected Figma design specification (JSON format)</li>
+            <li>AI selection reasoning and quality analysis</li>
+            <li>Complete execution trace and metadata</li>
+            <li>README with usage instructions</li>
+          </ul>
+          <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
+            <p className="text-green-800 font-medium">🎉 Figma specification ready for download</p>
+            <p className="text-green-600 text-xs mt-1">ZIP archive with complete design deliverables</p>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   if (!content) return null;

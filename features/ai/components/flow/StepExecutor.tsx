@@ -38,10 +38,84 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
     selectedFigmaSpec,
     setSelectedFigmaSpec,
     figmaSelectionReasoning,
-    setFigmaSelectionReasoning
+    setFigmaSelectionReasoning,
+    executionTrace
   } = useAgentFlow();
 
   const userGuid = useUserGuid();
+
+  // Download function for Figma specification
+  const downloadFigmaSpec = useCallback(async () => {
+    if (!selectedFigmaSpec) {
+      console.error('❌ No selected Figma spec to download');
+      addError('No Figma specification selected for download', 6);
+      return;
+    }
+
+    console.log('📦 StepExecutor - Starting Figma spec download:', {
+      specName: selectedFigmaSpec.name,
+      hasReasoning: !!figmaSelectionReasoning,
+      hasExecutionTrace: !!executionTrace,
+      userGuid
+    });
+
+    try {
+      const response = await fetch('/api/agent/download-figma-spec', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-user-guid': userGuid
+        },
+        body: JSON.stringify({
+          selectedFigmaSpec,
+          figmaSelectionReasoning,
+          executionTrace,
+          userGuid
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`Download failed: ${response.status} ${response.statusText}`);
+      }
+
+      // Get the blob data
+      const blob = await response.blob();
+      
+      // Create download link
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      
+      // Get filename from Content-Disposition header or use default
+      const contentDisposition = response.headers.get('Content-Disposition');
+      let filename = `figma-spec-${selectedFigmaSpec.name?.replace(/[^a-zA-Z0-9]/g, '-') || 'download'}-${Date.now()}.zip`;
+      
+      if (contentDisposition) {
+        const filenameMatch = contentDisposition.match(/filename="(.+)"/);
+        if (filenameMatch) {
+          filename = filenameMatch[1];
+        }
+      }
+      
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      
+      // Cleanup
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+      
+      console.log('✅ StepExecutor - Figma spec download completed:', {
+        filename,
+        fileSize: blob.size,
+        specName: selectedFigmaSpec.name
+      });
+
+    } catch (error) {
+      console.error('💥 StepExecutor - Download failed:', error);
+      addError(error instanceof Error ? error.message : 'Failed to download Figma specification', 6);
+    }
+  }, [selectedFigmaSpec, figmaSelectionReasoning, executionTrace, userGuid, addError]);
 
   // Comprehensive debugging - Track all state changes
   useEffect(() => {
@@ -857,47 +931,23 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
     }
   }, [currentStep, figmaSpecs, figmaEvaluationResults, aborted, userGuid, completeStep, addError, setSelectedFigmaSpec, setFigmaSelectionReasoning, selectedFigmaSpec]);
 
-  // Step 6: Actual Figma Generation
+  // Step 6: Download Figma Specification (MVP Final Step)
   useEffect(() => {
-    console.log('🎨 StepExecutor - Step 6 (Actual Figma Generation) useEffect triggered:', {
+    console.log('📦 StepExecutor - Step 6 (Download Figma Specification) useEffect triggered:', {
       currentStep,
       selectedFigmaSpec: selectedFigmaSpec?.name || 'None',
       aborted,
       condition: currentStep === 6 && selectedFigmaSpec && !aborted,
-      stepName: currentStep === 6 ? 'Actual Figma Generation' : `Step ${currentStep}`
+      stepName: currentStep === 6 ? 'Download Figma Specification' : `Step ${currentStep}`
     });
     
     if (currentStep === 6 && selectedFigmaSpec && !aborted) {
-      console.log('🚀 StepExecutor - Starting actual Figma generation process with selected spec:', selectedFigmaSpec.name);
-      const generateActualFigma = async () => {
-        try {
-          console.log('📡 StepExecutor - Making API call to /api/agent/generate-actual-figma with selected spec');
-          const res = await fetch('/api/agent/generate-actual-figma', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'x-user-guid': userGuid },
-            body: JSON.stringify({ selectedSpec: selectedFigmaSpec })
-          });
-          
-          console.log('📨 StepExecutor - Actual Figma API response status:', res.status);
-          const data = await res.json();
-          console.log('📊 StepExecutor - Step 6 API response data:', data);
-          
-          if (data.figmaFile) {
-            // TODO: Store actual Figma file in state
-            console.log('✅ StepExecutor - Generated actual Figma file:', data.figmaFile);
-            completeStep(6);
-          } else {
-            console.error('❌ StepExecutor - No Figma file returned');
-            addError('Failed to generate actual Figma file', 6);
-          }
-        } catch (err) {
-          const message = err instanceof Error ? err.message : 'Unknown error';
-          console.error('💥 StepExecutor - Step 6 API call error:', err);
-          addError(message, 6);
-        }
-      };
-      
-      generateActualFigma();
+      console.log('🚀 StepExecutor - Download step reached - auto-completing since download is user-initiated');
+      // Auto-complete this step since download is user-initiated
+      setTimeout(() => {
+        console.log('✅ StepExecutor - Auto-completing download Figma specification step');
+        completeStep(6);
+      }, 1000);
     } else {
       console.log('⏸️ StepExecutor - Step 6 conditions not met:', {
         currentStepIs6: currentStep === 6,
@@ -906,9 +956,9 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
         notAborted: !aborted
       });
     }
-  }, [currentStep, selectedFigmaSpec, aborted, userGuid, completeStep, addError]);
+  }, [currentStep, selectedFigmaSpec, aborted, completeStep]);
 
-  // Step 7: Code Generation (3 Parallel Paths)
+
   useEffect(() => {
     console.log('💻 StepExecutor - Step 7 useEffect triggered:', {
       currentStep,
@@ -1373,46 +1423,18 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
       )}
       {currentStep === 6 && (
         <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">Generating Actual Figma File</h2>
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600 mx-auto mb-4"></div>
-            <p className="text-gray-600">Creating production-ready Figma design file...</p>
-          </div>
-        </div>
-      )}
-      {currentStep === 7 && (
-        <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">Generating Code (3 Parallel)</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {[1, 2, 3].map((num) => (
-              <div key={num} className="bg-gray-50 rounded-xl p-4 text-center">
-                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-green-600 mx-auto mb-2"></div>
-                <p className="text-sm text-gray-600">Implementation {num}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-      {currentStep === 8 && (
-        <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">Evaluating & Selecting Code</h2>
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-600 mx-auto mb-4"></div>
-            <p className="text-gray-600">AI is evaluating code implementations to select the best one...</p>
-          </div>
-        </div>
-      )}
-      {currentStep === 9 && (
-        <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">Ready for Download</h2>
+          <h2 className="text-xl font-semibold text-gray-900 mb-4">Download Figma Specification</h2>
           <div className="text-center">
             <div className="bg-green-50 rounded-xl p-6 mb-4">
               <div className="text-green-600 text-4xl mb-2">🎉</div>
-              <h3 className="text-lg font-semibold text-green-800 mb-2">Artifacts Generated Successfully!</h3>
-              <p className="text-green-600">Your Figma design and code implementation are ready for download.</p>
+              <h3 className="text-lg font-semibold text-green-800 mb-2">Figma Specification Ready!</h3>
+              <p className="text-green-600">Your selected Figma design specification is ready for download.</p>
             </div>
-            <button className="bg-gradient-to-r from-green-500 to-blue-500 text-white py-3 px-8 rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200">
-              📦 Download Complete Package
+            <button 
+              onClick={() => downloadFigmaSpec()}
+              className="bg-gradient-to-r from-green-500 to-blue-500 text-white py-3 px-8 rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
+            >
+              📦 Download Figma Specification
             </button>
           </div>
         </div>

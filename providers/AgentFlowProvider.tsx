@@ -17,10 +17,7 @@ export const agentSteps = [
   'Figma Spec Generation (3 Parallel)',
   'Figma Spec Evaluation & Quality Assurance',
   'Figma Spec Selection & Evaluation',
-  'Actual Figma Generation',
-  'Code Generation (3 Parallel)',
-  'Code Evaluation & Selection',
-  'Download Artifacts'
+  'Download Figma Specification'
 ];
 
 interface AgentFlowContextValue {
