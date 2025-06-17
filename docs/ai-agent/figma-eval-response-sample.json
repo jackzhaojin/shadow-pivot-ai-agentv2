@@ -1,0 +1,108 @@
+{
+    "success": true,
+    "evaluationResults": [
+        {
+            "specId": "minimalist-approach-login-001",
+            "overallScore": 7.8,
+            "clarityScore": 8.5,
+            "structureScore": 7,
+            "feasibilityScore": 8,
+            "accessibilityScore": 6.5,
+            "issues": [
+                {
+                    "category": "accessibility",
+                    "severity": "high",
+                    "description": "Color contrast ratio for text and background does not meet WCAG AA standards",
+                    "suggestion": "Ensure text color has a contrast ratio of at least 4.5:1 against the background"
+                },
+                {
+                    "category": "structure",
+                    "severity": "medium",
+                    "description": "Input field labels lack associated input elements for screen readers",
+                    "suggestion": "Use 'for' attribute in labels to associate them with corresponding input fields"
+                },
+                {
+                    "category": "feasibility",
+                    "severity": "medium",
+                    "description": "Flexbox layout may require additional CSS for cross-browser compatibility",
+                    "suggestion": "Test layout in various browsers and consider fallbacks if necessary"
+                }
+            ],
+            "strengths": [
+                "Clean and modern visual design",
+                "Effective use of whitespace for clarity",
+                "Prominent call-to-action button with vibrant color"
+            ],
+            "recommendations": [
+                "Enhance color contrast for better accessibility",
+                "Implement ARIA labels for improved screen reader support",
+                "Document responsive behavior and breakpoints for various devices"
+            ]
+        },
+        {
+            "specId": "minimalist-login-form-001",
+            "overallScore": 8,
+            "clarityScore": 8.5,
+            "structureScore": 7.5,
+            "feasibilityScore": 8,
+            "accessibilityScore": 7,
+            "issues": [
+                {
+                    "category": "accessibility",
+                    "severity": "medium",
+                    "description": "Color contrast ratio for the login button may not meet WCAG standards",
+                    "suggestion": "Ensure the button's color contrast ratio is at least 4.5:1 against the background"
+                },
+                {
+                    "category": "structure",
+                    "severity": "low",
+                    "description": "Lack of clear naming conventions for components",
+                    "suggestion": "Adopt a consistent naming convention for components to improve clarity and reusability"
+                }
+            ],
+            "strengths": [
+                "Clean and modern design approach",
+                "Effective use of whitespace to enhance focus on the login form",
+                "Responsive layout considerations are well-defined"
+            ],
+            "recommendations": [
+                "Conduct a thorough accessibility audit to ensure compliance with WCAG standards",
+                "Implement design tokens for colors and spacing to enhance maintainability",
+                "Provide documentation for component interactions and states for developers"
+            ]
+        },
+        {
+            "specId": "minimalist-login-form-001",
+            "overallScore": 7.8,
+            "clarityScore": 8.5,
+            "structureScore": 7,
+            "feasibilityScore": 8,
+            "accessibilityScore": 6.5,
+            "issues": [
+                {
+                    "category": "accessibility",
+                    "severity": "high",
+                    "description": "Color contrast ratio for the 'Login' button is insufficient",
+                    "suggestion": "Ensure the button color contrast meets at least 4.5:1 against the background"
+                },
+                {
+                    "category": "structure",
+                    "severity": "medium",
+                    "description": "Lack of clear documentation for responsive behavior",
+                    "suggestion": "Include detailed breakpoints and responsive design guidelines in the spec"
+                }
+            ],
+            "strengths": [
+                "Clean and modern design aesthetic",
+                "Effective use of whitespace to enhance focus on the login form",
+                "Consistent use of sans-serif typography for readability"
+            ],
+            "recommendations": [
+                "Enhance accessibility by adding ARIA labels to input fields",
+                "Provide hover and active states for the 'Forgot Password?' link",
+                "Consider implementing a grid system for better layout control"
+            ]
+        }
+    ],
+    "message": "Figma specs evaluated successfully"
+}
