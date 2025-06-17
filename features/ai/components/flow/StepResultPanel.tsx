@@ -39,7 +39,14 @@ export default function StepResultPanel({
   figmaEvaluationResults = [],
   onClose
 }: StepResultPanelProps) {
-  const { validatedSteps, invalidatedSteps, markStepValidated, markStepInvalidated, figmaEvaluationResults: providerEvaluationResults } = useAgentFlow();
+  const { 
+    validatedSteps, 
+    invalidatedSteps, 
+    markStepValidated, 
+    markStepInvalidated, 
+    figmaEvaluationResults: providerEvaluationResults,
+    figmaSpecs: providerFigmaSpecs
+  } = useAgentFlow();
   const [showDetails, setShowDetails] = useState(true); // Initially show details for a better user experience
   
   const isValidated = validatedSteps.has(stepIndex);
@@ -203,13 +210,32 @@ export default function StepResultPanel({
               <button
                 onClick={async () => {
                   console.log('🔧 Manual Step 5 trigger button clicked');
+                  
+                  // Always use the freshest data from provider
+                  const specsToUse = providerFigmaSpecs || figmaSpecs || [];
+                  const resultsToUse = providerEvaluationResults || figmaEvaluationResults || [];
+                  
+                  console.log('🔧 Manual trigger data check:', {
+                    propFigmaSpecs: figmaSpecs.length,
+                    propEvaluationResults: figmaEvaluationResults.length,
+                    providerFigmaSpecs: providerFigmaSpecs.length,
+                    providerEvaluationResults: providerEvaluationResults.length,
+                    specsToUse: specsToUse.length,
+                    resultsToUse: resultsToUse.length
+                  });
+                  
+                  if (specsToUse.length === 0 || resultsToUse.length === 0) {
+                    console.error('🔧 Manual trigger: Missing required data');
+                    return;
+                  }
+                  
                   try {
                     const res = await fetch('/api/agent/select-figma-spec', {
                       method: 'POST',
                       headers: { 'Content-Type': 'application/json', 'x-user-guid': 'manual-trigger' },
                       body: JSON.stringify({ 
-                        figmaSpecs,
-                        figmaEvaluationResults: figmaEvaluationResults.length > 0 ? figmaEvaluationResults : providerEvaluationResults
+                        figmaSpecs: specsToUse,
+                        figmaEvaluationResults: resultsToUse
                       })
                     });
                     const data = await res.json();
