@@ -24,7 +24,11 @@
     "test:e2e": "node tests/run-e2e-tests.js",
     "test:baseline": "node tests/run-baseline-tests.js",
     "test:all": "node tests/run-all-tests.js",
-    "monitor-deployment": "./monitor-deployment.sh"
+    "monitor-deployment": "./monitor-deployment.sh",
+    "logs": "node scripts/get-debug-logs.js",
+    "logs:save": "node scripts/get-debug-logs.js --file=debug-logs.txt",
+    "logs:figma": "node scripts/get-debug-logs.js --category=FIGMA_EVAL",
+    "logs:ai": "node scripts/get-debug-logs.js --category=AI_CLIENT"
   },
   "dependencies": {
     "@azure/arm-appservice": "^14.1.0",

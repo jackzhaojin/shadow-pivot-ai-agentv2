@@ -1,5 +1,6 @@
 import { generateChatCompletion } from '../daos/aiClient';
 import { loadPromptTemplate, applyTemplate } from '../utils/promptUtils';
+import { logInfo, logError, logDebug } from '../utils/debugLogger';
 import path from 'path';
 import type { FigmaSpec } from './figmaSpec';
 
@@ -25,6 +26,15 @@ export interface SpecEvaluationResult {
  * Following established patterns from design evaluation and figma spec generation
  */
 export async function evaluateFigmaSpec(spec: FigmaSpec, index = 0): Promise<SpecEvaluationResult> {
+  const requestId = `figma-eval-${Date.now()}-${index}`;
+  
+  logInfo('FIGMA_EVAL', `Starting quality evaluation for spec ${index}`, {
+    specName: spec.name?.substring(0, 50) + '...',
+    specDescription: spec.description?.substring(0, 100) + '...',
+    componentCount: spec.components?.length || 0,
+    index
+  }, requestId);
+
   console.log('🧪 evaluateFigmaSpec - Starting quality evaluation for spec:', {
     specName: spec.name?.substring(0, 50) + '...',
     specDescription: spec.description?.substring(0, 100) + '...',
@@ -99,6 +109,17 @@ export async function evaluateFigmaSpec(spec: FigmaSpec, index = 0): Promise<Spe
     
     rawResponse = content;
   } catch (aiError) {
+    const errorMessage = aiError instanceof Error ? aiError.message : 'Unknown AI error';
+    
+    logError('FIGMA_EVAL_AI', `AI service error for spec ${index}`, {
+      error: errorMessage,
+      specName: spec.name,
+      specIndex: index,
+      errorType: 'AI_SERVICE_ERROR',
+      isRateLimit: errorMessage.includes('429') || errorMessage.includes('Rate limit'),
+      errorStack: aiError instanceof Error ? aiError.stack : undefined
+    }, requestId);
+    
     console.error('💥 evaluateFigmaSpec - AI service error:', {
       error: aiError instanceof Error ? aiError.message : 'Unknown AI error',
       specName: spec.name,
@@ -106,19 +127,52 @@ export async function evaluateFigmaSpec(spec: FigmaSpec, index = 0): Promise<Spe
       errorType: 'AI_SERVICE_ERROR'
     });
     
-    return createFallbackEvaluationResult(spec, index, aiError instanceof Error ? aiError.message : 'AI service error');
+    return createFallbackEvaluationResult(spec, index, errorMessage);
   }
 
   let data: SpecEvaluationResult;
   try {
     console.log('🔍 evaluateFigmaSpec - Parsing and validating AI response...');
+    console.log('📄 evaluateFigmaSpec - Raw response analysis:', {
+      responseLength: rawResponse?.length || 0,
+      startsWithJSON: rawResponse?.trim().startsWith('{'),
+      startsWithMarkdown: rawResponse?.trim().startsWith('```'),
+      firstChars: rawResponse?.substring(0, 50),
+      lastChars: rawResponse?.substring(-50),
+      specName: spec.name
+    });
+    
+    // Try to extract JSON from markdown code blocks if present
+    let jsonContent = rawResponse;
+    if (rawResponse.includes('```json')) {
+      const jsonMatch = rawResponse.match(/```json\s*([\s\S]*?)\s*```/);
+      if (jsonMatch) {
+        jsonContent = jsonMatch[1].trim();
+        console.log('📝 evaluateFigmaSpec - Extracted JSON from markdown:', {
+          extractedLength: jsonContent.length,
+          extractedPreview: jsonContent.substring(0, 100) + '...'
+        });
+      }
+    } else if (rawResponse.includes('```')) {
+      const codeMatch = rawResponse.match(/```\s*([\s\S]*?)\s*```/);
+      if (codeMatch) {
+        jsonContent = codeMatch[1].trim();
+        console.log('📝 evaluateFigmaSpec - Extracted content from code block:', {
+          extractedLength: jsonContent.length,
+          extractedPreview: jsonContent.substring(0, 100) + '...'
+        });
+      }
+    }
     
     // Parse JSON response
-    const parsedResponse = JSON.parse(rawResponse);
-    console.log('✅ evaluateFigmaSpec - JSON parsed successfully');
+    const parsedResponse = JSON.parse(jsonContent);
+    console.log('✅ evaluateFigmaSpec - JSON parsed successfully:', {
+      resultType: typeof parsedResponse,
+      hasOverallScore: 'overallScore' in parsedResponse,
+      topLevelKeys: Object.keys(parsedResponse)
+    });
     
     // Use parsed response directly (validation can be added later)
-    console.log('⚠️ evaluateFigmaSpec - Using parsed response directly');
     data = parsedResponse;
 
     console.log('🎯 evaluateFigmaSpec - Response processing successful:', {
@@ -130,12 +184,48 @@ export async function evaluateFigmaSpec(spec: FigmaSpec, index = 0): Promise<Spe
     });
 
   } catch (parseError) {
-    console.error('❌ evaluateFigmaSpec - Response parsing/validation error:', {
+    const parseErrorInfo = {
       error: parseError instanceof Error ? parseError.message : 'Unknown parsing error',
-      rawResponsePreview: rawResponse?.substring(0, 300) + '...',
+      errorStack: parseError instanceof Error ? parseError.stack : undefined,
+      rawResponseLength: rawResponse?.length || 0,
+      rawResponsePreview: rawResponse?.substring(0, 500),
+      rawResponseSuffix: rawResponse?.substring(-200),
       specName: spec.name,
-      errorType: 'RESPONSE_PARSING_ERROR'
+      specIndex: index,
+      errorType: 'RESPONSE_PARSING_ERROR',
+      parseAttempts: {
+        containsJSON: rawResponse?.includes('{'),
+        containsMarkdown: rawResponse?.includes('```'),
+        startsWithHash: rawResponse?.trim().startsWith('#'),
+        containsRateLimit: rawResponse?.includes('429') || rawResponse?.includes('Rate limit'),
+        containsErrorMsg: rawResponse?.includes('error') || rawResponse?.includes('Error')
+      }
+    };
+    
+    logError('FIGMA_EVAL_PARSE', `Response parsing failed for spec ${index}`, parseErrorInfo, requestId);
+    
+    console.error('❌ evaluateFigmaSpec - Response parsing/validation error:', parseErrorInfo);
+    
+    // Log the full raw response for debugging (truncated for readability)
+    console.log('🔍 FULL_RAW_RESPONSE_DEBUG:', {
+      specName: spec.name,
+      fullResponse: rawResponse?.length > 2000 ? rawResponse.substring(0, 2000) + '... [TRUNCATED]' : rawResponse
     });
+    
+    // Also log to structured logger for easy export
+    logDebug('FIGMA_EVAL_RAW_RESPONSE', `Full AI response for failed parsing`, {
+      specName: spec.name,
+      specIndex: index,
+      fullResponse: rawResponse,
+      responseAnalysis: {
+        length: rawResponse?.length || 0,
+        firstLine: rawResponse?.split('\n')[0] || '',
+        lastLine: rawResponse?.split('\n').slice(-1)[0] || '',
+        containsCodeBlocks: (rawResponse?.match(/```/g) || []).length,
+        looksLikeMarkdown: rawResponse?.includes('#') && rawResponse?.includes('\n'),
+        looksLikeJSON: rawResponse?.trim().startsWith('{') && rawResponse?.trim().endsWith('}')
+      }
+    }, requestId);
     
     return createFallbackEvaluationResult(spec, index, `Response parsing error: ${parseError instanceof Error ? parseError.message : 'Unknown error'}`);
   }

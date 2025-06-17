@@ -1,5 +1,6 @@
 import { AzureOpenAI } from 'openai';
 import { DefaultAzureCredential } from '@azure/identity';
+import { logError } from '../utils/debugLogger';
 
 export function getAIClient() {
   const endpoint = process.env.AZURE_OPENAI_ENDPOINT || 'https://story-generation-v1.openai.azure.com/';
@@ -61,13 +62,106 @@ export async function generateChatCompletion(
     
     return response;
   } catch (error) {
-    console.error('💥 generateChatCompletion - AI request failed:', {
+    // Enhanced error logging for debugging
+    const errorInfo = {
       error,
       errorMessage: error instanceof Error ? error.message : 'Unknown error',
       errorStack: error instanceof Error ? error.stack : undefined,
+      errorType: error?.constructor?.name,
       deployment: deploymentName,
       endpoint: process.env.AZURE_OPENAI_ENDPOINT
-    });
+    };
+
+    // Check for specific error types
+    if (error && typeof error === 'object') {
+      const errObj = error as {
+        status?: number;
+        code?: number | string;
+        message?: string;
+        headers?: Record<string, string>;
+        response?: {
+          status?: number;
+          statusText?: string;
+          headers?: Record<string, string>;
+          data?: unknown;
+        };
+        body?: unknown;
+        statusText?: string;
+        config?: { url?: string };
+        url?: string;
+        errno?: number;
+        hostname?: string;
+        port?: number;
+        address?: string;
+        type?: string;
+        name?: string;
+        cause?: unknown;
+      };
+      
+      // Rate limiting (429)
+      if (errObj.status === 429 || errObj.code === 429 || (error instanceof Error && error.message?.includes('429'))) {
+        const rateLimitInfo = {
+          ...errorInfo,
+          rateLimitDetails: {
+            status: errObj.status,
+            code: errObj.code,
+            retryAfter: errObj.headers?.['retry-after'],
+            retryAfterMs: errObj.headers?.['retry-after-ms'],
+            remainingRequests: errObj.headers?.['x-ratelimit-remaining-requests'],
+            remainingTokens: errObj.headers?.['x-ratelimit-remaining-tokens'],
+            errorBody: errObj.response?.data || errObj.body,
+            fullErrorMessage: error instanceof Error ? error.message : 'Unknown error message'
+          }
+        };
+        
+        logError('AI_CLIENT_RATE_LIMIT', 'Rate limit exceeded (429)', rateLimitInfo);
+        console.error('🚫 generateChatCompletion - Rate limit exceeded (429):', rateLimitInfo);
+      }
+      // Other HTTP errors
+      else if (errObj.status || errObj.response?.status) {
+        console.error('🌐 generateChatCompletion - HTTP error:', {
+          ...errorInfo,
+          httpDetails: {
+            status: errObj.status || errObj.response?.status,
+            statusText: errObj.statusText || errObj.response?.statusText,
+            headers: errObj.headers || errObj.response?.headers,
+            responseData: errObj.response?.data || errObj.body,
+            url: errObj.config?.url || errObj.url
+          }
+        });
+      }
+      // Network/connection errors
+      else if (errObj.code === 'ENOTFOUND' || errObj.code === 'ECONNREFUSED' || errObj.code === 'ETIMEDOUT') {
+        console.error('🔌 generateChatCompletion - Network error:', {
+          ...errorInfo,
+          networkDetails: {
+            code: errObj.code,
+            errno: errObj.errno,
+            hostname: errObj.hostname,
+            port: errObj.port,
+            address: errObj.address
+          }
+        });
+      }
+      // Generic structured error
+      else {
+        console.error('⚠️ generateChatCompletion - Structured error:', {
+          ...errorInfo,
+          additionalProps: {
+            status: errObj.status,
+            code: errObj.code,
+            type: errObj.type,
+            name: errObj.name,
+            message: errObj.message,
+            cause: errObj.cause
+          }
+        });
+      }
+    } else {
+      // Simple error logging
+      console.error('💥 generateChatCompletion - AI request failed:', errorInfo);
+    }
+    
     throw error;
   }
 }
