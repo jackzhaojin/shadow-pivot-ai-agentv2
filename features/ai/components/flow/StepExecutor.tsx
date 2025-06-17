@@ -772,7 +772,20 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
       }
     });
 
-    if (currentStep === 5 && figmaSpecs.length > 0 && figmaEvaluationResults.length > 0 && !aborted) {
+    // Force trigger Step 5 if we have the required data but currentStep tracking is off
+    const shouldForceTriggerStep5 = figmaSpecs.length > 0 && 
+                                   figmaEvaluationResults.length > 0 && 
+                                   !aborted && 
+                                   !selectedFigmaSpec &&
+                                   (currentStep === 5 || (figmaSpecs.length > 0 && figmaEvaluationResults.length > 0));
+
+    console.log('🔍 StepExecutor - Step 5 force trigger check:', {
+      shouldForceTriggerStep5,
+      hasSelectedSpec: !!selectedFigmaSpec,
+      selectedSpecName: selectedFigmaSpec?.name || 'None'
+    });
+
+    if (shouldForceTriggerStep5) {
       console.log('🚀 StepExecutor - Starting Figma spec selection process (simple logic, no AI)');
       
       const selectBestFigmaSpecProcess = async () => {
@@ -842,7 +855,7 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
         notAborted: !aborted
       });
     }
-  }, [currentStep, figmaSpecs, figmaEvaluationResults, aborted, userGuid, completeStep, addError, setSelectedFigmaSpec, setFigmaSelectionReasoning]);
+  }, [currentStep, figmaSpecs, figmaEvaluationResults, aborted, userGuid, completeStep, addError, setSelectedFigmaSpec, setFigmaSelectionReasoning, selectedFigmaSpec]);
 
   // Step 6: Actual Figma Generation
   useEffect(() => {
