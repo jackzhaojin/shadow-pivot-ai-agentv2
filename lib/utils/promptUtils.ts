@@ -133,7 +133,6 @@ export function validateResponse(response: unknown, template: PromptTemplate): {
           if (fieldName in responseObj) {
             const fieldValue = responseObj[fieldName];
             if (typeof fieldSpec === 'object' && fieldSpec && 'type' in fieldSpec) {
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               const expectedType = (fieldSpec as any).type;
               if (expectedType === 'array' && !Array.isArray(fieldValue)) {
                 errors.push(`Field '${fieldName}' should be an array`);
@@ -141,7 +140,6 @@ export function validateResponse(response: unknown, template: PromptTemplate): {
                 errors.push(`Field '${fieldName}' should be a string`);
               } else if (expectedType === 'array' && Array.isArray(fieldValue)) {
                 // Check minItems for array fields
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 const arraySpec = fieldSpec as any;
                 if (arraySpec.minItems !== undefined && fieldValue.length < arraySpec.minItems) {
                   errors.push(`Field '${fieldName}' must contain at least ${arraySpec.minItems} items`);

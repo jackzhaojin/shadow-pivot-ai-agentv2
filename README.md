@@ -114,11 +114,8 @@ docs/                    # Project documentation
   ├── ai-log/            # Logs from AI agent development sessions
   └── ...                # Other documentation files
 infrastructure.md       # Azure infrastructure setup guide
-release-1.0.mdc          # Release 1.0 (MVP) task management
-release-1.1.mdc          # Release 1.1 stabilization plan
-release-1.2.mdc          # Release 1.2 session management plan
-release-1.3.mdc          # Release 1.3 code generation plan
-release-backlog.mdc      # Unscheduled backlog
+release-1.0.mdc          # Release 1.0 (MVP) task management and progress
+release-1.1.mdc          # Release 1.1 (Post-MVP) task management and planning
 AGENTS.md                # Repository guidelines for contributors
 ...                      # Other configuration files (Docker, Next.js, TS, etc.)
 ```
@@ -136,15 +133,9 @@ AGENTS.md                # Repository guidelines for contributors
 For more detailed information, please refer to the following documents:
 
 - **Core Project Documents**
-  - [Release 1.0 PRD](./prd-1.0.md): MVP requirements.
-  - [Release 1.1 PRD](./prd-1.1.md): Stabilization goals.
-  - [Release 1.2 PRD](./prd-1.2.md): Session management goals.
-  - [Release 1.3 PRD](./prd-1.3.md): Code upload and generation goals.
-  - [Release 1.0 Task Management](./release-1.0.mdc).
-  - [Release 1.1 Task Management](./release-1.1.mdc).
-  - [Release 1.2 Task Management](./release-1.2.mdc).
-  - [Release 1.3 Task Management](./release-1.3.mdc).
-  - [Backlog](./release-backlog.mdc) and [Backlog PRD](./prd-backlog.md).
+  - [AI Agent PRD](./prd.md): Product Requirements for the AI Agent.
+  - [Release 1.0 Task Management](./release-1.0.mdc): MVP task breakdown, phases, and progress.
+  - [Release 1.1 Task Management](./release-1.1.mdc): Post-MVP enhancements and advanced features.
   - [Repository Guidelines (AGENTS.md)](./AGENTS.md): Guidelines for contributing to this repository.
 - **Technical Guides**
   - [Azure Infrastructure Setup](./infrastructure.md): Guide to setting up necessary Azure resources.
