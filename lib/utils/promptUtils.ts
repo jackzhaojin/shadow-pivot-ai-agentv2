@@ -133,16 +133,16 @@ export function validateResponse(response: unknown, template: PromptTemplate): {
           if (fieldName in responseObj) {
             const fieldValue = responseObj[fieldName];
             if (typeof fieldSpec === 'object' && fieldSpec && 'type' in fieldSpec) {
-              const expectedType = (fieldSpec as any).type;
+              const schemaField = fieldSpec as { type: string; minItems?: number };
+              const expectedType = schemaField.type;
               if (expectedType === 'array' && !Array.isArray(fieldValue)) {
                 errors.push(`Field '${fieldName}' should be an array`);
               } else if (expectedType === 'string' && typeof fieldValue !== 'string') {
                 errors.push(`Field '${fieldName}' should be a string`);
               } else if (expectedType === 'array' && Array.isArray(fieldValue)) {
                 // Check minItems for array fields
-                const arraySpec = fieldSpec as any;
-                if (arraySpec.minItems !== undefined && fieldValue.length < arraySpec.minItems) {
-                  errors.push(`Field '${fieldName}' must contain at least ${arraySpec.minItems} items`);
+                if (schemaField.minItems !== undefined && fieldValue.length < schemaField.minItems) {
+                  errors.push(`Field '${fieldName}' must contain at least ${schemaField.minItems} items`);
                 }
               }
             }
