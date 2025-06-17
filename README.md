@@ -1,6 +1,34 @@
 # TSLA AI UI Agent
 
-A Next.js application for AI-powered agent workflows with Azure integration, designed for deployment-first development.
+A Next.js application for AI-powered agent workflows with Azure integration, designed for deployment-first development. The project follows a structured release approach with clearly defined scope and progression.
+
+## Project Release Structure
+
+This project is organized into multiple releases with focused scope:
+
+### **Release 1.0 (MVP) - Current Focus** 
+- **Scope**: Figma spec generation and download only (no code generation, no persistent storage)
+- **Status**: Active Development
+- **Documentation**: [PRD-1.0.md](prd-1.0.md) | [Release-1.0.mdc](release-1.0.mdc)
+
+### **Release 1.1 (Stabilization) - Next**
+- **Scope**: Cypress testing, React state fixes, code refactoring  
+- **Status**: Planning
+- **Documentation**: [Release-1.1.mdc](release-1.1.mdc)
+
+### **Release 1.2 (Session Management) - Future**
+- **Scope**: User session persistence, Azure Blob Storage, session history
+- **Status**: Planning  
+- **Documentation**: [Release-1.2.mdc](release-1.2.mdc)
+
+### **Release 1.3 (Code Generation) - Future**
+- **Scope**: Code generation, upload/download code samples, similarity matching
+- **Status**: Planning
+- **Documentation**: [Release-1.3.mdc](release-1.3.mdc)
+
+### **Backlog - Future Releases**
+- **Scope**: GitHub integration, enterprise features, advanced AI capabilities
+- **Documentation**: [PRD-Backlog.md](prd-backlog.md) | [Release-Backlog.mdc](release-backlog.mdc)
 
 ## AI Development Approach
 
@@ -11,7 +39,7 @@ This project is **100% AI agent coded** with no copy-paste code. We use a mix of
 | **AI Agents Will Handle** | **Human Maintainer Will Handle** |
 |---------------------------|-----------------------------------|
 | ✅ **All Code Implementation** | 📝 **Minor Markdown Adjustments** |
-| • TypeScript/JavaScript code | • Minor edits to  project plan (.mdc files), PRD specifications |
+| • TypeScript/JavaScript code | • Minor edits to project plan (.mdc files), PRD specifications |
 | • React components and pages | • Minor edits to agent instructions |
 | • API routes and backend logic | • Minor edits to other markdown documentation |
 | • Azure integration code | |
@@ -45,7 +73,7 @@ This approach ensures rapid development while maintaining clear separation of co
 - **Cloud Platform**: Microsoft Azure
 - **Authentication**: Azure Managed Identity with DefaultAzureCredential
 - **AI Services**: Azure AI Foundry (OpenAI GPT-4o-mini)
-- **Storage**: Azure Blob Storage
+- **Storage**: Azure Blob Storage (Release 1.2+)
 - **Deployment**: Docker + GitHub Actions + Azure App Service
 
 
@@ -98,6 +126,7 @@ This approach ensures rapid development while maintaining clear separation of co
 4. **Open your browser**: [http://localhost:3000](http://localhost:3000)
 
 ## Project Structure Overview
+## Project Structure Overview
 
 ```
 app/                     # Next.js App Router: pages, API routes
@@ -113,11 +142,19 @@ docs/                    # Project documentation
   ├── ai-agent/          # AI Agent specific documents (e.g., PRD)
   ├── ai-log/            # Logs from AI agent development sessions
   └── ...                # Other documentation files
+
+# Release Management Files
+prd.md                   # Project overview and release structure
+prd-1.0.md              # Release 1.0 (MVP) product requirements
+prd-backlog.md          # Future features backlog
+release-1.0.mdc         # Release 1.0 (MVP) task management and progress
+release-1.1.mdc         # Release 1.1 (Stabilization) task management
+release-1.2.mdc         # Release 1.2 (Session Management) task management  
+release-1.3.mdc         # Release 1.3 (Code Generation) task management
+release-backlog.mdc     # Future releases task backlog
+
 infrastructure.md       # Azure infrastructure setup guide
-release-1.0.mdc          # Release 1.0 (MVP) task management and progress
-release-1.1.mdc          # Release 1.1 (Post-MVP) task management and planning
-AGENTS.md                # Repository guidelines for contributors
-...                      # Other configuration files (Docker, Next.js, TS, etc.)
+AGENTS.md               # Repository guidelines for contributors
 ```
 
 ## Development Workflow
@@ -132,34 +169,48 @@ AGENTS.md                # Repository guidelines for contributors
 
 For more detailed information, please refer to the following documents:
 
-- **Core Project Documents**
-  - [AI Agent PRD](./prd.md): Product Requirements for the AI Agent.
-  - [Release 1.0 Task Management](./release-1.0.mdc): MVP task breakdown, phases, and progress.
-  - [Release 1.1 Task Management](./release-1.1.mdc): Post-MVP enhancements and advanced features.
-  - [Repository Guidelines (AGENTS.md)](./AGENTS.md): Guidelines for contributing to this repository.
-- **Technical Guides**
-  - [Azure Infrastructure Setup](./infrastructure.md): Guide to setting up necessary Azure resources.
-  - [Azure Integration Guide](./docs/AZURE_INTEGRATION.md): Details on Azure service configuration and testing.
-  - [Deployment Guide](./docs/DEPLOYMENT.md): Information on Docker and GitHub Actions CI/CD.
-  - [Troubleshooting Guide](./docs/TROUBLESHOOTING.md): Solutions for common issues.
-  - [App Router Overview](./docs/app-router-overview.md): Information about the Next.js App Router.
-  - [Technical Documentation Index](./docs/technical/README.md): Implementation guides and key issue resolutions.
-  - [Technical Blueprint](./docs/technical/blueprint/README.md): Overview of architecture and core patterns.
-  - [Core Capabilities](./docs/technical/blueprint/core-capabilities.md): Summary of design decisions and system layers.
-- **Development & Testing Specifics**
-  - **Test Structure:**
-    - `tests/baseline/`: Basic Azure authentication tests
-    - `tests/dao/`: DAO layer tests for Azure and AI client integration
-    - `tests/services/`: Service logic tests (user GUID, spec selection, execution)
-    - `tests/endpoints/`: External API and endpoint tests
-    - `tests/ui/`: UI component tests for the agent flow and interfaces
-    - `tests/e2e/`: End-to-end integration tests
-  - **Test Commands:** `npm run test:all` runs the full suite. Individual groups: `npm run test:baseline`, `npm run test:dao`, `npm run test:services`, `npm run test:endpoints`, `npm run test:ui`, and `npm run test:e2e`.
-- **Development Logs & Notes** (primarily for historical context)
-  - [Session Logs](./docs/ai-log/): Contains logs from various development sessions.
-  - [SSR Integration Notes](./docs/session-1-4b-ssr-integration.md)
+### **Release-Specific Documents**
+- **[Project Overview (prd.md)](./prd.md)**: High-level project structure and release roadmap
+- **[Release 1.0 MVP Requirements (prd-1.0.md)](./prd-1.0.md)**: Detailed MVP product requirements (current focus)
+- **[Release 1.0 Task Management (release-1.0.mdc)](./release-1.0.mdc)**: MVP task breakdown, phases, and progress
+- **[Release 1.1 Stabilization (release-1.1.mdc)](./release-1.1.mdc)**: Cypress testing, React state fixes, refactoring
+- **[Release 1.2 Session Management (release-1.2.mdc)](./release-1.2.mdc)**: User sessions, persistent storage, file management
+- **[Release 1.3 Code Generation (release-1.3.mdc)](./release-1.3.mdc)**: Code generation, upload/download, similarity matching
+
+### **Backlog and Future Planning**
+- **[PRD Backlog (prd-backlog.md)](./prd-backlog.md)**: All advanced features not assigned to specific releases
+- **[Release Backlog (release-backlog.mdc)](./release-backlog.mdc)**: Comprehensive task backlog for future enhancements
+
+### **Development Guidelines**
+- **[Repository Guidelines (AGENTS.md)](./AGENTS.md)**: Guidelines for contributing to this repository
+
+### **Technical Guides**
+- **[Azure Infrastructure Setup](./infrastructure.md)**: Guide to setting up necessary Azure resources
+- **[Azure Integration Guide](./docs/AZURE_INTEGRATION.md)**: Details on Azure service configuration and testing
+- **[Deployment Guide](./docs/DEPLOYMENT.md)**: Information on Docker and GitHub Actions CI/CD
+- **[Troubleshooting Guide](./docs/TROUBLESHOOTING.md)**: Solutions for common issues
+- **[App Router Overview](./docs/app-router-overview.md)**: Information about the Next.js App Router
+- **[Technical Documentation Index](./docs/technical/README.md)**: Implementation guides and key issue resolutions
+- **[Technical Blueprint](./docs/technical/blueprint/README.md)**: Overview of architecture and core patterns
+- **[Core Capabilities](./docs/technical/blueprint/core-capabilities.md)**: Summary of design decisions and system layers
+
+### **Development & Testing Specifics**
+- **Test Structure:**
+  - `tests/baseline/`: Basic Azure authentication tests
+  - `tests/dao/`: DAO layer tests for Azure and AI client integration
+  - `tests/services/`: Service logic tests (user GUID, spec selection, execution)
+  - `tests/endpoints/`: External API and endpoint tests
+  - `tests/ui/`: UI component tests for the agent flow and interfaces
+  - `tests/e2e/`: End-to-end integration tests
+- **Test Commands:** `npm run test:all` runs the full suite. Individual groups: `npm run test:baseline`, `npm run test:dao`, `npm run test:services`, `npm run test:endpoints`, `npm run test:ui`, and `npm run test:e2e`.
+
+### **Development Logs & Notes** (primarily for historical context)
+- **[Session Logs](./docs/ai-log/)**: Contains logs from various development sessions
+- **[SSR Integration Notes](./docs/session-1-4b-ssr-integration.md)**
 
 ---
 
-**Status**: ✅ Full CI/CD pipeline operational. Core feature development (Phase 3) is active.
+**Current Status**: Release 1.0 (MVP) - Active Development  
+**Current Focus**: Figma spec generation pipeline with Azure AI integration  
+**Next Milestone**: Complete MVP with stable Figma generation and download capabilities
 

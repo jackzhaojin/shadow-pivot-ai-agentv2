@@ -1,172 +1,40 @@
-**Product Requirements Document (PRD) - Overview and Structure**
+**Product Requirements Document (PRD) - Release 1.0 (MVP)**
 
 ---
 
-### Project Title: AI UI Agent with Visual Execution
+### Project Title: AI UI Agent with Visual Execution - MVP
 
 ### Overview:
 
-An AI-powered design-to-code agent embedded within a Next.js app, capable of generating visual UIs for web apps. The project is structured across multiple releases with clearly defined scope and progression.
+An AI-powered design-to-code agent embedded within a Next.js app, capable of generating visual UIs (graphs/tables) for web apps. The app guides users through a multistep agent pipeline with visual execution tracking, enabling retryable design/code cycles. **Release 1.0 (MVP) focuses on Figma spec generation and download only - no code generation or Azure Blob Storage integration.**
 
 ---
 
-### 📚 Release-Specific Documentation Structure:
+### Goals:
 
-This PRD provides an overview and directs to specific release documentation:
+* Use AI to propose, evaluate, and implement UI design concepts with visual execution tracking.
+* Support a step-based AI agent with a visual trace and execution log.
+* Enable Figma spec download (no code generation in MVP).
+* Support both SSR and CSR within Next.js 15.1.8 using the App Router.
+* **MVP Constraint**: No Azure Blob Storage integration - all data stored locally/in-memory during session.
 
-#### **Current Release Documentation:**
-- **[PRD-1.0.md](prd-1.0.md)** - Release 1.0 MVP Product Requirements (Figma generation only)
-- **[Release-1.0.mdc](release-1.0.mdc)** - Release 1.0 MVP Task Management and Progress
-- **[Release-1.1.mdc](release-1.1.mdc)** - Release 1.1 Stabilization (Cypress testing, React state fixes)
-- **[Release-1.2.mdc](release-1.2.mdc)** - Release 1.2 User Session Management (Persistent sessions, Figma file storage)
-- **[Release-1.3.mdc](release-1.3.mdc)** - Release 1.3 Code Generation (Upload/download code samples)
+---
 
-#### **Future and Backlog Documentation:**
-- **[PRD-Backlog.md](prd-backlog.md)** - All advanced features not assigned to specific releases
-- **[Release-Backlog.mdc](release-backlog.mdc)** - Comprehensive task backlog for future enhancements
+### 📚 Documentation Structure:
 
-#### **Technical Implementation:**
-- **[Technical Documentation](docs/technical/README.md)** - Implementation guides and key issue resolutions
+This PRD focuses on **Release 1.0 MVP requirements and high-level technical design**. For detailed technical implementation:
+
+- **[Technical Documentation](docs/technical/README.md)** - Index of implementation guides and key issue resolutions
 - **[Technical Blueprint](docs/technical/blueprint/README.md)** - Core capabilities and architecture patterns
 - **[AGENTS.md](AGENTS.md)** - Development guidelines, folder structure, and contribution standards  
 - **[AI Development Logs](docs/ai-log/)** - Session-by-session development history and decision tracking
+- **[Release 1.0 Task Management](release-1.0.mdc)** - MVP implementation roadmap and progress tracking
 
 ---
 
-### Release Strategy and Scope:
+### Key Features (MVP Release 1.0):
 
-#### **Release 1.0 (MVP) - Current Focus**
-**Scope**: Figma spec generation and download only
-* **No code generation** - moved to Release 1.3
-* **No Azure Blob Storage** - moved to Release 1.2
-* **Simplified pipeline**: Design concepts → Evaluation → Figma specs → Download
-* **Goal**: Establish core AI agent pipeline with basic functionality
-
-#### **Release 1.1 (Stabilization)**
-**Scope**: Testing infrastructure and React state fixes
-* **Cypress testing** - comprehensive UI testing framework
-* **React state management fixes** - eliminate manual triggering issues
-* **Code refactoring** - improve maintainability and performance
-* **Goal**: Stabilize MVP with robust testing and proper state management
-
-#### **Release 1.2 (User Session Management)**
-**Scope**: Persistent sessions and file storage
-* **Azure Blob Storage integration** - persistent session and file storage
-* **Session history display** - view and manage previous sessions
-* **Figma file management** - organize and access generated files
-* **Goal**: Enable users to maintain session continuity and file history
-
-#### **Release 1.3 (Code Generation)**
-**Scope**: Code generation with sample matching
-* **Parallel code generation** - generate multiple code implementations
-* **Code sample upload** - upload existing code for style matching
-* **Similarity matching** - generate code similar to uploaded samples
-* **Goal**: Enable comprehensive code generation based on user patterns
-
-#### **Future Releases (Backlog)**
-**Scope**: Advanced features and enterprise capabilities
-* **GitHub integration** - automated PR creation and code review
-* **Multi-agent collaboration** - specialized AI agents for different tasks
-* **Enterprise features** - RBAC, SSO, compliance, IaC automation
-* **Advanced UX** - real-time collaboration, advanced preview capabilities
-
----
-
-### Quick Start Guide:
-
-#### **For Development Team:**
-1. **Current Focus**: Work on Release 1.0 MVP features only
-2. **Reference Documents**: Use [PRD-1.0.md](prd-1.0.md) and [Release-1.0.mdc](release-1.0.mdc)
-3. **Task Management**: Follow task breakdown in Release-1.0.mdc
-4. **Guidelines**: Follow [AGENTS.md](AGENTS.md) for development standards
-
-#### **For Product Planning:**
-1. **MVP Scope**: Review [PRD-1.0.md](prd-1.0.md) for current release requirements
-2. **Future Planning**: Review [PRD-Backlog.md](prd-backlog.md) for advanced features
-3. **Release Roadmap**: Use Release-1.1.mdc through Release-1.3.mdc for planning
-4. **Backlog Management**: Use [Release-Backlog.mdc](release-backlog.mdc) for unscheduled features
-
-#### **For Stakeholder Review:**
-1. **Current Status**: Check [Release-1.0.mdc](release-1.0.mdc) for progress updates
-2. **MVP Capabilities**: Review [PRD-1.0.md](prd-1.0.md) for deliverable features
-3. **Future Vision**: Review [PRD-Backlog.md](prd-backlog.md) for long-term capabilities
-4. **Technical Context**: Review [Technical Documentation](docs/technical/README.md) for implementation details
-
----
-
-### Architecture Overview:
-
-The application maintains a consistent architecture across all releases:
-
-* **Framework**: Next.js 15.1.8 with App Router
-* **Styling**: TailwindCSS
-* **Cloud Platform**: Microsoft Azure
-* **Authentication**: Azure Managed Identity with DefaultAzureCredential
-* **AI Services**: Azure AI Foundry (OpenAI GPT-4o-mini)
-
-#### **Progressive Feature Addition:**
-* **Release 1.0**: In-memory session storage, Figma generation only
-* **Release 1.2**: Azure Blob Storage integration, persistent sessions
-* **Release 1.3**: Code generation capabilities, sample matching
-* **Future**: Advanced integrations, enterprise features, multi-platform support
-
----
-
-### Development Approach:
-
-* **AI-Driven Development**: 100% AI agent coded with no copy-paste
-* **Test-Driven Development**: Comprehensive testing at each release
-* **Incremental Delivery**: Each release builds upon previous stable foundation
-* **User Feedback Integration**: Release planning informed by user feedback
-
----
-
-### Success Criteria by Release:
-
-#### **Release 1.0 (MVP)**
-- [ ] Functional AI agent pipeline from brief to Figma spec download
-- [ ] Visual execution tracking with proper state management
-- [ ] Azure AI integration working reliably
-- [ ] Deployed and accessible to users
-
-#### **Release 1.1 (Stabilization)**
-- [ ] Comprehensive Cypress testing infrastructure
-- [ ] React state management issues resolved
-- [ ] Improved code quality and maintainability
-- [ ] Performance optimization completed
-
-#### **Release 1.2 (Session Management)**
-- [ ] Persistent user sessions across devices
-- [ ] Azure Blob Storage integration for file storage
-- [ ] Session history and file management UI
-- [ ] Secure user data isolation
-
-#### **Release 1.3 (Code Generation)**
-- [ ] Parallel code generation pipeline
-- [ ] Code sample upload and analysis
-- [ ] Similarity matching for consistent code style
-- [ ] Complete download packages with integration guidance
-
----
-
-### Next Steps:
-
-1. **Complete Release 1.0 MVP** - Focus on core Figma generation pipeline
-2. **Stabilize with Release 1.1** - Implement comprehensive testing and fix React state issues  
-3. **Enable Persistence with Release 1.2** - Add session management and file storage
-4. **Add Code Generation with Release 1.3** - Implement full design-to-code pipeline
-5. **Plan Future Releases** - Prioritize backlog items based on user feedback and business needs
-
----
-
-**Current Status**: Release 1.0 (MVP) - Active Development
-**Next Milestone**: Complete MVP Figma generation pipeline with reliable Azure AI integration
-
----
-
-### Key Features:
-
-#### Agent Pipeline:
+#### Agent Pipeline (Simplified for MVP):
 
 1. **Design Concept Generation**
 
@@ -189,33 +57,20 @@ The application maintains a consistent architecture across all releases:
 
    * LLM selects the most usable spec based on effort vs. clarity tradeoffs.
 
-5. **Parallel Code Generation**
+5. **Download Artifacts (MVP Scope)**
 
-   * **3 code implementations generated in parallel** - displayed in 3 concurrent processing boxes.
-   * Generates full Next.js + TypeScript features (React components, Tailwind).
-   * Agent tests each generated code implementation for functionality and quality.
-   * Self-contained feature folders with minimal routing logic.
-
-6. **Code Selection & Testing**
-
-   * Agent evaluates and selects the best code implementation from the 3 generated options.
-   * **Automated testing criteria**: Code quality, functionality, accessibility compliance, and component structure.
-   * **Aggregate scoring system**: Combines multiple evaluation metrics for optimal selection.
-
-7. **Download Artifacts**
-
-   * **ZIP archive download**: Complete package containing selected Figma specs and code.
+   * **Figma spec download only**: Selected Figma specifications in downloadable format.
    * **Full execution trace**: Detailed log of all agent decisions and evaluations.
-   * **Future enhancement**: Individual file preview capabilities (post-MVP).
-   * Execution results stored per-user in Blob Storage: `userId/executionId/`.
+   * **No code generation**: Code generation moved to Release 1.1.
+   * **No Azure Blob Storage**: All execution data stored in-memory during session.
 
-#### User Experience:
+#### User Experience (MVP):
 
 * **Agent Input & Flow Control:**
   * Users can always enter a creative brief to start a new AI agent flow
   * Users can abort the entire agent flow at any time with a prominent abort button
   * **No manual step advancement**: Agent automatically progresses through all steps without user intervention
-  * Users can start multiple flows sequentially (previous flow data remains accessible)
+  * Users can start multiple flows sequentially (previous flow data available during session only)
 
 * **Visual Flow Indicators:**
   * Users see visual agent flow with active step indicators (e.g., blinking/highlighted)
@@ -239,37 +94,30 @@ The application maintains a consistent architecture across all releases:
 
 * **Parallel Processing Display:**
   * **3 boxes showing concurrent Figma spec generation** with real-time progress indicators
-  * **3 boxes showing concurrent code generation** with real-time progress indicators
   * Each parallel process shows individual status and completion indicators
+  * **No parallel code generation boxes**: Removed for MVP scope
 
-* **Execution Management:**
-  * Export full execution (Figma spec + code + summary trace)
-  * Users can revisit past runs via execution history
-  * **Download capability**: ZIP archive with complete artifacts and execution trace
+* **Execution Management (MVP):**
+  * Export Figma spec and summary trace
+  * Users can revisit current session runs (no persistent storage)
+  * **Download capability**: Figma specifications and execution trace
 
-#### Agent Testing & Evaluation Criteria:
+#### Agent Testing & Evaluation Criteria (MVP):
 
 **Figma Spec Testing:**
 * Design clarity and visual hierarchy
 * Component structure and reusability
 * Alignment with modern UI/UX principles
-* Technical feasibility for code generation
+* Technical feasibility for future code generation
 
-**Code Implementation Testing:**
-* **Functionality**: Components render correctly and handle interactions
-* **Code Quality**: Clean, maintainable TypeScript/React code
-* **Accessibility**: WCAG compliance and semantic HTML
-* **Performance**: Optimized rendering and bundle size
-* **Structure**: Proper component organization and routing integration
-
-**Aggregate Scoring System:**
-* Weighted evaluation combining all testing criteria
-* Automatic selection of highest-scoring implementation
+**Aggregate Scoring System (MVP):**
+* Figma spec evaluation and ranking only
+* Automatic selection of highest-scoring specification
 * Detailed scoring breakdown available in execution trace
 
 ---
 
-### Technical Design:
+### Technical Design (MVP):
 
 #### App Architecture:
 
@@ -277,6 +125,7 @@ The application maintains a consistent architecture across all releases:
 * Styling: **TailwindCSS** (via `npx` setup).
 * Agent Flow UI: SSR for baseline, CSR for interaction/live updates.
 * Data Visualization: Open (Recharts/D3/others allowed).
+* **No persistent storage**: All data stored in-memory during session.
 
 #### Preferred Code Structure:
 
@@ -299,36 +148,29 @@ The application maintains a consistent architecture across all releases:
     /components/         ← Feature-specific components
     /api/
     /utils.ts
-  /stocks/
-    /components/
-    /hooks.ts
-    /api/
 
 /hooks                   ← Global shared custom hooks
-```markdown
+
 /lib                     ← Core logic and business layers
 
-  /daos                  ← Data Access Objects for external services (Azure, Foundry, Storage)
+  /daos                  ← Data Access Objects for external services (Azure AI only for MVP)
     - Example: `aiClient.ts` wraps Azure AI Foundry LLM calls and prompt orchestration.
     - Example: `azureClient.ts` sets up Azure SDK clients using DefaultAzureCredential.
-    - Example: `storageClient.ts` handles Blob Storage upload/download with user-scoped paths.
-    - Example: `cosmosClient.ts` (future) manages Cosmos DB user/session metadata.
+    - **MVP Note**: No storageClient.ts or cosmosClient.ts needed.
 
   /services              ← Business logic and agent workflow orchestration
     - Example: `designConcept.ts` generates multiple UI design concepts from a creative brief.
     - Example: `designEvaluation.ts` scores and ranks design concepts for clarity and modifiability.
     - Example: `figmaSpec.ts` runs parallel Figma spec generation and validates usability.
     - Example: `specSelection.ts` selects the optimal Figma spec based on agent evaluation.
-    - Example: `codeGeneration.ts` generates and tests multiple code implementations in parallel.
-    - Example: `codeSelection.ts` evaluates, scores, and selects the best code implementation.
     - Example: `executionTrace.ts` aggregates logs, scoring, and trace data for export.
+    - **MVP Note**: No codeGeneration.ts or codeSelection.ts needed.
 
   /utils                 ← Shared utilities and helpers
     - Example: `graphUtils.ts` provides chart/graph data shaping and library adapters.
     - Example: `promptUtils.ts` manages AI prompt templates and formatting.
     - Example: `scoringUtils.ts` implements aggregate scoring and metric weighting.
-    - Example: `fileUtils.ts` handles ZIP packaging, file formatting, and download helpers.
-```
+    - Example: `fileUtils.ts` handles file formatting and download helpers.
 
 /providers               ← Context providers (e.g., theme, chat state)
 
@@ -355,7 +197,7 @@ npx create-next-app@latest
 ✔ Would you like to customize the import alias (@/* by default)? … No
 ```
 
-#### Backend & AI:
+#### Backend & AI (MVP):
 
 * AI Integration: Uses **Azure AI Foundry** if available.
 * Authentication:
@@ -367,9 +209,7 @@ npx create-next-app@latest
     * If you are local user or github co pilot: Uses az login
     * Automatically resolves to Managed Identity on Azure App Service
     * Enables unified credential usage across environments
-* Storage: **Azure Blob Storage (Hot v2 tier)**
-
-  * All executions stored under `/userId/executionId/*`
+* **No Storage**: MVP does not use Azure Blob Storage - all data in-memory during session
 * AI Step Computation:
 
   * Parallel Figma generation where applicable
@@ -383,16 +223,10 @@ npx create-next-app@latest
 * SDK calls must be made only within server components or API routes (never client components).
 * When developing with test driven development, always use Node.js and DefaultAzureCredential instead of az CLI commands, since they work reliably across all environments
 
-#### User Identity:
+#### User Identity (MVP):
 
 * Each user assigned a GUID ID (shown in UI)
-* Local access token used for scoped blob operations
-
-#### Storage Format:
-
-* **Design specs**: JSON + PNG previews (if applicable)
-* **Code bundles**: ZIP archive containing complete feature implementation
-* **Execution metadata**: Trace log JSON + agent state JSON + scoring breakdown
+* **No persistent storage**: User data only available during session
 
 #### Recent Technical Improvements:
 
@@ -405,7 +239,6 @@ npx create-next-app@latest
 * ✅ **Step Validation Feature**: Added ability for users to validate/invalidate completed steps with feedback mechanisms and visual indicators in timeline.
 
 * ✅ **Enhanced Error Handling**: Improved debugging capabilities with comprehensive logging throughout the agent flow execution.
-* **Download package**: Single ZIP file with all artifacts and execution details
 
 ---
 
@@ -436,52 +269,30 @@ npx create-next-app@latest
 * ✅ **Graceful Degradation**: Flow stops on errors but preserves access to successful steps
 
 #### **Parallel Processing Display:**
-* ✅ **3-box parallel processing display** for Figma and code generation
+* ✅ **3-box parallel processing display** for Figma generation
 * ✅ **Real-time progress indicators** for each parallel process
 * ✅ **Individual status tracking** for concurrent operations
 
-#### **Core Features:**
-* ✅ **Aggregate scoring system** for automatic selection
-* ✅ **ZIP download** of complete artifacts (not GitHub PR)
-* ✅ **Full run archive export** with execution trace
-* ✅ **Execution storage in Azure Blob** with user-scoped paths
-* ✅ **Parallel generation steps** (3 Figma specs + 3 code implementations)
+#### **Core Features (MVP):**
+* ✅ **Aggregate scoring system** for automatic Figma spec selection
+* ✅ **Figma spec download** (not code or GitHub PR)
+* ✅ **Full run trace export** with execution details
+* ✅ **In-memory execution storage** during session (no Azure Blob)
+* ✅ **Parallel Figma spec generation** (3 specs in parallel)
 * ✅ **Azure AI Foundry integration** (if possible)
 * ✅ **Managed Identity** on Azure, DefaultAzureCredential for local
-* ✅ **All executions and agent runs visible to all users** (MVP scope)
+* ✅ **All executions visible to all users** during session (MVP scope)
 * ✅ **Infrastructure documented and provisioned manually** for MVP
 
-#### **Technical Requirements:**
+#### **Technical Requirements (MVP):**
 * ✅ No retries or edits for failed steps (planned for Release 1.1)
-* ✅ No Storybook/test code generation (planned for Release 1.1)
+* ✅ No code generation (moved to Release 1.1)
+* ✅ No Azure Blob Storage (moved to Release 1.1)
 * ✅ No multi-user isolation (planned for Release 1.1)
 
 ---
 
-### Release 1.1 (Post-MVP) Scope:
-
-* **Enhanced User Experience**
-  * Individual file preview capabilities
-  * Retry/modify steps and re-run failed executions
-  * Multi-user execution isolation and privacy controls
-  * Enhanced visual indicators and progress tracking
-
-* **Advanced Features**
-  * GitHub PR integration for code delivery
-  * Storybook/test support in generated features
-  * Multi-agent collaboration workflows
-  * AI metrics dashboard per execution
-  * Advanced scoring refinements and selection criteria
-
-* **Infrastructure & DevOps**
-  * Full Infrastructure as Code automation (e.g., Terraform, Bicep)
-  * Cost optimization for blob cleanup policies
-  * Automated token rotation for blob SAS
-  * Performance monitoring and optimization
-
----
-
-### Deployment & Infrastructure Notes:
+### Deployment & Infrastructure Notes (MVP):
 
 * A `Dockerfile` and `.dockerignore` will be included to support containerized builds and deployments.
 
@@ -495,57 +306,36 @@ npx create-next-app@latest
 
 * An `infrastructure.md` file will be included in the codebase to guide developers through setting up the necessary Azure resources:
 
-  * Azure Storage Account
-  * Azure AI Foundry
+  * Azure AI Foundry (primary requirement for MVP)
   * Managed Identities
   * User permissions and roles
+  * **No Azure Storage Account needed for MVP**
 
 * Full Infrastructure as Code (IaC) will be developed post-MVP.
 
 ---
 
-### Release 1.1 Enhancements (Post-MVP):
-
-* Retry/modify steps and re-run
-* GitHub PR integration
-* Storybook/test support in generated feature
-* Multi-agent collaboration
-* AI metrics dashboard per execution
-* Full Infrastructure as Code automation (e.g., Terraform, Bicep)
-* Individual file preview capabilities
-* Multi-user execution isolation and privacy controls
-
----
-
-### Open Items:
-
-* Which graph library will be selected (leave flexible for now)
-* How to handle authentication/token rotation for blob SAS
-* Cost optimization for blob cleanup policies
-
----
-
-### Test-Driven Development & Validation Approach:
+### Test-Driven Development & Validation Approach (MVP):
 
 * The project will follow a **test-driven development (TDD)** methodology.
 * Emphasis is on **integration testing** and **end-to-end validation** of actual functionality, rather than isolated unit tests.
-* Tests should validate real user flows, agent pipeline execution, and integration with external services (e.g., Azure AI Foundry, Azure Blob Storage).
+* Tests should validate real user flows, agent pipeline execution, and integration with external services (e.g., Azure AI Foundry).
 * Automated tests should cover:
-  * Full agent pipeline execution (from creative brief to artifact download)
+  * Full agent pipeline execution (from creative brief to Figma spec download)
   * Visual execution tracking and UI state transitions
-  * API and storage integration (mocked or real, as appropriate)
+  * API and AI service integration (mocked or real, as appropriate)
   * Accessibility and usability of generated UIs
 * Unit testing is **not required** unless it directly supports integration or functional validation.
 * when developing test driven development which is always needed, never use az cli commands since it doesn't work on codex, always use node and then DefaultAzureCredential, which works for everyone
 
 ---
 
-### Code Architecture:
+### Code Architecture (MVP):
 
 #### **Core Structure:**
 
 * **Layered Architecture:** Clear separation of concerns with distinct layers:
-  * **Data Access Objects (DAOs)** (`lib/daos/`): Interfaces with external services like Azure
+  * **Data Access Objects (DAOs)** (`lib/daos/`): Interfaces with external services like Azure AI
   * **Business Services** (`lib/services/`): Core business logic implementation
   * **Utilities** (`lib/utils/`): Shared helper functions across the application
   * **Components** (`components/`): Reusable UI elements
@@ -554,7 +344,7 @@ npx create-next-app@latest
 #### **Key Design Principles:**
 
 * **Separation of Concerns:** Each layer has a distinct responsibility
-  * DAOs handle external resource access (Azure AI, Blob Storage, Cosmos DB)
+  * DAOs handle external resource access (Azure AI only for MVP)
   * Services implement business logic and workflows
   * Utils provide shared functionality used across the application
 * **Clean Interfaces:** Each module exposes a well-defined interface
@@ -562,23 +352,42 @@ npx create-next-app@latest
 * **Maintainability:** Makes the codebase easier to understand, extend and refactor
 * **Organized Test Suites:** Tests are grouped under `tests/baseline`, `tests/dao`, `tests/services`, `tests/endpoints`, `tests/ui`, and `tests/e2e` with runner scripts. Execute all with `npm run test:all`.
 
-#### **File Organization:**
+#### **File Organization (MVP):**
 
 ```
 lib/
 ├── daos/              # Data Access Objects for external services
 │   ├── aiClient.ts    # Azure AI client wrapper
 │   ├── azureClient.ts # Azure base client utilities
-│   ├── cosmosClient.ts # Cosmos DB client
-│   ├── storageClient.ts # Azure Blob Storage client
 │   └── index.ts       # Re-exports for DAOs
 ├── services/          # Business logic implementation
 │   ├── designConcept.ts # Design concept generation service
-│   ├── designEvaluation.ts # Design evaluation service
-│   ├── specSelection.ts # Design selection service
+│   ├── designEvaluation.ts # Design evaluation service  
+│   ├── figmaSpec.ts   # Figma spec generation service
+│   ├── specSelection.ts # Figma spec selection service
+│   ├── executionTrace.ts # Execution tracking service
 │   └── index.ts       # Re-exports for services
 └── utils/             # Shared utilities
     ├── graphUtils.ts  # Graph/chart utilities
     ├── promptUtils.ts # AI prompt utilities
+    ├── scoringUtils.ts # Scoring and evaluation utilities
+    ├── fileUtils.ts   # File download utilities
     └── index.ts       # Re-exports for utilities
 ```
+
+---
+
+### Open Items (MVP):
+
+* Which graph library will be selected (leave flexible for now)
+* How to handle authentication/token management for AI services
+* Session management without persistent storage
+
+---
+
+### Future Releases:
+
+* **Release 1.1**: Stabilization release - Cypress testing, React state fixes, refactoring
+* **Release 1.2**: User session management, persistent Figma files, session history display
+* **Release 1.3**: Code generation, upload/download code samples
+* **Backlog**: All other advanced features (GitHub integration, multi-agent, enterprise features)

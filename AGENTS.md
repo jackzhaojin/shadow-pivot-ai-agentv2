@@ -1,10 +1,44 @@
 # Repository Guidelines
 
-This repo contains the **TSLA AI UI Agent** built with Next.js 15.1.8. All contributions should follow the high level design described in `prd.md` in root project and the task breakdown in `release-1.0.mdc` (MVP) or `release-1.1.mdc` (Post-MVP).
+This repo contains the **TSLA AI UI Agent** built with Next.js 15.1.8. All contributions should follow the release-specific design described in the appropriate PRD and release management documents.
 
-We're on 1.0 at the moment, do not do 1.1 yet.
+## Current Release Focus
 
-Also I will only ask you take on a bite size, if you finish the 1.2.3 (example) you're on, do not move onto 1.2.4 or 1.3.1.
+**🎯 Current Release: 1.0 (MVP)**
+- **Primary Document**: [PRD-1.0.md](prd-1.0.md) - MVP product requirements 
+- **Task Management**: [Release-1.0.mdc](release-1.0.mdc) - MVP task breakdown and progress
+- **Scope**: Figma spec generation and download only (no code generation, no persistent storage)
+
+**⛔ Do NOT work on Release 1.1+ features yet** - Focus only on completing Release 1.0 MVP.
+
+## Project Structure
+
+### Release Documentation Hierarchy
+```
+# Core Project Structure
+prd.md                   # Project overview and release roadmap
+prd-1.0.md              # Release 1.0 (MVP) detailed requirements ← CURRENT FOCUS
+prd-backlog.md          # Future features (not scheduled)
+
+# Release Task Management  
+release-1.0.mdc         # Release 1.0 task breakdown ← CURRENT FOCUS
+release-1.1.mdc         # Release 1.1 planning (stabilization)
+release-1.2.mdc         # Release 1.2 planning (session management)
+release-1.3.mdc         # Release 1.3 planning (code generation)
+release-backlog.mdc     # Future releases backlog
+```
+
+### Development Guidelines
+**Reference Documents in Order:**
+1. **[PRD-1.0.md](prd-1.0.md)** - Understand current MVP scope and requirements
+2. **[Release-1.0.mdc](release-1.0.mdc)** - Find specific tasks and track progress
+3. **[AGENTS.md](AGENTS.md)** - Follow development standards (this document)
+
+**Task Assignment Protocol:**
+- I will only assign you bite-sized tasks (e.g., 3.2.3)
+- Complete only the assigned task - do NOT move to next tasks (3.2.4, 3.3.1, etc.)
+- Update the appropriate .mdc file when task is completed
+- Do NOT work on Release 1.1+ features until Release 1.0 is complete
 
 ## Folder Structure
 Use the structure outlined in the PRD when adding new code:
