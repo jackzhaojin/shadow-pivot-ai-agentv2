@@ -28,7 +28,7 @@ export async function evaluateFigmaSpec(spec: FigmaSpec, index = 0): Promise<Spe
   console.log('🧪 evaluateFigmaSpec - Starting quality evaluation for spec:', {
     specName: spec.name?.substring(0, 50) + '...',
     specDescription: spec.description?.substring(0, 100) + '...',
-    componentCount: spec.components?.length || 0,
+    componentCount: spec.designSystem?.components ? Object.keys(spec.designSystem.components).length : 0,
     index
   });
 
@@ -47,7 +47,7 @@ export async function evaluateFigmaSpec(spec: FigmaSpec, index = 0): Promise<Spe
     const templateResult = applyTemplate(template, { 
       specName: spec.name || 'Unnamed Spec',
       specDescription: spec.description || 'No description provided',
-      components: Array.isArray(spec.components) ? spec.components.join(', ') : 'No components specified'
+      components: spec.designSystem?.components ? Object.keys(spec.designSystem.components).join(', ') : 'No components specified'
     });
     systemPrompt = templateResult.systemPrompt;
     userPrompt = templateResult.userPrompt;
@@ -261,7 +261,7 @@ export async function testFigmaSpecs(specs: FigmaSpec[]): Promise<SpecEvaluation
     specsPreview: specs.map((s, i) => ({
       index: i,
       name: s.name?.substring(0, 30) + '...',
-      componentCount: s.components?.length || 0
+      componentCount: s.designSystem?.components ? Object.keys(s.designSystem.components).length : 0
     }))
   });
 

@@ -132,14 +132,14 @@ export async function evaluateFigmaSpec(spec: FigmaSpec, index = 0): Promise<Spe
   logInfo('FIGMA_EVAL', `Starting quality evaluation for spec ${index}`, {
     specName: spec.name?.substring(0, 50) + '...',
     specDescription: spec.description?.substring(0, 100) + '...',
-    componentCount: spec.components?.length || 0,
+    componentCount: spec.designSystem?.components ? Object.keys(spec.designSystem.components).length : 0,
     index
   }, requestId);
 
   console.log('🧪 evaluateFigmaSpec - Starting quality evaluation for spec:', {
     specName: spec.name?.substring(0, 50) + '...',
     specDescription: spec.description?.substring(0, 100) + '...',
-    componentCount: spec.components?.length || 0,
+    componentCount: spec.designSystem?.components ? Object.keys(spec.designSystem.components).length : 0,
     index
   });
 
@@ -158,7 +158,7 @@ export async function evaluateFigmaSpec(spec: FigmaSpec, index = 0): Promise<Spe
     const templateResult = applyTemplate(template, { 
       specName: spec.name || 'Unnamed Spec',
       specDescription: spec.description || 'No description provided',
-      components: Array.isArray(spec.components) ? spec.components.join(', ') : 'No components specified'
+      components: spec.designSystem?.components ? Object.keys(spec.designSystem.components).join(', ') : 'No components specified'
     });
     
     systemPrompt = templateResult.systemPrompt;
@@ -180,7 +180,7 @@ export async function evaluateFigmaSpec(spec: FigmaSpec, index = 0): Promise<Spe
     
     // Fallback template
     systemPrompt = `You are a Figma spec quality evaluator. Evaluate the provided spec for design clarity, component structure, technical feasibility, and accessibility. Return a structured evaluation with scores and feedback.`;
-    userPrompt = `Evaluate this Figma spec: ${spec.name || 'Unnamed Spec'}. Description: ${spec.description || 'No description'}. Components: ${Array.isArray(spec.components) ? spec.components.join(', ') : 'None specified'}.`;
+    userPrompt = `Evaluate this Figma spec: ${spec.name || 'Unnamed Spec'}. Description: ${spec.description || 'No description'}. Components: ${spec.designSystem?.components ? Object.keys(spec.designSystem.components).join(', ') : 'None specified'}.`;
     temperature = 0.3;
   }
 

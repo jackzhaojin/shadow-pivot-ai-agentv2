@@ -30,7 +30,17 @@ export async function POST(request: NextRequest) {
   }
 }
 
-async function createDownload({ selectedFigmaSpec, figmaSelectionReasoning, executionTrace, userGuid }: any) {
+interface DownloadRequest {
+  selectedFigmaSpec: {
+    name?: string;
+    [key: string]: unknown;
+  };
+  figmaSelectionReasoning: string;
+  executionTrace: Record<string, unknown>;
+  userGuid: string;
+}
+
+async function createDownload({ selectedFigmaSpec, figmaSelectionReasoning, executionTrace, userGuid }: DownloadRequest) {
   if (!selectedFigmaSpec) {
     console.error('❌ API - No selectedFigmaSpec provided');
     return NextResponse.json({

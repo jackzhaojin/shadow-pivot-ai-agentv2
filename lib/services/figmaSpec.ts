@@ -2,37 +2,130 @@ import { generateChatCompletion } from '../daos/aiClient';
 import { loadPromptTemplate, applyTemplate, validateResponse } from '../utils/promptUtils';
 import path from 'path';
 
+interface DesignSystemMetadata {
+  version?: string;
+  brand?: string;
+  author?: string;
+  colors?: Record<string, unknown>;
+}
+
+interface DesignTokens {
+  colors?: Record<string, unknown>;
+  typography?: Record<string, unknown>;
+  spacing?: Record<string, unknown>;
+}
+
+interface Components {
+  [key: string]: {
+    type: string;
+    description?: string;
+    styling?: string;
+    properties?: Record<string, unknown>;
+  };
+}
+
+interface Grid {
+  columns?: number;
+  gap?: string;
+  rows?: number;
+  gutter?: string;
+}
+
+interface Spacing {
+  base?: string;
+  scale?: Record<string, string>;
+}
+
+interface ResponsiveSettings {
+  breakpoints?: Record<string, string>;
+  behavior?: string;
+}
+
+interface InteractionStates {
+  hover?: boolean;
+  focus?: boolean;
+  active?: boolean;
+  disabled?: boolean;
+}
+
+interface Animation {
+  name?: string;
+  type?: string;
+  duration?: string;
+  easing?: string;
+  trigger?: string;
+}
+
+interface Gesture {
+  type: string;
+  action?: string;
+  target?: string;
+}
+
+interface ContrastSettings {
+  minimum?: string;
+  preferred?: string;
+  ratio?: string;
+}
+
+interface FocusManagement {
+  visible?: boolean;
+  style?: string;
+  logical?: boolean;
+}
+
+interface ScreenReader {
+  aria?: boolean;
+  labels?: boolean | Record<string, string>;
+}
+
+interface KeyboardSettings {
+  navigation?: boolean;
+  shortcuts?: boolean | Record<string, string>;
+}
+
+interface CodeSnippets {
+  [key: string]: string;
+}
+
+interface Asset {
+  name: string;
+  type: string;
+  url?: string;
+  size?: string;
+}
+
 export interface FigmaSpec {
   name: string;
   description: string;
   designSystem: {
-    metadata?: any;
-    tokens?: any;
-    components?: any;
+    metadata?: DesignSystemMetadata;
+    tokens?: DesignTokens;
+    components?: Components;
   };
   layout: {
     structure?: string;
-    grid?: any;
-    spacing?: any;
-    responsive?: any;
+    grid?: Grid;
+    spacing?: Spacing;
+    responsive?: ResponsiveSettings;
   };
   interactions: {
-    states?: any;
-    animations?: any[];
-    gestures?: any[];
+    states?: InteractionStates;
+    animations?: Animation[];
+    gestures?: Gesture[];
   };
   accessibility: {
-    contrast?: any;
-    focusManagement?: any;
-    screenReader?: any;
-    keyboard?: any;
+    contrast?: ContrastSettings;
+    focusManagement?: FocusManagement;
+    screenReader?: ScreenReader;
+    keyboard?: KeyboardSettings;
   };
   implementation: {
     technology?: string;
     framework?: string;
-    dependencies?: any[];
-    codeSnippets?: any;
-    assets?: any[];
+    dependencies?: string[];
+    codeSnippets?: CodeSnippets;
+    assets?: (Asset | string)[];
   };
 }
 
@@ -197,28 +290,29 @@ export async function generateFigmaSpec(concept: string, brief = 'Design a UI co
     
     // Try to transform the AI response to match our interface
     if (data && typeof data === 'object' && !Array.isArray(data)) {
+      const sourceData = data as unknown as Record<string, unknown>;
       const transformed: FigmaSpec = {
-        name: (data as any).name || 'Generated Component',
-        description: (data as any).description || 'AI-generated Figma specification',
-        designSystem: (data as any).designSystem || {},
-        layout: (data as any).layout || {
+        name: (sourceData.name as string) || 'Generated Component',
+        description: (sourceData.description as string) || 'AI-generated Figma specification',
+        designSystem: (sourceData.designSystem as FigmaSpec['designSystem']) || {},
+        layout: (sourceData.layout as FigmaSpec['layout']) || {
           structure: 'responsive',
           grid: { columns: 12 },
           spacing: { base: '8px' },
           responsive: { breakpoints: { mobile: '768px' } }
         },
-        interactions: (data as any).interactions || {
+        interactions: (sourceData.interactions as FigmaSpec['interactions']) || {
           states: { hover: true },
           animations: [],
           gestures: []
         },
-        accessibility: (data as any).accessibility || {
+        accessibility: (sourceData.accessibility as FigmaSpec['accessibility']) || {
           contrast: { minimum: '4.5:1' },
           focusManagement: { visible: true },
           screenReader: { aria: true },
           keyboard: { navigation: true }
         },
-        implementation: (data as any).implementation || {
+        implementation: (sourceData.implementation as FigmaSpec['implementation']) || {
           technology: 'React',
           framework: 'Next.js',
           dependencies: [],

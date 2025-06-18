@@ -922,14 +922,14 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
         });
         if (currentStep === 4 && figmaSpecs.length === 0 && !isStep4Running) {
           console.log('🔄 StepExecutor - Using mock data for Step 4 evaluation');
-          const mockFigmaSpecs = [
+          const mockFigmaSpecs: FigmaSpec[] = [
             { 
               name: 'Mock Figma Spec 1', 
               description: 'Mock spec for testing', 
               designSystem: {
                 metadata: { version: '1.0', author: 'Mock Designer' },
                 tokens: { colors: { primary: { main: '#007bff' } } },
-                components: { mockComponent1: { type: 'component' } }
+                components: { mockComponent1: { type: 'component', description: 'Mock component' } }
               },
               layout: { structure: 'mock layout' },
               interactions: { states: {}, animations: [] },
@@ -942,7 +942,7 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
               designSystem: {
                 metadata: { version: '1.0', author: 'Mock Designer' },
                 tokens: { colors: { primary: { main: '#28a745' } } },
-                components: { mockComponent2: { type: 'component' } }
+                components: { mockComponent2: { type: 'component', description: 'Another mock component' } }
               },
               layout: { structure: 'mock layout' },
               interactions: { states: {}, animations: [] },
@@ -955,7 +955,7 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
               designSystem: {
                 metadata: { version: '1.0', author: 'Mock Designer' },
                 tokens: { colors: { primary: { main: '#dc3545' } } },
-                components: { mockComponent3: { type: 'component' } }
+                components: { mockComponent3: { type: 'component', description: 'Third mock component' } }
               },
               layout: { structure: 'mock layout' },
               interactions: { states: {}, animations: [] },
