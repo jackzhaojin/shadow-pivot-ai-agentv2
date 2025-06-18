@@ -8,7 +8,7 @@ on:
 
 permissions:
   id-token: write
-  contents: read
+  contents: write  # Changed from 'read' to 'write' for creating releases and tags
   packages: write
 
 env:
