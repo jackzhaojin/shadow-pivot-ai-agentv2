@@ -5,7 +5,35 @@ import path from 'path';
 export interface FigmaSpec {
   name: string;
   description: string;
-  components: string[];
+  designSystem: {
+    metadata?: any;
+    tokens?: any;
+    components?: any;
+  };
+  layout: {
+    structure?: string;
+    grid?: any;
+    spacing?: any;
+    responsive?: any;
+  };
+  interactions: {
+    states?: any;
+    animations?: any[];
+    gestures?: any[];
+  };
+  accessibility: {
+    contrast?: any;
+    focusManagement?: any;
+    screenReader?: any;
+    keyboard?: any;
+  };
+  implementation: {
+    technology?: string;
+    framework?: string;
+    dependencies?: any[];
+    codeSnippets?: any;
+    assets?: any[];
+  };
 }
 
 export async function generateFigmaSpec(concept: string, brief = 'Design a UI component'): Promise<FigmaSpec> {
@@ -14,7 +42,7 @@ export async function generateFigmaSpec(concept: string, brief = 'Design a UI co
     brief: brief?.substring(0, 100) + '...'
   });
   
-  const templatePath = path.join('prompts', 'figma-spec-generation', 'v1.json');
+  const templatePath = path.join('prompts', 'figma-spec-generation', 'v2.json');
   console.log('📁 generateFigmaSpec - Loading template from:', templatePath);
   
   let template, systemPrompt, userPrompt, temperature;
@@ -50,7 +78,10 @@ export async function generateFigmaSpec(concept: string, brief = 'Design a UI co
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt }
       ],
-      { temperature }
+      { 
+        temperature,
+        maxTokens: 3000  // Increased from default 1000 to allow for verbose Figma specs
+      }
     );
     
     console.log('📡 generateFigmaSpec - AI response received:', {
@@ -114,11 +145,40 @@ export async function generateFigmaSpec(concept: string, brief = 'Design a UI co
       data = {
         name: concept || 'Generated Component',
         description: content.length > 0 ? content.substring(0, 500) + '...' : 'AI-generated Figma specification',
-        components: [
-          'Main container with modern styling',
-          'Content area with responsive layout',
-          'Interactive elements with hover states'
-        ]
+        designSystem: {
+          tokens: {
+            colors: { primary: '#007bff', neutral: { white: '#ffffff', gray: '#6c757d' } },
+            typography: { fontFamilies: { primary: 'Inter, sans-serif' } }
+          },
+          components: {
+            mainContainer: { type: 'container', styling: 'modern, responsive' },
+            contentArea: { type: 'layout', styling: 'flexible, accessible' }
+          }
+        },
+        layout: {
+          structure: 'responsive grid',
+          grid: { columns: 12, gutter: '16px' },
+          spacing: { base: '8px' },
+          responsive: { breakpoints: { mobile: '768px', tablet: '1024px' } }
+        },
+        interactions: {
+          states: { hover: true, focus: true, active: true },
+          animations: [{ type: 'fadeIn', duration: '200ms' }],
+          gestures: [{ type: 'tap', action: 'select' }]
+        },
+        accessibility: {
+          contrast: { minimum: '4.5:1' },
+          focusManagement: { visible: true, logical: true },
+          screenReader: { aria: true, labels: true },
+          keyboard: { navigation: true, shortcuts: true }
+        },
+        implementation: {
+          technology: 'React',
+          framework: 'Next.js',
+          dependencies: ['@emotion/styled', 'framer-motion'],
+          codeSnippets: { component: 'const Component = () => { return <div>...</div>; }' },
+          assets: ['icons.svg', 'images/']
+        }
       };
       
       console.log('🔄 generateFigmaSpec - Using fallback spec:', data);
@@ -130,6 +190,46 @@ export async function generateFigmaSpec(concept: string, brief = 'Design a UI co
       return validation.parsedResponse as FigmaSpec;
     }
     
+    console.warn('⚠️ generateFigmaSpec - Validation failed, but attempting to transform data:', {
+      errors: validation.errors,
+      originalDataKeys: data && typeof data === 'object' ? Object.keys(data) : 'not an object'
+    });
+    
+    // Try to transform the AI response to match our interface
+    if (data && typeof data === 'object' && !Array.isArray(data)) {
+      const transformed: FigmaSpec = {
+        name: (data as any).name || 'Generated Component',
+        description: (data as any).description || 'AI-generated Figma specification',
+        designSystem: (data as any).designSystem || {},
+        layout: (data as any).layout || {
+          structure: 'responsive',
+          grid: { columns: 12 },
+          spacing: { base: '8px' },
+          responsive: { breakpoints: { mobile: '768px' } }
+        },
+        interactions: (data as any).interactions || {
+          states: { hover: true },
+          animations: [],
+          gestures: []
+        },
+        accessibility: (data as any).accessibility || {
+          contrast: { minimum: '4.5:1' },
+          focusManagement: { visible: true },
+          screenReader: { aria: true },
+          keyboard: { navigation: true }
+        },
+        implementation: (data as any).implementation || {
+          technology: 'React',
+          framework: 'Next.js',
+          dependencies: [],
+          codeSnippets: {},
+          assets: []
+        }
+      };
+      
+      return transformed;
+    }
+    
     console.warn('⚠️ generateFigmaSpec - Validation failed, using fallback:', {
       errors: validation.errors,
       originalData: data
@@ -138,7 +238,34 @@ export async function generateFigmaSpec(concept: string, brief = 'Design a UI co
     return {
       name: data.name || concept,
       description: data.description || 'Generated Figma specification',
-      components: Array.isArray(data.components) ? data.components : ['Component 1', 'Component 2']
+      designSystem: data.designSystem || {
+        tokens: { colors: { primary: '#007bff' } },
+        components: { placeholder: { type: 'component' } }
+      },
+      layout: data.layout || {
+        structure: 'responsive',
+        grid: { columns: 12 },
+        spacing: { base: '8px' },
+        responsive: { breakpoints: { mobile: '768px' } }
+      },
+      interactions: data.interactions || {
+        states: { hover: true },
+        animations: [],
+        gestures: []
+      },
+      accessibility: data.accessibility || {
+        contrast: { minimum: '4.5:1' },
+        focusManagement: { visible: true },
+        screenReader: { aria: true },
+        keyboard: { navigation: true }
+      },
+      implementation: data.implementation || {
+        technology: 'React',
+        framework: 'Next.js',
+        dependencies: [],
+        codeSnippets: {},
+        assets: []
+      }
     };
   } catch (err) {
     console.error('💥 generateFigmaSpec - Critical error occurred:', {
@@ -152,7 +279,38 @@ export async function generateFigmaSpec(concept: string, brief = 'Design a UI co
     return {
       name: concept,
       description: `Fallback spec for ${concept} - AI generation failed`,
-      components: ['Main container', 'Content area', 'Action buttons']
+      designSystem: {
+        tokens: { colors: { primary: '#007bff' } },
+        components: {
+          mainContainer: { type: 'container', description: 'Main container' },
+          contentArea: { type: 'layout', description: 'Content area' },
+          actionButtons: { type: 'controls', description: 'Action buttons' }
+        }
+      },
+      layout: {
+        structure: 'fallback layout',
+        grid: { columns: 12 },
+        spacing: { base: '8px' },
+        responsive: { breakpoints: { mobile: '768px' } }
+      },
+      interactions: {
+        states: { hover: true },
+        animations: [],
+        gestures: []
+      },
+      accessibility: {
+        contrast: { minimum: '4.5:1' },
+        focusManagement: { visible: true },
+        screenReader: { aria: true },
+        keyboard: { navigation: true }
+      },
+      implementation: {
+        technology: 'React',
+        framework: 'Next.js',
+        dependencies: [],
+        codeSnippets: {},
+        assets: []
+      }
     };
   }
 }
@@ -175,7 +333,7 @@ export async function generateFigmaSpecs(concept: string, count = 3, brief?: str
     const results = await Promise.all(promises);
     console.log('✅ generateFigmaSpecs - All promises resolved successfully:', {
       resultsCount: results.length,
-      allValid: results.every(r => r && r.name && r.description && r.components)
+      allValid: results.every(r => r && r.name && r.description && r.designSystem)
     });
     return results;
   } catch (error) {
@@ -201,7 +359,34 @@ export async function generateFigmaSpecs(concept: string, count = 3, brief?: str
         return {
           name: `${concept} - Spec ${index + 1}`,
           description: 'Failed to generate - fallback spec',
-          components: ['Error placeholder']
+          designSystem: {
+            tokens: { colors: { primary: '#007bff' } },
+            components: { errorPlaceholder: { type: 'placeholder', description: 'Error placeholder' } }
+          },
+          layout: {
+            structure: 'error fallback',
+            grid: { columns: 12 },
+            spacing: { base: '8px' },
+            responsive: { breakpoints: { mobile: '768px' } }
+          },
+          interactions: {
+            states: { hover: true },
+            animations: [],
+            gestures: []
+          },
+          accessibility: {
+            contrast: { minimum: '4.5:1' },
+            focusManagement: { visible: true },
+            screenReader: { aria: true },
+            keyboard: { navigation: true }
+          },
+          implementation: {
+            technology: 'React',
+            framework: 'Next.js',
+            dependencies: [],
+            codeSnippets: {},
+            assets: []
+          }
         };
       }
     });

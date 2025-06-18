@@ -583,7 +583,15 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
               const specResult = (data.specs && data.specs.length > 0) ? data.specs[0] : {
                 name: `${selectedConcept} - Spec ${index + 1}`,
                 description: 'Generated Figma specification',
-                components: ['Component 1', 'Component 2']
+                designSystem: {
+                  metadata: { version: '1.0', author: 'AI Designer' },
+                  tokens: { colors: { primary: { main: '#007bff' } } },
+                  components: { component1: { type: 'component' }, component2: { type: 'component' } }
+                },
+                layout: { structure: 'responsive layout' },
+                interactions: { states: {}, animations: [] },
+                accessibility: { contrast: { ratio: '4.5:1' } },
+                implementation: { technology: 'React', framework: 'Tailwind' }
               };
               
               console.log(`✅ StepExecutor - Figma spec ${index + 1} generated:`, specResult);
@@ -617,9 +625,8 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
             spec && 
             spec.name && 
             spec.description &&
-            spec.components && 
-            Array.isArray(spec.components) &&
-            spec.components.length > 0
+            spec.designSystem && 
+            typeof spec.designSystem === 'object'
           );
 
           console.log('📋 StepExecutor - Filtering specs - valid vs total:', {
@@ -772,7 +779,11 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
     console.log('🧪🧪🧪 StepExecutor - Step 4 (Testing) useEffect triggered:', {
       currentStep,
       figmaSpecsLength: figmaSpecs.length,
-      figmaSpecs: figmaSpecs.map((spec, i) => ({ index: i, name: spec.name, componentsCount: spec.components?.length })),
+      figmaSpecs: figmaSpecs.map((spec, i) => ({ 
+        index: i, 
+        name: spec.name, 
+        componentsCount: spec.designSystem?.components ? Object.keys(spec.designSystem.components).length : 0
+      })),
       aborted,
       isStep4Running,
       condition: currentStep === 4 && figmaSpecs.length > 0 && !aborted && !isStep4Running,
@@ -805,7 +816,7 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
             specsPreview: figmaSpecs.map((s, i) => ({
               index: i,
               name: s.name?.substring(0, 30) + '...',
-              componentCount: s.components?.length || 0
+              componentCount: s.designSystem?.components ? Object.keys(s.designSystem.components).length : 0
             }))
           });
 
@@ -912,9 +923,45 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
         if (currentStep === 4 && figmaSpecs.length === 0 && !isStep4Running) {
           console.log('🔄 StepExecutor - Using mock data for Step 4 evaluation');
           const mockFigmaSpecs = [
-            { name: 'Mock Figma Spec 1', description: 'Mock spec for testing', components: [] },
-            { name: 'Mock Figma Spec 2', description: 'Another mock spec', components: [] },
-            { name: 'Mock Figma Spec 3', description: 'Third mock spec', components: [] }
+            { 
+              name: 'Mock Figma Spec 1', 
+              description: 'Mock spec for testing', 
+              designSystem: {
+                metadata: { version: '1.0', author: 'Mock Designer' },
+                tokens: { colors: { primary: { main: '#007bff' } } },
+                components: { mockComponent1: { type: 'component' } }
+              },
+              layout: { structure: 'mock layout' },
+              interactions: { states: {}, animations: [] },
+              accessibility: { contrast: { ratio: '4.5:1' } },
+              implementation: { technology: 'React', framework: 'Tailwind' }
+            },
+            { 
+              name: 'Mock Figma Spec 2', 
+              description: 'Another mock spec', 
+              designSystem: {
+                metadata: { version: '1.0', author: 'Mock Designer' },
+                tokens: { colors: { primary: { main: '#28a745' } } },
+                components: { mockComponent2: { type: 'component' } }
+              },
+              layout: { structure: 'mock layout' },
+              interactions: { states: {}, animations: [] },
+              accessibility: { contrast: { ratio: '4.5:1' } },
+              implementation: { technology: 'React', framework: 'Tailwind' }
+            },
+            { 
+              name: 'Mock Figma Spec 3', 
+              description: 'Third mock spec', 
+              designSystem: {
+                metadata: { version: '1.0', author: 'Mock Designer' },
+                tokens: { colors: { primary: { main: '#dc3545' } } },
+                components: { mockComponent3: { type: 'component' } }
+              },
+              layout: { structure: 'mock layout' },
+              interactions: { states: {}, animations: [] },
+              accessibility: { contrast: { ratio: '4.5:1' } },
+              implementation: { technology: 'React', framework: 'Tailwind' }
+            }
           ];
           
           triggerStep4FigmaEvaluation(mockFigmaSpecs);
@@ -927,9 +974,45 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
       setTimeout(() => {
         if (currentStep === 4 && !isStep4Running) {
           const specsToUse = figmaSpecs.length > 0 ? figmaSpecs : [
-            { name: 'Fallback Spec 1', description: 'Generated due to timing issues', components: ['Component1'] },
-            { name: 'Fallback Spec 2', description: 'Generated due to timing issues', components: ['Component2'] },
-            { name: 'Fallback Spec 3', description: 'Generated due to timing issues', components: ['Component3'] }
+            { 
+              name: 'Fallback Spec 1', 
+              description: 'Generated due to timing issues', 
+              designSystem: {
+                metadata: { version: '1.0', author: 'Fallback Designer' },
+                tokens: { colors: { primary: { main: '#007bff' } } },
+                components: { component1: { type: 'component' } }
+              },
+              layout: { structure: 'fallback layout' },
+              interactions: { states: {}, animations: [] },
+              accessibility: { contrast: { ratio: '4.5:1' } },
+              implementation: { technology: 'React', framework: 'Tailwind' }
+            },
+            { 
+              name: 'Fallback Spec 2', 
+              description: 'Generated due to timing issues', 
+              designSystem: {
+                metadata: { version: '1.0', author: 'Fallback Designer' },
+                tokens: { colors: { primary: { main: '#28a745' } } },
+                components: { component2: { type: 'component' } }
+              },
+              layout: { structure: 'fallback layout' },
+              interactions: { states: {}, animations: [] },
+              accessibility: { contrast: { ratio: '4.5:1' } },
+              implementation: { technology: 'React', framework: 'Tailwind' }
+            },
+            { 
+              name: 'Fallback Spec 3', 
+              description: 'Generated due to timing issues', 
+              designSystem: {
+                metadata: { version: '1.0', author: 'Fallback Designer' },
+                tokens: { colors: { primary: { main: '#dc3545' } } },
+                components: { component3: { type: 'component' } }
+              },
+              layout: { structure: 'fallback layout' },
+              interactions: { states: {}, animations: [] },
+              accessibility: { contrast: { ratio: '4.5:1' } },
+              implementation: { technology: 'React', framework: 'Tailwind' }
+            }
           ];
           console.log('� StepExecutor - Fallback: Force triggering Step 4 with specs:', specsToUse.length);
           triggerStep4FigmaEvaluation(specsToUse);
@@ -1434,7 +1517,7 @@ export default function StepExecutor({ brief, setBrief }: StepExecutorProps) {
           firstSpecPreview: successfulResults[0] ? { 
             name: successfulResults[0].name, 
             description: successfulResults[0].description?.substring(0, 100) + '...',
-            componentCount: successfulResults[0].components?.length || 0
+            componentCount: successfulResults[0].designSystem?.components ? Object.keys(successfulResults[0].designSystem.components).length : 0
           } : null
         });
         setFigmaSpecs(successfulResults);

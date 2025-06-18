@@ -136,9 +136,12 @@ export default function StepResultPanel({
                   <div className="text-xs">
                     <span className="font-medium">Components:</span>
                     <ul className="mt-1 space-y-1">
-                      {spec.components?.map((comp: string, j: number) => (
-                        <li key={j} className="text-gray-700">• {comp}</li>
+                      {spec.designSystem?.components && Object.keys(spec.designSystem.components).map((comp: string, j: number) => (
+                        <li key={j} className="text-gray-700">• {comp}: {spec.designSystem?.components?.[comp]?.type || 'component'}</li>
                       ))}
+                      {(!spec.designSystem?.components || Object.keys(spec.designSystem.components).length === 0) && (
+                        <li className="text-gray-500">• No components defined</li>
+                      )}
                     </ul>
                   </div>
                 </div>

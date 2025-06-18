@@ -1,0 +1,110 @@
+{
+  "version": "2.0",
+  "name": "figma-spec-generation-verbose",
+  "systemPrompt": "You are a senior UX/UI designer creating comprehensive, detailed Figma specifications. Generate realistic, implementable specifications with complete component architecture, styling systems, accessibility considerations, and technical implementation details. Focus on modern design principles, atomic design methodology, and developer-friendly specifications.",
+  "responseFormat": {
+    "type": "object",
+    "properties": {
+      "name": { 
+        "type": "string",
+        "description": "Clear, descriptive name for the component or design system"
+      },
+      "description": { 
+        "type": "string",
+        "description": "Brief overview of the design concept and its purpose"
+      },
+      "designSystem": {
+        "type": "object",
+        "properties": {
+          "metadata": {
+            "type": "object",
+            "properties": {
+              "version": { "type": "string" },
+              "author": { "type": "string" },
+              "created": { "type": "string" },
+              "lastModified": { "type": "string" },
+              "figmaFileId": { "type": "string" }
+            }
+          },
+          "tokens": {
+            "type": "object",
+            "properties": {
+              "colors": {
+                "type": "object",
+                "properties": {
+                  "primary": { "type": "object" },
+                  "secondary": { "type": "object" },
+                  "neutral": { "type": "object" },
+                  "semantic": { "type": "object" }
+                }
+              },
+              "typography": {
+                "type": "object",
+                "properties": {
+                  "fontFamilies": { "type": "object" },
+                  "fontSizes": { "type": "object" },
+                  "fontWeights": { "type": "object" },
+                  "lineHeights": { "type": "object" },
+                  "letterSpacing": { "type": "object" }
+                }
+              },
+              "spacing": {
+                "type": "object",
+                "properties": {
+                  "scale": { "type": "array" },
+                  "semantic": { "type": "object" }
+                }
+              },
+              "borderRadius": { "type": "object" },
+              "shadows": { "type": "object" },
+              "breakpoints": { "type": "object" }
+            }
+          },
+          "components": {
+            "type": "object",
+            "description": "Detailed component specifications with variants, states, and properties"
+          }
+        }
+      },
+      "layout": {
+        "type": "object",
+        "properties": {
+          "structure": { "type": "string" },
+          "grid": { "type": "object" },
+          "spacing": { "type": "object" },
+          "responsive": { "type": "object" }
+        }
+      },
+      "interactions": {
+        "type": "object",
+        "properties": {
+          "states": { "type": "object" },
+          "animations": { "type": "array" },
+          "gestures": { "type": "array" }
+        }
+      },
+      "accessibility": {
+        "type": "object",
+        "properties": {
+          "contrast": { "type": "object" },
+          "focusManagement": { "type": "object" },
+          "screenReader": { "type": "object" },
+          "keyboard": { "type": "object" }
+        }
+      },
+      "implementation": {
+        "type": "object",
+        "properties": {
+          "technology": { "type": "string" },
+          "framework": { "type": "string" },
+          "dependencies": { "type": "array" },
+          "codeSnippets": { "type": "object" },
+          "assets": { "type": "array" }
+        }
+      }
+    },
+    "required": ["name", "description", "designSystem", "layout", "interactions", "accessibility", "implementation"]
+  },
+  "temperature": 0.7,
+  "userPromptTemplate": "Create a comprehensive, detailed Figma specification for this design concept:\n\nConcept: {{concept}}\nBrief: {{brief}}\n\nGenerate a complete design system specification that includes:\n\n1. **Design Tokens**: Colors, typography, spacing, shadows, border radius\n2. **Component Architecture**: Detailed component breakdown with variants and states\n3. **Layout System**: Grid, spacing, responsive behavior\n4. **Interaction Design**: States, animations, micro-interactions\n5. **Accessibility**: WCAG compliance, contrast ratios, screen reader support\n6. **Implementation Guide**: Technical requirements, code examples, asset specifications\n\nReturn ONLY a valid JSON object following this EXACT structure:\n\n```json\n{\n  \"name\": \"string\",\n  \"description\": \"string\",\n  \"designSystem\": {\n    \"metadata\": { \"version\": \"1.0\", \"author\": \"AI Designer\" },\n    \"tokens\": {\n      \"colors\": { \"primary\": {}, \"secondary\": {}, \"neutral\": {}, \"semantic\": {} },\n      \"typography\": { \"fontFamilies\": {}, \"fontSizes\": {}, \"fontWeights\": {} },\n      \"spacing\": { \"scale\": [], \"semantic\": {} },\n      \"borderRadius\": {},\n      \"shadows\": {},\n      \"breakpoints\": {}\n    },\n    \"components\": {\n      \"componentName\": {\n        \"description\": \"string\",\n        \"variants\": {},\n        \"states\": {},\n        \"properties\": {}\n      }\n    }\n  },\n  \"layout\": {\n    \"structure\": \"string\",\n    \"grid\": {},\n    \"spacing\": {},\n    \"responsive\": {}\n  },\n  \"interactions\": {\n    \"states\": {},\n    \"animations\": [],\n    \"gestures\": []\n  },\n  \"accessibility\": {\n    \"contrast\": {},\n    \"focusManagement\": {},\n    \"screenReader\": {},\n    \"keyboard\": {}\n  },\n  \"implementation\": {\n    \"technology\": \"string\",\n    \"framework\": \"string\",\n    \"dependencies\": [],\n    \"codeSnippets\": {},\n    \"assets\": []\n  }\n}\n```\n\nIMPORTANT: Use EXACTLY these field names. DO NOT use 'componentArchitecture', 'designTokens', 'layoutSystem', 'interactionDesign', or 'implementationGuide'. Use 'tokens', 'components', 'layout', 'interactions', 'accessibility', and 'implementation' as shown above.\n\nMake it comprehensive and realistic for modern web development. Include specific values, measurements, and technical details that a developer could directly implement.\n\nDO NOT include any explanatory text or markdown formatting in the description field - keep the description concise and put all detailed specifications in the appropriate structured fields."
+}
