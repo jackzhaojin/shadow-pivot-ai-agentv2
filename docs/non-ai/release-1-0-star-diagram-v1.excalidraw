@@ -329,9 +329,9 @@
     {
       "id": "ufV4JBqOz9Oebj9SwCQPv",
       "type": "text",
-      "x": 308.0880737908944,
+      "x": 288.4580917962655,
       "y": 70.801607,
-      "width": 140.09991455078125,
+      "width": 179.35987854003906,
       "height": 75,
       "angle": 0,
       "strokeColor": "#1e1e1e",
@@ -346,20 +346,20 @@
       "index": "b0R",
       "roundness": null,
       "seed": 1443793344,
-      "version": 281,
-      "versionNonce": 1734588864,
+      "version": 298,
+      "versionNonce": 282018240,
       "isDeleted": false,
       "boundElements": null,
-      "updated": 1750254694627,
+      "updated": 1750257138003,
       "link": null,
       "locked": false,
-      "text": "Varied prev\noutcomes with\nteammates",
+      "text": "AI dev varied prev\noutcomes with\nteammates",
       "fontSize": 20,
       "fontFamily": 5,
       "textAlign": "center",
       "verticalAlign": "middle",
       "containerId": "_V2qZJ2DB7F5W2EMyX8H_",
-      "originalText": "Varied prev outcomes with teammates",
+      "originalText": "AI dev varied prev outcomes with teammates",
       "autoResize": true,
       "lineHeight": 1.25
     },
@@ -1590,8 +1590,8 @@
     {
       "id": "KYsQkUgbkz0S_pcPQ_CGN",
       "type": "rectangle",
-      "x": 725.7246753100949,
-      "y": 566.2170328537871,
+      "x": 1346.1535318393917,
+      "y": 566.2170330891388,
       "width": 205.13325924318528,
       "height": 110,
       "angle": 0,
@@ -1609,8 +1609,8 @@
         "type": 3
       },
       "seed": 156582336,
-      "version": 881,
-      "versionNonce": 689080768,
+      "version": 1022,
+      "versionNonce": 627122624,
       "isDeleted": false,
       "boundElements": [
         {
@@ -1618,15 +1618,15 @@
           "id": "BKVsL_8eDG2KlztXWYs5F"
         }
       ],
-      "updated": 1750255548880,
+      "updated": 1750257048999,
       "link": null,
       "locked": false
     },
     {
       "id": "BKVsL_8eDG2KlztXWYs5F",
       "type": "text",
-      "x": 736.2313531494609,
-      "y": 583.7170328537871,
+      "x": 1356.6602096787578,
+      "y": 583.7170330891388,
       "width": 184.11990356445312,
       "height": 75,
       "angle": 0,
@@ -1642,11 +1642,11 @@
       "index": "b15",
       "roundness": null,
       "seed": 952568256,
-      "version": 1268,
-      "versionNonce": 1978583488,
+      "version": 1409,
+      "versionNonce": 676784576,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1750255574762,
+      "updated": 1750257048999,
       "link": null,
       "locked": false,
       "text": "Enable multiple AI\nagents and trying\nout multiple models",
@@ -1662,8 +1662,8 @@
     {
       "id": "W6n3WCOkci9qMUwGP7n2H",
       "type": "rectangle",
-      "x": 728.2247510747434,
-      "y": 737.4577760891386,
+      "x": 1346.1535316040402,
+      "y": 737.4577773244902,
       "width": 205.13325924318528,
       "height": 110,
       "angle": 0,
@@ -1681,8 +1681,8 @@
         "type": 3
       },
       "seed": 650105280,
-      "version": 918,
-      "versionNonce": 712254016,
+      "version": 1058,
+      "versionNonce": 1727988288,
       "isDeleted": false,
       "boundElements": [
         {
@@ -1690,15 +1690,15 @@
           "id": "Qc1kddGqALqKOCe2sBu6G"
         }
       ],
-      "updated": 1750255576548,
+      "updated": 1750257027900,
       "link": null,
       "locked": false
     },
     {
       "id": "Qc1kddGqALqKOCe2sBu6G",
       "type": "text",
-      "x": 735.4514377642071,
-      "y": 742.4577760891386,
+      "x": 1353.380218293504,
+      "y": 742.4577773244902,
       "width": 190.6798858642578,
       "height": 100,
       "angle": 0,
@@ -1714,11 +1714,11 @@
       "index": "b17",
       "roundness": null,
       "seed": 1784650176,
-      "version": 1447,
-      "versionNonce": 899772992,
+      "version": 1587,
+      "versionNonce": 744798784,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1750255609927,
+      "updated": 1750257027900,
       "link": null,
       "locked": false,
       "text": "Claude 4.0 sonnet\nproduced the most\nmature code, Codex\nwas good bugs",
@@ -1734,8 +1734,8 @@
     {
       "id": "C6V2cl0dlDplj-qwCCjiP",
       "type": "rectangle",
-      "x": 727.391392310095,
-      "y": 916.4114608537872,
+      "x": 1346.1535318393917,
+      "y": 916.4114610891387,
       "width": 205.13325924318528,
       "height": 110,
       "angle": 0,
@@ -1753,8 +1753,8 @@
         "type": 3
       },
       "seed": 918970816,
-      "version": 981,
-      "versionNonce": 46076480,
+      "version": 1116,
+      "versionNonce": 2143834560,
       "isDeleted": false,
       "boundElements": [
         {
@@ -1762,15 +1762,15 @@
           "id": "9dzOYNShMJ6JYORCLI7qR"
         }
       ],
-      "updated": 1750255538380,
+      "updated": 1750257037765,
       "link": null,
       "locked": false
     },
     {
       "id": "9dzOYNShMJ6JYORCLI7qR",
       "type": "text",
-      "x": 738.4180820513164,
-      "y": 921.4114608537872,
+      "x": 1357.1802215806133,
+      "y": 921.4114610891387,
       "width": 183.0798797607422,
       "height": 100,
       "angle": 0,
@@ -1786,11 +1786,11 @@
       "index": "b19",
       "roundness": null,
       "seed": 1528048064,
-      "version": 1477,
-      "versionNonce": 1853249984,
+      "version": 1612,
+      "versionNonce": 240654784,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1750255636924,
+      "updated": 1750257037765,
       "link": null,
       "locked": false,
       "text": "AI coded project,\nhowever sometimes\nfeels like watching\npaint dry",
@@ -1852,7 +1852,7 @@
     {
       "id": "VztWYbtArAEclR0RNomEO",
       "type": "rectangle",
-      "x": 1041.9896572217156,
+      "x": 727.3913922217156,
       "y": 566.2170334714632,
       "width": 205.13325924318528,
       "height": 110,
@@ -1871,8 +1871,8 @@
         "type": 3
       },
       "seed": 110686784,
-      "version": 941,
-      "versionNonce": 820300352,
+      "version": 994,
+      "versionNonce": 1905793600,
       "isDeleted": false,
       "boundElements": [
         {
@@ -1880,14 +1880,14 @@
           "id": "xlY2FgOkTJIKycrmmketJ"
         }
       ],
-      "updated": 1750255674184,
+      "updated": 1750257001747,
       "link": null,
       "locked": false
     },
     {
       "id": "xlY2FgOkTJIKycrmmketJ",
       "type": "text",
-      "x": 1052.2863512353981,
+      "x": 737.6880862353981,
       "y": 583.7170334714632,
       "width": 184.5398712158203,
       "height": 75,
@@ -1904,11 +1904,11 @@
       "index": "b1I",
       "roundness": null,
       "seed": 591440448,
-      "version": 1402,
-      "versionNonce": 714301888,
+      "version": 1455,
+      "versionNonce": 874172992,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1750255915226,
+      "updated": 1750257001747,
       "link": null,
       "locked": false,
       "text": "Early investment in\nCICD, infra and AI\nAutonomy",
@@ -1924,7 +1924,7 @@
     {
       "id": "fV8XI_arq9LakpjFdzRJv",
       "type": "rectangle",
-      "x": 1044.489732986364,
+      "x": 729.8914679863641,
       "y": 737.4577767068146,
       "width": 205.13325924318528,
       "height": 110,
@@ -1943,8 +1943,8 @@
         "type": 3
       },
       "seed": 1110532672,
-      "version": 978,
-      "versionNonce": 2103917120,
+      "version": 1031,
+      "versionNonce": 92703296,
       "isDeleted": false,
       "boundElements": [
         {
@@ -1952,14 +1952,14 @@
           "id": "4NAYo8fgq5vhtIT1exx1h"
         }
       ],
-      "updated": 1750255674184,
+      "updated": 1750257001747,
       "link": null,
       "locked": false
     },
     {
       "id": "4NAYo8fgq5vhtIT1exx1h",
       "type": "text",
-      "x": 1064.936420896531,
+      "x": 750.338155896531,
       "y": 742.4577767068146,
       "width": 164.23988342285156,
       "height": 100,
@@ -1976,11 +1976,11 @@
       "index": "b1K",
       "roundness": null,
       "seed": 843782720,
-      "version": 1699,
-      "versionNonce": 32201152,
+      "version": 1752,
+      "versionNonce": 549143104,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1750255768082,
+      "updated": 1750257001747,
       "link": null,
       "locked": false,
       "text": "While a ton was\ninvested, needed\nCypress for more\nautomation",
@@ -1996,7 +1996,7 @@
     {
       "id": "iedEcVmA-3TXFDAedVZDT",
       "type": "rectangle",
-      "x": 1043.6563742217156,
+      "x": 729.0581092217157,
       "y": 916.4114614714629,
       "width": 205.13325924318528,
       "height": 110,
@@ -2015,8 +2015,8 @@
         "type": 3
       },
       "seed": 1718473280,
-      "version": 1041,
-      "versionNonce": 895552,
+      "version": 1094,
+      "versionNonce": 1687747136,
       "isDeleted": false,
       "boundElements": [
         {
@@ -2024,14 +2024,14 @@
           "id": "XLca2_3nqvWxUqNyg6tOC"
         }
       ],
-      "updated": 1750255674184,
+      "updated": 1750257001747,
       "link": null,
       "locked": false
     },
     {
       "id": "XLca2_3nqvWxUqNyg6tOC",
       "type": "text",
-      "x": 1049.483067014695,
+      "x": 734.8848020146951,
       "y": 921.4114614714629,
       "width": 193.47987365722656,
       "height": 100,
@@ -2048,11 +2048,11 @@
       "index": "b1M",
       "roundness": null,
       "seed": 1970899520,
-      "version": 1620,
-      "versionNonce": 1657913792,
+      "version": 1673,
+      "versionNonce": 1409266240,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1750255799396,
+      "updated": 1750257001747,
       "link": null,
       "locked": false,
       "text": "AI was able to fully\nvalidate backend\nrouted endpoints\nthroughout",
@@ -2068,7 +2068,7 @@
     {
       "id": "z-LP7TmJJjMV3WiYLJVw4",
       "type": "rectangle",
-      "x": 1358.2546376924192,
+      "x": 1043.6563726924192,
       "y": 566.2170334714631,
       "width": 205.13325924318528,
       "height": 110,
@@ -2087,8 +2087,8 @@
         "type": 3
       },
       "seed": 86989376,
-      "version": 987,
-      "versionNonce": 2098975296,
+      "version": 1040,
+      "versionNonce": 365914688,
       "isDeleted": false,
       "boundElements": [
         {
@@ -2096,14 +2096,14 @@
           "id": "_Q2AXSSY23k7KRV3epash"
         }
       ],
-      "updated": 1750255859137,
+      "updated": 1750257001747,
       "link": null,
       "locked": false
     },
     {
       "id": "_Q2AXSSY23k7KRV3epash",
       "type": "text",
-      "x": 1388.1713115645002,
+      "x": 1073.5730465645001,
       "y": 571.2170334714631,
       "width": 145.29991149902344,
       "height": 100,
@@ -2120,11 +2120,11 @@
       "index": "b1O",
       "roundness": null,
       "seed": 1388974656,
-      "version": 1530,
-      "versionNonce": 1455678016,
+      "version": 1583,
+      "versionNonce": 1961370176,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1750256112816,
+      "updated": 1750257001747,
       "link": null,
       "locked": false,
       "text": "Use this\nopportunity to\ngrow with FED\narchitecture",
@@ -2140,7 +2140,7 @@
     {
       "id": "pB8H85OtRakYmrn0YXHU5",
       "type": "rectangle",
-      "x": 1360.7547134570677,
+      "x": 1046.1564484570677,
       "y": 737.4577767068145,
       "width": 205.13325924318528,
       "height": 110,
@@ -2159,8 +2159,8 @@
         "type": 3
       },
       "seed": 206424640,
-      "version": 1024,
-      "versionNonce": 1568424512,
+      "version": 1077,
+      "versionNonce": 1613355584,
       "isDeleted": false,
       "boundElements": [
         {
@@ -2168,14 +2168,14 @@
           "id": "8nEF-OBuK5Rcx2C5w2clr"
         }
       ],
-      "updated": 1750255859137,
+      "updated": 1750257001747,
       "link": null,
       "locked": false
     },
     {
       "id": "8nEF-OBuK5Rcx2C5w2clr",
       "type": "text",
-      "x": 1367.521416320848,
+      "x": 1052.9231513208479,
       "y": 742.4577767068145,
       "width": 191.599853515625,
       "height": 100,
@@ -2192,11 +2192,11 @@
       "index": "b1Q",
       "roundness": null,
       "seed": 1285194304,
-      "version": 1820,
-      "versionNonce": 1234057792,
+      "version": 1873,
+      "versionNonce": 1786024512,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1750256132363,
+      "updated": 1750257001747,
       "link": null,
       "locked": false,
       "text": "AI did do some\ncapabilities that my\nprevious frontend\nteams did not do",
@@ -2212,7 +2212,7 @@
     {
       "id": "5AXkmT5mXsm99NfYZyjUk",
       "type": "rectangle",
-      "x": 1359.9213546924193,
+      "x": 1045.3230896924192,
       "y": 916.4114614714626,
       "width": 205.13325924318528,
       "height": 110,
@@ -2231,8 +2231,8 @@
         "type": 3
       },
       "seed": 1385183808,
-      "version": 1087,
-      "versionNonce": 343978560,
+      "version": 1140,
+      "versionNonce": 1252543040,
       "isDeleted": false,
       "boundElements": [
         {
@@ -2240,14 +2240,14 @@
           "id": "P__NGlFc6maXhJch8pLIb"
         }
       ],
-      "updated": 1750255859137,
+      "updated": 1750257001747,
       "link": null,
       "locked": false
     },
     {
       "id": "P__NGlFc6maXhJch8pLIb",
       "type": "text",
-      "x": 1376.7380453491683,
+      "x": 1062.1397803491682,
       "y": 921.4114614714626,
       "width": 171.4998779296875,
       "height": 100,
@@ -2264,11 +2264,11 @@
       "index": "b1S",
       "roundness": null,
       "seed": 17756736,
-      "version": 1820,
-      "versionNonce": 672891456,
+      "version": 1873,
+      "versionNonce": 1537540672,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1750256201816,
+      "updated": 1750257001747,
       "link": null,
       "locked": false,
       "text": "AI collab gave me\ngrowth ops, how\nmuch I learn is up\nto me",
