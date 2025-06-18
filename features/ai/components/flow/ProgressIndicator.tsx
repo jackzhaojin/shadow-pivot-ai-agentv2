@@ -1,6 +1,7 @@
 'use client';
 import React from 'react';
-import { createArtifactZipPlaceholder } from '@/utils/download';
+import { useAgentFlow } from '@/providers/AgentFlowProvider';
+import { useUserGuid } from '@/providers/UserGuidProvider';
 import type { ExecutionTrace } from '@/utils/execution';
 
 interface ProgressIndicatorProps {
@@ -11,16 +12,67 @@ interface ProgressIndicatorProps {
 }
 
 export default function ProgressIndicator({ aborted, currentStep, stepsLength, executionTrace }: ProgressIndicatorProps) {
-  const handleDownload = () => {
-    if (!executionTrace) return;
-    const content = createArtifactZipPlaceholder({ trace: JSON.stringify(executionTrace, null, 2) });
-    const blob = new Blob([content], { type: 'application/zip' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `execution-${executionTrace.executionId}.zip`;
-    a.click();
-    URL.revokeObjectURL(url);
+  const { selectedFigmaSpec, figmaSelectionReasoning } = useAgentFlow();
+  const userGuid = useUserGuid();
+
+  const handleDownload = async () => {
+    console.log('🚀 DOWNLOAD ARTIFACTS CLICKED!');
+    
+    try {
+      // Get current state
+      const currentSelectedFigmaSpec = selectedFigmaSpec;
+      const currentFigmaSelectionReasoning = figmaSelectionReasoning;
+      const currentExecutionTrace = executionTrace;
+      
+      console.log('📊 Sending download request with data:', {
+        hasSelectedFigmaSpec: !!currentSelectedFigmaSpec,
+        specName: currentSelectedFigmaSpec?.name,
+        userGuid
+      });
+
+      const response = await fetch('/api/agent/download-figma-spec', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          selectedFigmaSpec: currentSelectedFigmaSpec,
+          figmaSelectionReasoning: currentFigmaSelectionReasoning,
+          executionTrace: currentExecutionTrace,
+          userGuid
+        })
+      });
+
+      console.log('📨 Download response received:', {
+        status: response.status,
+        ok: response.ok
+      });
+
+      if (!response.ok) {
+        throw new Error(`Download failed: ${response.status}`);
+      }
+
+      const blob = await response.blob();
+      console.log('💾 Blob received:', {
+        size: blob.size,
+        type: blob.type
+      });
+
+      // Create download link
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `figma-spec-${Date.now()}.zip`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+
+      console.log('✅ Download completed successfully');
+    } catch (error) {
+      console.error('💥 Download failed:', error);
+      alert(`Download error: ${error}`);
+    }
   };
 
   if (aborted) {
