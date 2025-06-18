@@ -8,7 +8,7 @@ on:
 
 permissions:
   id-token: write
-  contents: read
+  contents: write  # Changed from 'read' to 'write' for creating releases and tags
   packages: write
 
 env:
@@ -70,6 +70,38 @@ jobs:
           cache-to: type=local,dest=/tmp/.buildx-cache-release
       # --- End Docker Build ---
 
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        id: create_release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ steps.extract_version.outputs.version }}
+          release_name: Release v${{ steps.extract_version.outputs.version }}
+          body: |
+            ## 🚀 Release v${{ steps.extract_version.outputs.version }}
+            
+            ### 📦 Docker Images
+            This release has been built and pushed to GitHub Container Registry:
+            
+            - `${{ env.IMAGE_NAME }}:${{ steps.extract_version.outputs.version }}`
+            - `${{ env.IMAGE_NAME }}:release-latest`
+            
+            ### 🔧 Deployment
+            Pull the specific version for your permanent infrastructure:
+            ```bash
+            docker pull ${{ env.IMAGE_NAME }}:${{ steps.extract_version.outputs.version }}
+            ```
+            
+            ### 📝 Changes
+            Built from branch: `release/${{ steps.extract_version.outputs.version }}`
+            Commit: ${{ github.sha }}
+            
+            ### ⚠️ Note
+            This is an automated release. No Azure services were restarted.
+          draft: false
+          prerelease: false
+
       - name: Release Summary
         run: |
           echo "🚀 Release build completed successfully!"
@@ -77,6 +109,10 @@ jobs:
           echo "📦 Docker images pushed to GHCR:"
           echo "  - ${{ env.IMAGE_NAME }}:${{ steps.extract_version.outputs.version }}"
           echo "  - ${{ env.IMAGE_NAME }}:release-latest"
+          echo ""
+          echo "🏷️ GitHub Release created:"
+          echo "  - Tag: v${{ steps.extract_version.outputs.version }}"
+          echo "  - URL: ${{ steps.create_release.outputs.html_url }}"
           echo ""
           echo "💡 This release is ready for deployment to your permanent infrastructure."
           echo "🔧 No Azure services were restarted - deploy manually when ready."
