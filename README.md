@@ -6,14 +6,14 @@ A Next.js application for AI-powered agent workflows with Azure integration, des
 
 This project is organized into multiple releases with focused scope:
 
-### **Release 1.0 (MVP) - Current Focus** 
+### **Release 1.0 (MVP) - Launched**
 - **Scope**: Figma spec generation and download only (no code generation, no persistent storage)
-- **Status**: Active Development
+- **Status**: ✅ Completed
 - **Documentation**: [PRD-1.0.md](prd-1.0.md) | [Release-1.0.mdc](release-1.0.mdc)
 
-### **Release 1.1 (Stabilization) - Next**
-- **Scope**: Cypress testing, React state fixes, code refactoring  
-- **Status**: Planning
+### **Release 1.1 (Stabilization) - Current Focus**
+- **Scope**: Cypress testing, React state fixes, code refactoring
+- **Status**: Active Development
 - **Documentation**: [Release-1.1.mdc](release-1.1.mdc)
 
 ### **Release 1.2 (Session Management) - Future**
@@ -210,7 +210,7 @@ For more detailed information, please refer to the following documents:
 
 ---
 
-**Current Status**: Release 1.0 (MVP) - Active Development  
-**Current Focus**: Figma spec generation pipeline with Azure AI integration  
-**Next Milestone**: Complete MVP with stable Figma generation and download capabilities
+**Current Status**: Release 1.1 (Stabilization) - Active Development
+**Current Focus**: Cypress testing and React state stabilization
+**Next Milestone**: Complete stabilization tasks with comprehensive test coverage
 
