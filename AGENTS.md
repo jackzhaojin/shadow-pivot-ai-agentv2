@@ -4,12 +4,12 @@ This repo contains the **TSLA AI UI Agent** built with Next.js 15.1.8. All contr
 
 ## Current Release Focus
 
-**🎯 Current Release: 1.0 (MVP)**
-- **Primary Document**: [PRD-1.0.md](prd-1.0.md) - MVP product requirements 
-- **Task Management**: [Release-1.0.mdc](release-1.0.mdc) - MVP task breakdown and progress
-- **Scope**: Figma spec generation and download only (no code generation, no persistent storage)
+**🎯 Current Release: 1.1 (Stabilization)**
+- **Primary Document**: [PRD-1.0.md](prd-1.0.md) - Baseline requirements
+- **Task Management**: [Release-1.1.mdc](release-1.1.mdc) - Stabilization tasks and progress
+- **Scope**: Cypress testing, React state fixes, code refactoring
 
-**⛔ Do NOT work on Release 1.1+ features yet** - Focus only on completing Release 1.0 MVP.
+**⛔ Do NOT work on Release 1.2+ features yet** - Focus only on completing Release 1.1.
 
 ## Project Structure
 
@@ -17,12 +17,12 @@ This repo contains the **TSLA AI UI Agent** built with Next.js 15.1.8. All contr
 ```
 # Core Project Structure
 prd.md                   # Project overview and release roadmap
-prd-1.0.md              # Release 1.0 (MVP) detailed requirements ← CURRENT FOCUS
+prd-1.0.md              # Release 1.0 (MVP) detailed requirements
 prd-backlog.md          # Future features (not scheduled)
 
 # Release Task Management  
-release-1.0.mdc         # Release 1.0 task breakdown ← CURRENT FOCUS
-release-1.1.mdc         # Release 1.1 planning (stabilization)
+release-1.0.mdc         # Release 1.0 task breakdown (completed)
+release-1.1.mdc         # Release 1.1 task breakdown ← CURRENT FOCUS
 release-1.2.mdc         # Release 1.2 planning (session management)
 release-1.3.mdc         # Release 1.3 planning (code generation)
 release-backlog.mdc     # Future releases backlog
@@ -30,15 +30,15 @@ release-backlog.mdc     # Future releases backlog
 
 ### Development Guidelines
 **Reference Documents in Order:**
-1. **[PRD-1.0.md](prd-1.0.md)** - Understand current MVP scope and requirements
-2. **[Release-1.0.mdc](release-1.0.mdc)** - Find specific tasks and track progress
+1. **[PRD-1.0.md](prd-1.0.md)** - Understand baseline requirements
+2. **[Release-1.1.mdc](release-1.1.mdc)** - Find stabilization tasks and track progress
 3. **[AGENTS.md](AGENTS.md)** - Follow development standards (this document)
 
 **Task Assignment Protocol:**
 - I will only assign you bite-sized tasks (e.g., 3.2.3)
 - Complete only the assigned task - do NOT move to next tasks (3.2.4, 3.3.1, etc.)
 - Update the appropriate .mdc file when task is completed
-- Do NOT work on Release 1.1+ features until Release 1.0 is complete
+- Do NOT work on Release 1.2+ features until Release 1.1 is complete
 
 ## Folder Structure
 Use the structure outlined in the PRD when adding new code:
